@@ -3,7 +3,7 @@ const Dotenv = require("dotenv-webpack");
 const path = require("path");
 
 module.exports = {
-  mode: process.env.NODE_ENV,
+  mode: process.env.NODE_ENV || "production",
   devServer: {
     hot: true,
     proxy: {
