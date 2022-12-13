@@ -2,6 +2,8 @@ const express = require("express");
 const app = express();
 const path = require("path");
 const fetch = require("node-fetch");
+const parsePrometheusTextFormat = require("parse-prometheus-text-format");
+const prom2Json = require("prom2json-se");
 require("dotenv").config();
 
 const MODE = process.env.NODE_ENV || "production";
@@ -14,9 +16,10 @@ if (MODE === "production") {
 }
 
 app.get("/metrics", async (req, res) => {
-  const text = await (await fetch("http://localhost:9991/metrics")).text;
-  console.log(text);
-  return res.status(200).send("successsss");
+  const text = await (await fetch("http://localhost:9991/metrics")).text();
+  const json = prom2Json.convert(text);
+  console.log(prom2Json.convert(text));
+  return res.status(200).json(json);
 });
 
 app.listen(PORT, () => {
