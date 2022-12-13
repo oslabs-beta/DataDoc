@@ -1,21 +1,19 @@
 const express = require("express");
 const app = express();
-const path = require('path');
+const path = require("path");
 require("dotenv").config();
 
+const MODE = process.env.NODE_ENV || "production";
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 
-if (process.env.NODE_ENV === 'production') {
-  app.use("/dist", express.static(path.join(__dirname, '../dist')));
+if (MODE === "production") {
+  app.use("/", express.static(path.join(__dirname, "../dist")));
 }
 
-// serve index.html on the route '/'
-app.get('/', (req, res) => {
-  return res.status(200).sendFile(path.join(__dirname, '../dist/index.html'));
-});
-
 app.listen(PORT, () => {
-    console.log(`Express server listening on port ${PORT}\n${process.env.NODE_ENV.toUpperCase()} mode`);
+  console.log(
+    `Express server listening on port ${PORT}\n${MODE.toUpperCase()} mode`
+  );
 });

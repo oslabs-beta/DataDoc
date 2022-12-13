@@ -4,23 +4,22 @@ const path = require("path");
 
 module.exports = {
   mode: process.env.NODE_ENV || "production",
+  entry: path.resolve(__dirname, "/client/index.js"),
+  output: {
+    path: path.resolve(__dirname, "dist"),
+    filename: "bundle.js",
+    publicPath: "/",
+  },
+  devtool: "source-map",
   devServer: {
-    hot: true,
-    proxy: {
-      "/": "http://localhost:3000",
-    },
     static: {
-      directory: path.resolve(__dirname, "./dist"),
+      directory: path.resolve(__dirname, "dist"),
     },
     port: 8080,
+    hot: true,
     open: true,
+    compress: true,
     historyApiFallback: true,
-  },
-  entry: path.resolve(__dirname, "./client/index.js"),
-  output: {
-    path: path.resolve(__dirname, "./dist"),
-    filename: "bundle.js",
-    publicPath: "/dist",
   },
   module: {
     rules: [
@@ -46,11 +45,4 @@ module.exports = {
       systemvars: true,
     }),
   ],
-  // resolve: {
-  //   fallback: {
-  //     fs: false,
-  //     os: false,
-  //     path: false,
-  //   },
-  // },
 };
