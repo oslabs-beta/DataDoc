@@ -5,7 +5,7 @@
   "productName": "Datective",
   "main": "electron/electron-main.js",
   "scripts": {
-    "start": "NODE_ENV=production & nodemon server/server.js",
+    "start": "NODE_ENV=production nodemon server/server.js",
     "build": "NODE_ENV=production webpack",
     "dev": "NODE_ENV=development webpack serve --open & NODE_ENV=development nodemon server/server.js",
     "test": "jest --verbose",
@@ -16,7 +16,7 @@
     "url": "git+https://github.com/oslabs-beta/Datective.git"
   },
   "keywords": [],
-  "author": "Jamie Schiff, Mariam Zakariadze, Jonathan Huang, Jo Huang",
+  "author": "Jo Huang https://github.com/jochuang, Jonathan Huang https://github.com/JH51, Jamie Schiff https://github.com/jamieschiff, Mariam Zakariadze https://github.com/mariamzakariadze",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/oslabs-beta/Datective/issues"
