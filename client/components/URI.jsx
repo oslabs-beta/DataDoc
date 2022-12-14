@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React from "react";
 
-function URI(props){
+const URI=(props)=>{
   return(
+    <div>
 
+    </div>
   )
 }
 
