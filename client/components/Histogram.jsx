@@ -13,7 +13,7 @@ ChartJS.register(
   Legend
 );
 
-console.log(dataObj)
+console.log(dataObj[0].values)
 
 export const options = {
   responsive: true,

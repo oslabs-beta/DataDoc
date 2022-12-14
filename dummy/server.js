@@ -25,7 +25,7 @@ app.get("/fast", (req, res) => {
 });
 
 app.get("/slow", (req, res) => {
-  setTimeout(() => res.status(200).send("fast"), 1000);
+  setTimeout(() => res.status(200).send("slow"), 1000);
 });
 
 app.use("/good", (req, res) => {
