@@ -7,8 +7,8 @@ import Charts from '../components/Charts.jsx';
 const Production = () => {
   return (
     <div className='productionContainer'>
-      <h1>HEY WORLD</h1>
-      {/* <URIList /> */}
+      {/* <h1>HEY WORLD</h1> */}
+      <URIList />
       {/* <Charts/> */}
     </div>
   )
