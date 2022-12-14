@@ -28,6 +28,10 @@ const fetchDataFromPromServer = async (req, res) => {
   }
 };
 
+app.get("/routes", (req, res) => {
+  res.status(200).json(["route1", "route2", "route3", "route4"]);
+})
+
 app.post("/monitoring", (req, res) => {
   const { active, interval } = req.body; // active is a boolean, interval is in seconds
   if (active)
