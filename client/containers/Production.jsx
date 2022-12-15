@@ -2,8 +2,7 @@ import React from "react";
 
 //import components here
 import URIList from '../components/URIList.jsx'
-import Charts from '../components/Charts.jsx';
-import Dashboard from '../components/Dashboard.jsx';
+import ChartsContainer from "./ChartsContainer.jsx";
 
 const Production = () => {
   return (
@@ -11,7 +10,7 @@ const Production = () => {
       <h1>This is from production</h1>
       <URIList />
       {/* <Charts/> */}
-      <Dashboard />
+      <ChartsContainer />
     </div>
   )
 }
