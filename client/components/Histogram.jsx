@@ -9,10 +9,9 @@ import {
   Legend,
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
-import { faker } from "@faker-js/faker";
-import dataObj from "./data.js";
 
 const { SERVER_URL } = process.env;
+console.log(SERVER_URL)
 
 const Histogram = (props) => {
   const [histLabels, setHistLabels] = useState([]);
@@ -42,10 +41,31 @@ const Histogram = (props) => {
             newData[i] = e[1];
             return;
           });
+          console.log(newData)
         setHistLabels(Object.keys(newLabels));
         setHistData(Object.values(newData));
       });
   }, []);
+
+  const data = {
+    labels: histLabels,
+    datasets: [
+      {
+        label: "Frequency",
+        data: histData,
+        backgroundColor: [
+          "rgba(255, 99, 132, 0.5)",
+          "rgba(255, 99, 132, 0.5)",
+          "rgba(255, 99, 132, 0.5)",
+          "rgba(255, 99, 132, 0.5)",
+          "rgba(255, 99, 132, 0.5)",
+        ],
+        barPercentage: 1.0,
+        categoryPercentage: 1.0,
+        borderWidth: 1.0,
+      },
+    ],
+  };
 
   const options = {
     responsive: true,
@@ -59,27 +79,7 @@ const Histogram = (props) => {
       },
     },
   };
-
-  const data = {
-    labels: histLabels,
-    datasets: [
-      {
-        // borderWidth: 1.0,
-        barPercentage: 1.0,
-        categoryPercentage: 1.0,
-        label: "Frequency",
-        data: Object.values(histData),
-        backgroundColor: [
-          "rgba(255, 99, 132, 0.5)",
-          "rgba(255, 99, 132, 0.5)",
-          "rgba(255, 99, 132, 0.5)",
-          "rgba(255, 99, 132, 0.5)",
-          "rgba(255, 99, 132, 0.5)",
-        ],
-      },
-    ],
-  };
-
+  
   return <Bar data={data} options={options} />;
 };
 
