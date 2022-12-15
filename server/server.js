@@ -4,11 +4,13 @@ const app = express();
 const path = require("path");
 const fetch = require("node-fetch");
 const prom2Json = require("prom2json-se");
+const cors = require("cors")
 
 const MODE = process.env.NODE_ENV || "production";
 const PORT = process.env.PORT || 9990;
 
 app.use(express.json());
+app.use(cors());
 
 if (MODE === "production") {
   app.use(express.static(path.join(__dirname, "../dist")));
@@ -29,8 +31,23 @@ const fetchDataFromPromServer = async (req, res) => {
 };
 
 app.get("/routes", (req, res) => {
-  res.status(200).json(["route1", "route2", "route3", "route4"]);
+  res.status(200).json([
+    { endpoint: "route1", status: 200 },
+    { endpoint: "route2", status: 200 },
+    { endpoint: "route3", status: 200 },
+    { endpoint: "route4", status: 200 }]);
 })
+
+app.get("/histogram", (req, res) => {
+  return res.status(200).json({
+    0: 2,
+    0.1: 6,
+    0.5: 3,
+    1: 2,
+    5: 1,
+    10: 0
+  })
+});
 
 app.post("/monitoring", (req, res) => {
   const { active, interval } = req.body; // active is a boolean, interval is in seconds
