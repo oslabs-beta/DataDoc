@@ -6,8 +6,6 @@ require("dotenv").config();
 
 const { SERVER_URL } = process.env;
 
-console.log("ELECTRON RUNNING SMOOTH");
-
 function createWindow() {
   let win = new BrowserWindow({
     width: 800,
@@ -16,9 +14,21 @@ function createWindow() {
       nodeIntegration: true,
     },
   });
-  console.log(fs.readdirSync("./dist"));
-  win.loadFile("./dist/index.html");
-  // win.loadURL("http://localhost:8080")
+  if (process.env.NODE_ENV === 'production') {
+    indexPath = url.format({
+      protocol: 'file:',
+      pathname: path.resolve(__dirname, '../dist/index.html'),
+      slashes: true
+    })
+  } else {
+    indexPath = url.format({
+      protocol: 'http:',
+      host: 'localhost:8080',
+      pathname: 'index.html',
+      slashes: true
+    })
+  }
+  setTimeout(() => win.loadURL(indexPath), 1000);
 }
 
 app.whenReady().then(() => {

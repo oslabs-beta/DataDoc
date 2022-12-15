@@ -13,10 +13,6 @@ module.exports = {
   },
   devtool: "source-map",
   devServer: {
-    setupMiddlewares: (middlewares, devServer) => {
-      devServer.app.use('/', express.static(path.resolve(__dirname, 'dist')));
-      return middlewares;
-    },
     static: {
       directory: path.resolve(__dirname, "dist"),
     },
