@@ -16,8 +16,9 @@ function createWindow() {
   });
   if (process.env.NODE_ENV === 'production') {
     indexPath = url.format({
-      protocol: 'file:',
-      pathname: path.resolve(__dirname, '../dist/index.html'),
+      protocol: 'http:',
+      host: 'localhost:9990',
+      pathname: 'index.html',
       slashes: true
     })
   } else {
@@ -28,6 +29,7 @@ function createWindow() {
       slashes: true
     })
   }
+  console.log(indexPath)
   setTimeout(() => win.loadURL(indexPath), 1000);
 }
 
