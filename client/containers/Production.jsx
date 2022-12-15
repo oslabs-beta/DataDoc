@@ -8,7 +8,7 @@ const Production = () => {
   return (
     <div className='productionContainer'>
       <h1>This is from production</h1>
-      {/* <URIList /> */}
+      <URIList />
       {/* <Charts/> */}
       <ChartsContainer />
     </div>

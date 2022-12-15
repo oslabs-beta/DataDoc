@@ -1,10 +1,15 @@
 import React from "react";
+import { MemoryRouter as Router } from 'react-router-dom';
+
+import Production from '../containers/Production'
 
 const HomeButton=(props)=>{
   return(
-    <div>
-      
-    </div>
+    <Router>
+      <div className="homeButton">
+        <Link to='/'>Home</Link>
+      </div>
+    </Router>
   )
 }
 
