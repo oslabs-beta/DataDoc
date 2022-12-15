@@ -1,0 +1,24 @@
+.navbarContainer{
+  height: 100% !important;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid;
+  border-radius: 0;
+  border-color: rgba(132, 134, 133, 0.693);
+  background-color: rgb(255, 255, 255);
+  transition: 0.8s ease;
+  position: sticky;
+}
+
+.navbarButton{
+  height: 50px;
+  border-top-right-radius: 10rem;
+  border-bottom-right-radius: 9rem;
+  width: 10px;
+  position: absolute;
+  outline: none;
+  z-index: 1;
+  background-color: rgba(184, 216, 201, 0.693);
+  border-color: rgba(174, 200, 188, 0.693);
+  border-left: 0;
+}

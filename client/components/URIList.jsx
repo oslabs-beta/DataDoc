@@ -29,7 +29,7 @@ const URIList=(props)=>{
       <div className='URIEntries'>
         {errorMessage !== '' ? <FlashError errorMessage={errorMessage}/> : null}
         {URIList.map((element)=>{
-          return <URI key={uuidv4()} endpoint={element.endpoint} status={element.status}/>
+          return <URI key={uuidv4()} method={element.method} endpoint={element.path} status={element.status}/>
         })}
       </div>
     </div>
