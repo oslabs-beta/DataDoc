@@ -1,0 +1,54 @@
+.modal {
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(128,128,128,0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content {
+  padding: 40px;
+  width: 25vw;
+  height: 50vh;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  border-radius: 20px;
+}
+
+.close-button {
+  align-self: flex-end;
+  width: 40px;
+  border-radius: 20px;
+}
+
+.modal-header {
+  color: black;
+}
+
+.subscribers {
+  height: 8%;
+  border-radius: 10px;
+}
+
+.alert-status-codes {
+  height: 100%;
+  resize: none;
+  border-radius: 10px;
+}
+
+.monitoring-frequency{
+  height: 40%;
+  resize: none;
+  border-radius: 10px;
+}
+
+.submit-button {
+  height: 8%;
+  border-radius: 10px;
+}

@@ -32,6 +32,7 @@
     "electron": "^22.0.0",
     "html-webpack-plugin": "^5.5.0",
     "jest": "^29.3.1",
+    "react-router-dom": "^6.4.5",
     "sass-loader": "^13.2.0",
     "style-loader": "^3.3.1",
     "webpack": "^5.75.0",
@@ -53,6 +54,7 @@
     "react-dom": "^18.2.0",
     "react-router": "^6.4.5",
     "response-time": "^2.3.2",
+    "sass": "^1.56.2",
     "typescript": "^4.9.4",
     "uuidv4": "^6.2.13"
   }
