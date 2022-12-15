@@ -42,8 +42,8 @@ const Histogram = (props) => {
             return;
           });
           console.log(newData)
-        setHistLabels(Object.keys(newLabels));
-        setHistData(Object.values(newData));
+        setHistLabels(newLabels);
+        setHistData(newData);
       });
   }, []);
 
