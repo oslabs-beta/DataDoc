@@ -22,7 +22,6 @@ module.exports = {
     },
     port: 8080,
     hot: true,
-    open: true,
     compress: true,
     historyApiFallback: true,
   },
