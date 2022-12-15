@@ -1,6 +1,7 @@
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const Dotenv = require("dotenv-webpack");
 const path = require("path");
+const express = require("express");
 
 module.exports = {
   mode: process.env.NODE_ENV || "production",
@@ -12,6 +13,10 @@ module.exports = {
   },
   devtool: "source-map",
   devServer: {
+    setupMiddlewares: (middlewares, devServer) => {
+      devServer.app.use('/', express.static(path.resolve(__dirname, 'dist')));
+      return middlewares;
+    },
     static: {
       directory: path.resolve(__dirname, "dist"),
     },
