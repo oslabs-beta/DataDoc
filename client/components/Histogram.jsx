@@ -12,6 +12,8 @@ import { Bar } from "react-chartjs-2";
 import { faker } from "@faker-js/faker";
 import dataObj from "./data.js";
 
+const { SERVER_URL } = process.env;
+
 const Histogram = (props) => {
   const [histLabels, setHistLabels] = useState([]);
   const [histData, setHistData] = useState([]);
@@ -26,7 +28,7 @@ const Histogram = (props) => {
   );
 
   useEffect(() => {
-    fetch("http://localhost:9990/histogram")
+    fetch(`${SERVER_URL}/histogram`)
       .then((serverResponse) => serverResponse.json())
       .then((serverResponseJson) => {
         const newLabels = new Array(Object.keys(serverResponseJson).length);
