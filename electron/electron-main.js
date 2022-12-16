@@ -6,7 +6,7 @@ const { SERVER_URL } = process.env;
 
 function createWindow() {
   let win = new BrowserWindow({
-    width: 900,
+    width: 960,
     height: 700,
     webPreferences: {
       nodeIntegration: true,
