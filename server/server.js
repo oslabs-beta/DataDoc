@@ -30,14 +30,14 @@ const fetchDataFromPromServer = async (req, res) => {
   }
 };
 
-app.get("/routes", (req, res) => {
-  res.status(200).json([
-    { endpoint: "route1", status: 200 },
-    { endpoint: "route2", status: 200 },
-    { endpoint: "route3", status: 200 },
-    { endpoint: "route4", status: 200 },
-  ]);
-});
+// app.get("/routes", (req, res) => {
+//   res.status(200).json([
+//     { endpoint: "route1", status: 200 },
+//     { endpoint: "route2", status: 200 },
+//     { endpoint: "route3", status: 200 },
+//     { endpoint: "route4", status: 200 },
+//   ]);
+// });
 
 app.get("/histogram", (req, res) => {
   return res.status(200).json({
@@ -62,6 +62,16 @@ app.post("/monitoring", (req, res) => {
 app.get("/metrics", async (req, res) => {
   return res.status(200).json(promData);
 });
+
+app.get("/routes", async (req, res) => {
+  const response = await fetch('http://localhost:3001/allroutes');
+  const routes = await response.json();
+  // TO BE REMOVED: hard code status code 200
+  routes.forEach((route) => {
+    route.status = 200
+  })
+  return res.status(200).json(routes);
+})
 
 app.listen(PORT, () => {
   console.log(
