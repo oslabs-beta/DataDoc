@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
 const URI=(props)=>{
-  const {endpoint, status} = props
+  const {endpoint, status, method} = props
   const {checked, setChecked} = useState(true)
 
   const handleClick = (e) =>{
@@ -17,6 +17,7 @@ const URI=(props)=>{
           <thead>
             <tr>
               <th>Tracking</th>
+              <th>Method</th>
               <th>URI Endpoint</th>
               <th>Status Code</th>
             </tr>
@@ -25,6 +26,9 @@ const URI=(props)=>{
             <tr>
               <td>
         <input type="checkbox" id="checked" name="checkTrackingURI" onClick={(e)=>handleClick(e)}>{checked}</input>
+              </td>
+              <td>
+                <field>{method}</field>
               </td>
               <td>
         <field>{endpoint}</field>

@@ -64,14 +64,14 @@ app.get("/metrics", async (req, res) => {
 });
 
 app.get("/routes", async (req, res) => {
-  const response = await fetch('http://localhost:3001/allroutes');
+  const response = await fetch("http://localhost:3001/allroutes");
   const routes = await response.json();
   // TO BE REMOVED: hard code status code 200
   routes.forEach((route) => {
-    route.status = 200
-  })
+    route.status = 200;
+  });
   return res.status(200).json(routes);
-})
+});
 
 app.listen(PORT, () => {
   console.log(

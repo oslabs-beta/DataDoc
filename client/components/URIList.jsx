@@ -13,6 +13,7 @@ const URIList=(props)=>{
 
   //fetch the URI List from the backend when the component mounts
   useEffect(()=> {
+    // fetch(`http://localhost:9990/routes`)
     fetch(`http://localhost:${process.env.PORT}/routes`)
      .then(response=>response.json())
      .then(data=>{
