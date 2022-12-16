@@ -19,7 +19,7 @@ const listEndPoints = require("express-list-endpoints")
 // }));
 app.use(express.json());
 
-app.use(require("api-express-exporter")()); // That's it!
+app.use(require("api-express-exporter")());
 
 app.get("/fast", (req, res) => {
   res.status(200).send("fast");
@@ -62,10 +62,9 @@ app.get(
 
 app.use("/", (req, res) => res.send("HELLO WORLD"));
 
-let allroutes = [];
+let allroutes;
 
 app.listen(PORT, () => {
   console.log(`Express server started on port ${PORT}`);
-  console.log(listEndPoints(app));
   allroutes = listEndPoints(app);
 });
