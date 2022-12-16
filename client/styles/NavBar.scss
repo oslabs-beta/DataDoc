@@ -1,4 +1,4 @@
-.navbarContainer{
+.navbar-container{
   height: 100% !important;
   display: flex;
   flex-direction: column;
@@ -6,11 +6,11 @@
   border-radius: 0;
   border-color: rgba(132, 134, 133, 0.693);
   background-color: rgb(255, 255, 255);
-  transition: 0.8s ease;
-  position: sticky;
+  transition: 0.5s ease;
+  position: fixed;
 }
 
-.navbarButton{
+.navbar-button{
   height: 50px;
   border-top-right-radius: 10rem;
   border-bottom-right-radius: 9rem;
@@ -21,4 +21,5 @@
   background-color: rgba(184, 216, 201, 0.693);
   border-color: rgba(174, 200, 188, 0.693);
   border-left: 0;
+  cursor: pointer;
 }
