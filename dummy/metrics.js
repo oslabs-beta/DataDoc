@@ -9,19 +9,24 @@ const restResponseTimeHistogram = new client.Histogram({
   labelNames: ["method", "route", "status_code"],
 });
 
-module.exports = { 
-  startMetricsServer: function () {
-    const { collectDefaultMetrics } = client;
-    collectDefaultMetrics();
+const restCounter = new client.Counter({
+  name: 'metric_name',
+  help: 'metric_help',
+  labelNames: ["method", "route", "status_code"],
+});
 
+module.exports = {
+  restResponseTimeHistogram,
+  restCounter,
+  startMetricsServer: function (PORT) {
+    // const { collectDefaultMetrics } = client;
+    // collectDefaultMetrics();
     app.get("/metrics", async (req, res) => {
       res.set("Content-Type", client.register.contentType);
       return res.send(await client.register.metrics());
     });
-
-    app.listen(3002, () => {
-      console.log("Metrics server started on port 3001");
+    app.listen(PORT, () => {
+      console.log(`Metrics server started on port ${PORT}`);
     });
   },
-  restResponseTimeHistogram
-}
+};

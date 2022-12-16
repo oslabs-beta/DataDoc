@@ -1,22 +1,23 @@
 const express = require("express");
 const app = express();
-const PORT = 3001;
+const PORT = 3000;
 const fetch = require("node-fetch");
-const listEndPoints = require("express-list-endpoints")
-// const responseTime = require("response-time");
-// const { startMetricsServer, restResponseTimeHistogram } = require("./metrics.js");
+const listEndPoints = require("express-list-endpoints");
+const responseTime = require("response-time");
+const { startMetricsServer, restResponseTimeHistogram, restCounter } = require("./metrics.js");
 
-// // Inject response time; response time will send metrics to Histogram
-// app.use(responseTime((req, res, time) => {
-//   if (req.url) {
-//     console.log('time:',time);
-//     restResponseTimeHistogram.observe({
-//       method: req.method,
-//       route: req.url,
-//       status_code: res.statusCode
-//     }, time / 1000)
-//   }
-// }));
+// Inject response time; response time will send metrics to Histogram
+app.use(responseTime((req, res, time) => {
+  if (req.url) {
+    console.log('time:',time);
+    // restResponseTimeHistogram.observe({
+    //   method: req.method,
+    //   route: req.url,
+    //   status_code: res.statusCode
+    // }, time / 1000)
+    restCounter.inc();
+  }
+}));
 app.use(express.json());
 
 app.use(require("api-express-exporter")());
@@ -29,9 +30,15 @@ app.get("/slow", (req, res) => {
   setTimeout(() => res.status(200).send("slow"), 1000);
 });
 
-app.patch("/good", (req, res) => {
-  return res.sendStatus(202);
-});
+app.patch(
+  "/good",
+  function customMiddleware(req, res, next) {
+    return next();
+  },
+  (req, res) => {
+    return res.sendStatus(202);
+  }
+);
 
 app.use("/bad", (req, res) => {
   return res.sendStatus(505);
@@ -45,7 +52,7 @@ app.use("/error", (req, res) => {
   }
 });
 
-app.use("/allroutes", (req, res) => res.send(allroutes))
+app.use("/allroutes", (req, res) => res.send(allroutes));
 
 app.get(
   "/someotherroute",
@@ -66,5 +73,6 @@ let allroutes;
 
 app.listen(PORT, () => {
   console.log(`Express server started on port ${PORT}`);
+  startMetricsServer(9992);
   allroutes = listEndPoints(app);
 });
