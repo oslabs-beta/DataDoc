@@ -30,16 +30,27 @@ const URIList = (props) => {
         {errorMessage !== "" ? (
           <FlashError errorMessage={errorMessage} />
         ) : null}
-        {URIList.map((element) => {
-          return (
-            <URI
-              key={uuidv4()}
-              method={element.method}
-              endpoint={element.path}
-              status={element.status}
-            />
-          );
-        })}
+        <table>
+          <thead>
+            <tr>
+              <th>Tracking</th>
+              <th>URI Endpoint</th>
+              <th>Status Code</th>
+            </tr>
+          </thead>
+          <tbody>
+            {URIList.map((element) => {
+              return (
+                <URI
+                  key={uuidv4()}
+                  method={element.method}
+                  endpoint={element.path}
+                  status={element.status}
+                />
+              );
+            })}
+          </tbody>
+        </table>
       </div>
     </div>
   );
