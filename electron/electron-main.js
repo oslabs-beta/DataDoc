@@ -28,7 +28,11 @@ function createWindow() {
     })
   }
   console.log(indexPath)
-  setTimeout(() => win.loadURL(indexPath), 500);
+  // setTimeout(() => win.loadURL(indexPath), 500);
+  win.loadURL(indexPath);
+  win.once('ready-to-show', () => {
+    win.show()
+  })
 }
 
 app.whenReady().then(() => {
