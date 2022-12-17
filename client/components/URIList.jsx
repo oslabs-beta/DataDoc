@@ -5,11 +5,21 @@ import { v4 as uuidv4 } from 'uuid';
 //import other components here
 import URI from './URI.jsx'
 import FlashError from './FlashError.jsx';
+import SearchBar from './SearchBar.jsx';
+
 
 
 const URIList=(props)=>{
-  const [URIList, setURIList] = useState([])
-  const [errorMessage, setErrorMessage] = useState('')
+  const [URIList, setURIList] = useState([]);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [searchInput, setSearch] = useState('');
+
+  const inputHandler = (e) => {
+    //convert input text to lower case
+    var lowerCase = e.target.value.toLowerCase();
+    setInputText(lowerCase);
+  };
+
 
   //fetch the URI List from the backend when the component mounts
   useEffect(()=> {
@@ -24,8 +34,10 @@ const URIList=(props)=>{
         setTimeout(()=> setErrorMessage(''), 5000)
       })
   },[])
+
   return(
     <div className='URIListContainer'>
+      <SearchBar onChange ={inputHandler}/>
       <div className='URIEntries'>
         {errorMessage !== '' ? <FlashError errorMessage={errorMessage}/> : null}
         {URIList.map((element)=>{
