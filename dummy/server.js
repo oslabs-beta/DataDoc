@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const PORT = 3001;
 const fetch = require("node-fetch");
+const listEndPoints = require("express-list-endpoints")
 // const responseTime = require("response-time");
 // const { startMetricsServer, restResponseTimeHistogram } = require("./metrics.js");
 
@@ -16,9 +17,9 @@ const fetch = require("node-fetch");
 //     }, time / 1000)
 //   }
 // }));
-
 app.use(express.json());
-app.use(require("api-express-exporter")()); // That's it!
+
+app.use(require("api-express-exporter")());
 
 app.get("/fast", (req, res) => {
   res.status(200).send("fast");
@@ -28,7 +29,7 @@ app.get("/slow", (req, res) => {
   setTimeout(() => res.status(200).send("slow"), 1000);
 });
 
-app.use("/good", (req, res) => {
+app.patch("/good", (req, res) => {
   return res.sendStatus(202);
 });
 
@@ -43,6 +44,8 @@ app.use("/error", (req, res) => {
     res.status(506).send(error);
   }
 });
+
+app.use("/allroutes", (req, res) => res.send(allroutes))
 
 app.get(
   "/someotherroute",
@@ -59,7 +62,9 @@ app.get(
 
 app.use("/", (req, res) => res.send("HELLO WORLD"));
 
+let allroutes;
+
 app.listen(PORT, () => {
   console.log(`Express server started on port ${PORT}`);
-  // startMetricsServer();
+  allroutes = listEndPoints(app);
 });

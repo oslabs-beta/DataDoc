@@ -1,12 +1,21 @@
-import React, { useEffect, useState } from 'react';
-import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
-import { Bar } from 'react-chartjs-2';
-import { faker } from '@faker-js/faker';
-import dataObj from './data.js'
+import React, { useEffect, useState } from "react";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
+import { Bar } from "react-chartjs-2";
+
+const { SERVER_URL } = process.env;
+console.log(SERVER_URL)
 
 const Histogram = (props) => {
-
-  const [histData, setHistData] = useState({})
+  const [histLabels, setHistLabels] = useState([]);
+  const [histData, setHistData] = useState([]);
 
   ChartJS.register(
     CategoryScale,
@@ -18,47 +27,63 @@ const Histogram = (props) => {
   );
 
   useEffect(() => {
-    fetch('http://localhost:9990/histogram')
-      .then(res => res.json())
-      .then(test => setHistData(test))
-  }, [])
-  
+    fetch(`${SERVER_URL}/histogram`)
+      .then((serverResponse) => serverResponse.json())
+      .then((serverResponseJson) => {
+        const newLabels = new Array(Object.keys(serverResponseJson).length);
+        const newData = new Array(Object.keys(serverResponseJson).length);
+        Object.entries(serverResponseJson)
+          .sort((a, b) => {
+            return Number(a[0]) - Number(b[0]);
+          })
+          .forEach((e, i) => {
+            newLabels[i] = e[0];
+            newData[i] = e[1];
+            return;
+          });
+        setHistLabels(newLabels);
+        setHistData(newData);
+      });
+  }, []);
+
+  const data = {
+    labels: histLabels,
+    datasets: [
+      {
+        label: "Frequency",
+        data: histData,
+        backgroundColor: [
+          "rgba(255, 99, 132, 0.5)",
+          "rgba(255, 99, 132, 0.5)",
+          "rgba(255, 99, 132, 0.5)",
+          "rgba(255, 99, 132, 0.5)",
+          "rgba(255, 99, 132, 0.5)",
+        ],
+        barPercentage: 1.0,
+        categoryPercentage: 1.0,
+        borderWidth: 1.0,
+      },
+    ],
+  };
+
   const options = {
     responsive: true,
     plugins: {
       legend: {
-        position: 'top',
+        position: "top",
       },
       title: {
         display: true,
-        text: 'Response Time Distribution',
+        text: "Response Time Distribution",
       },
     },
   };
-  console.log(histData)
-  const data = {
-    labels: Object.keys(histData).sort((a, b) => a - b ),
-    datasets: [
-      {
-        label: 'Response Time (ms)',
-        data: Object.values(histData),
-        backgroundColor: [
-          'rgba(255, 99, 132, 0.5)',
-          'rgba(255, 99, 132, 0.5)',
-          'rgba(255, 99, 132, 0.5)',
-          'rgba(255, 99, 132, 0.5)',
-          'rgba(255, 99, 132, 0.5)'        
-        ]
-      },
-    ],
-  };
   
   return (
-    <Bar 
-      data={data} 
-      options={options} 
-    />
-  )
-}
+    <div class="histogram">
+      <Bar data={data} options={options} />
+    </div>
+  );
+};
 
 export default Histogram;
