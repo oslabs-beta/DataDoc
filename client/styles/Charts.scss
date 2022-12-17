@@ -1,9 +1,13 @@
 .charts-container {
-  display: flex;
+  display: grid;
+  grid-template-rows:    1fr 1fr;
+  grid-template-columns: 1fr 1fr;
   flex-direction: row;
   width: 100%;
   box-sizing: border-box;
   align-content: space-between;
+  align-items: center;
+  justify-items: center;
   div {
     flex: 1;
   }
