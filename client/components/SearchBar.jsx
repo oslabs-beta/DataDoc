@@ -5,7 +5,7 @@ const SearchBar=()=>{
   return(
     <div>
       <form action="/" method="get">
-        <input type="text" id="header-search" placeholder="Search blog posts"/>
+        <input type="text" id="header-search" placeholder="Search URI"/>
         <button type="submit">Search</button>
       </form>
     </div>

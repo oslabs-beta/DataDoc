@@ -17,7 +17,7 @@ const URIList=(props)=>{
   const inputHandler = (e) => {
     //convert input text to lower case
     var lowerCase = e.target.value.toLowerCase();
-    setInputText(lowerCase);
+    setSearch(lowerCase);
   };
 
 
@@ -40,7 +40,14 @@ const URIList=(props)=>{
       <SearchBar onChange ={inputHandler}/>
       <div className='URIEntries'>
         {errorMessage !== '' ? <FlashError errorMessage={errorMessage}/> : null}
-        {URIList.map((element)=>{
+        {
+        URIList.filter(URI => {
+          if (URI === '') {
+            return URI;
+          } else if (URI.endpoint.toLowerCase().includes(URI.toLowerCase())) {
+            return URI;
+          }
+        }).map((element)=>{
           return <URI key={uuidv4()} endpoint={element.endpoint} status={element.status}/>
         })}
       </div>
