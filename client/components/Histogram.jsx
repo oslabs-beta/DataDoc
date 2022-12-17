@@ -79,7 +79,11 @@ const Histogram = (props) => {
     },
   };
   
-  return <Bar data={data} options={options} />;
+  return (
+    <div class="histogram">
+      <Bar data={data} options={options} />
+    </div>
+  );
 };
 
 export default Histogram;

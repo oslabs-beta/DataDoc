@@ -1,16 +1,19 @@
-import React from 'react';
+import React from "react";
 
-import Development from './Development.jsx'
-import Production from './Production.jsx'
+import NavBar from "./NavBar.jsx";
+import Development from "./Development.jsx";
+import Production from "./Production.jsx";
 
+import "../styles/globals.scss";
 
 function App() {
   return (
     <div>
-      <Development/>
-      <Production/>
+      <NavBar/>
+      <Development />
+      <Production />
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
