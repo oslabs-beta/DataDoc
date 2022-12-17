@@ -26,14 +26,22 @@ app.use(
 
       // Increment the appropriate counter
       restCounter.inc();
+
+      // res.on("finish", () => console.log(res.statusCode))
     }
   })
 );
+// app.use((req, res, next) => {
+//   res.on("finish", () => {
+//     console.log(res.statusCode);
+//   })
+//   return next();
+// })
 
 app.use(require("api-express-exporter")());
 
 app.get("/fast", (req, res) => {
-  res.status(200).send("fast");
+  res.status(201).send("fast");
 });
 
 app.get("/slow", (req, res) => {
@@ -56,11 +64,11 @@ app.get("/good",
   }
 )
 
-app.post("/bad", (req, res) => {
+app.get("/bad", (req, res) => {
   return res.sendStatus(505);
 });
 
-app.delete("/error", (req, res) => {
+app.get("/error", (req, res) => {
   try {
     throw new Error("something broke...");
   } catch (error) {
