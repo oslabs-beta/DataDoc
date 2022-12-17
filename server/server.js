@@ -64,7 +64,7 @@ app.get("/metrics", async (req, res) => {
 });
 
 app.get("/routes", async (req, res) => {
-  const response = await fetch('http://localhost:3001/allroutes');
+  const response = await fetch('http://localhost:3000/allroutes');
   const routes = await response.json();
   // TO BE REMOVED: hard code status code 200
   routes.forEach((route) => {

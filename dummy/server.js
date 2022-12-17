@@ -4,21 +4,31 @@ const PORT = 3000;
 const fetch = require("node-fetch");
 const listEndPoints = require("express-list-endpoints");
 const responseTime = require("response-time");
-const { startMetricsServer, restResponseTimeHistogram, restCounter } = require("./metrics.js");
+const {
+  startMetricsServer,
+  restResponseTimeHistogram,
+  restCounter,
+} = require("./metrics.js");
 
-// Inject response time; response time will send metrics to Histogram
-app.use(responseTime((req, res, time) => {
-  if (req.url) {
-    console.log('time:',time);
-    // restResponseTimeHistogram.observe({
-    //   method: req.method,
-    //   route: req.url,
-    //   status_code: res.statusCode
-    // }, time / 1000)
-    restCounter.inc();
-  }
-}));
 app.use(express.json());
+// Inject response time; response time will send metrics to Histogram
+app.use(
+  responseTime((req, res, time) => {
+    if (req.url) {
+      // Print the response time
+      console.log(`${new Date().toUTCString()}\npath: ${req.url}\ntime: ${time.toFixed(3)} ms`);
+
+      // restResponseTimeHistogram.observe({
+      //   method: req.method,
+      //   route: req.url,
+      //   status_code: res.statusCode
+      // }, time / 1000)
+
+      // Increment the appropriate counter
+      restCounter.inc();
+    }
+  })
+);
 
 app.use(require("api-express-exporter")());
 
@@ -40,11 +50,17 @@ app.patch(
   }
 );
 
-app.use("/bad", (req, res) => {
+app.get("/good",
+  (req, res) => {
+    return res.sendStatus(200);
+  }
+)
+
+app.post("/bad", (req, res) => {
   return res.sendStatus(505);
 });
 
-app.use("/error", (req, res) => {
+app.delete("/error", (req, res) => {
   try {
     throw new Error("something broke...");
   } catch (error) {
@@ -52,7 +68,7 @@ app.use("/error", (req, res) => {
   }
 });
 
-app.use("/allroutes", (req, res) => res.send(allroutes));
+app.use("/allroutes", (req, res) => res.json(allroutes));
 
 app.get(
   "/someotherroute",

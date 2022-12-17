@@ -1,5 +1,6 @@
 const express = require("express");
 const client = require("prom-client");
+const fetch = require("node-fetch");
 
 const app = express();
 
@@ -18,9 +19,12 @@ const restCounter = new client.Counter({
 module.exports = {
   restResponseTimeHistogram,
   restCounter,
-  startMetricsServer: function (PORT) {
+  startMetricsServer: async function (PORT) {
     // const { collectDefaultMetrics } = client;
     // collectDefaultMetrics();
+
+    console.log((await (await fetch('http://localhost:3000/allroutes')).json()));
+
     app.get("/metrics", async (req, res) => {
       res.set("Content-Type", client.register.contentType);
       return res.send(await client.register.metrics());
