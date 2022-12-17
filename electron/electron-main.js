@@ -27,8 +27,6 @@ function createWindow() {
       slashes: true
     })
   }
-  console.log(indexPath)
-  // setTimeout(() => win.loadURL(indexPath), 500);
   win.loadURL(indexPath);
   win.once('ready-to-show', () => {
     win.show()
