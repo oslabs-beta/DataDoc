@@ -9,6 +9,7 @@ const {
   restResponseTimeHistogram,
   restCounter,
 } = require("./metrics.js");
+const log = [];
 
 app.use(express.json());
 // Inject response time; response time will send metrics to Histogram
@@ -16,7 +17,16 @@ app.use(
   responseTime((req, res, time) => {
     if (req.url) {
       // Print the response time
-      console.log(`${new Date().toUTCString()}\npath: ${req.url}\ntime: ${time.toFixed(3)} ms\ncode: ${res.statusCode}`);
+      // console.log(`${Date.now()}\npath: ${req.url}\ntime: ${time.toFixed(3)} ms\ncode: ${res.statusCode}`);
+
+      log.push({
+        time: new Date(),
+        path: req.url,
+        method: req.method,
+        status_code: res.statusCode,
+      });
+
+      console.log(log[log.length - 1], log.length);
 
       // restResponseTimeHistogram.observe({
       //   method: req.method,
@@ -27,10 +37,11 @@ app.use(
       // Increment the appropriate counter
       restCounter.inc();
 
-      // res.on("finish", () => console.log(res.statusCode))
+      res.on("finish", () => {});
     }
   })
 );
+
 // app.use((req, res, next) => {
 //   res.on("finish", () => {
 //     console.log(res.statusCode);
@@ -58,11 +69,9 @@ app.patch(
   }
 );
 
-app.get("/good",
-  (req, res) => {
-    return res.sendStatus(200);
-  }
-)
+app.get("/good", (req, res) => {
+  return res.sendStatus(200);
+});
 
 app.get("/bad", (req, res) => {
   return res.sendStatus(505);
