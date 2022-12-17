@@ -16,7 +16,7 @@ app.use(
   responseTime((req, res, time) => {
     if (req.url) {
       // Print the response time
-      console.log(`${new Date().toUTCString()}\npath: ${req.url}\ntime: ${time.toFixed(3)} ms`);
+      console.log(`${new Date().toUTCString()}\npath: ${req.url}\ntime: ${time.toFixed(3)} ms\ncode: ${res.statusCode}`);
 
       // restResponseTimeHistogram.observe({
       //   method: req.method,
@@ -67,6 +67,8 @@ app.delete("/error", (req, res) => {
     res.status(506).send(error);
   }
 });
+
+app.get("/arbitrarily/nested/route", (req, res) => res.sendStatus(200));
 
 app.use("/allroutes", (req, res) => res.json(allroutes));
 

@@ -23,7 +23,8 @@ module.exports = {
     // const { collectDefaultMetrics } = client;
     // collectDefaultMetrics();
 
-    console.log((await (await fetch('http://localhost:3000/allroutes')).json()));
+    const routes = await (await fetch('http://localhost:3000/allroutes')).json();
+    console.log(routes.map((e) => e.path));
 
     app.get("/metrics", async (req, res) => {
       res.set("Content-Type", client.register.contentType);
