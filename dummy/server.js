@@ -26,7 +26,7 @@ app.use(
         path: req.url,
         method: req.method,
         status_code: res.statusCode,
-        time: time
+        response_time: Number(time.toFixed(3))
       });
 
       console.log(log[log.length - 1]);
