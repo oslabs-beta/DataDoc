@@ -4,12 +4,13 @@ const PORT = 3000;
 const fetch = require("node-fetch");
 const listEndPoints = require("express-list-endpoints");
 const responseTime = require("response-time");
-const {
-  startMetricsServer,
-  restResponseTimeHistogram,
-  restCounter,
-} = require("./metrics.js");
+// const {
+//   startMetricsServer,
+//   restResponseTimeHistogram,
+//   restCounter,
+// } = require("./metrics.js");
 const log = [];
+const module2 = require("./index.js");
 
 app.use(express.json());
 // Inject response time; response time will send metrics to Histogram
@@ -18,9 +19,6 @@ app.use(express.json());
 app.use(
   responseTime((req, res, time) => {
     if (req.url) {
-      // Print the response time
-      // console.log(`${Date.now()}\npath: ${req.url}\ntime: ${time.toFixed(3)} ms\ncode: ${res.statusCode}`);
-
       log.push({
         date_created: new Date(),
         path: req.url,
@@ -28,32 +26,10 @@ app.use(
         status_code: res.statusCode,
         response_time: Number(time.toFixed(3))
       });
-
       console.log(log[log.length - 1]);
-
-      // restResponseTimeHistogram.observe({
-      //   method: req.method,
-      //   route: req.url,
-      //   status_code: res.statusCode
-      // }, time / 1000)
-
-      // Increment the appropriate counter
-      restCounter.inc();
-
-      res.on("finish", () => {});
     }
   })
 );
-
-// app.use((req, res, next) => {
-//   res.on("finish", () => {
-//     console.log(res.statusCode);
-//   })
-//   return next();
-// })
-
-// ? Should be included in our package
-app.use(require("api-express-exporter")());
 
 app.get("/fast", (req, res) => {
   res.status(201).send("fast");
@@ -116,6 +92,6 @@ app.listen(PORT, () => {
 
   // ? Should be included in our package
   allroutes = listEndPoints(app);
-  startMetricsServer(9992);
+  module2.startMetricsServer();
 
 });
