@@ -13,6 +13,8 @@ const log = [];
 
 app.use(express.json());
 // Inject response time; response time will send metrics to Histogram
+
+// ? Should be included in our package
 app.use(
   responseTime((req, res, time) => {
     if (req.url) {
@@ -26,7 +28,7 @@ app.use(
         status_code: res.statusCode,
       });
 
-      console.log(log[log.length - 1], log.length);
+      console.log(log[log.length - 1]);
 
       // restResponseTimeHistogram.observe({
       //   method: req.method,
@@ -49,6 +51,7 @@ app.use(
 //   return next();
 // })
 
+// ? Should be included in our package
 app.use(require("api-express-exporter")());
 
 app.get("/fast", (req, res) => {
@@ -70,11 +73,14 @@ app.patch(
 );
 
 app.get("/good", (req, res) => {
-  return res.sendStatus(200);
+  const statusCode = Math.floor(Math.random() * 200 + 200);
+  console.log(statusCode);
+  return res.sendStatus(statusCode);
 });
 
 app.get("/bad", (req, res) => {
-  return res.sendStatus(505);
+  const statusCode = Math.floor(Math.random() * 200 + 400);
+  return res.sendStatus(statusCode);
 });
 
 app.get("/error", (req, res) => {
@@ -93,8 +99,6 @@ app.get(
   "/someotherroute",
   (req, res, next) => {
     fetch("https://google.com");
-    // .then((fetchResponse) => fetchResponse.text())
-    // .then((responseText) => console.log(responseText));
     return next();
   },
   (req, res) => {
@@ -108,6 +112,9 @@ let allroutes;
 
 app.listen(PORT, () => {
   console.log(`Express server started on port ${PORT}`);
-  startMetricsServer(9992);
+
+  // ? Should be included in our package
   allroutes = listEndPoints(app);
+  startMetricsServer(9992);
+
 });
