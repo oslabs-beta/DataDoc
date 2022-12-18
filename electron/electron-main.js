@@ -1,6 +1,6 @@
+require("dotenv").config();
 const { app, BrowserWindow } = require("electron");
 const url = require("url");
-require("dotenv").config();
 
 const { SERVER_URL } = process.env;
 
@@ -27,7 +27,7 @@ function createWindow() {
       slashes: true
     })
   }
-  win.loadURL(indexPath);
+  setTimeout(() => win.loadURL(indexPath), 0);
   win.once('ready-to-show', () => {
     win.show()
   })
