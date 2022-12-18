@@ -22,10 +22,11 @@ app.use(
       // console.log(`${Date.now()}\npath: ${req.url}\ntime: ${time.toFixed(3)} ms\ncode: ${res.statusCode}`);
 
       log.push({
-        time: new Date(),
+        date_created: new Date(),
         path: req.url,
         method: req.method,
         status_code: res.statusCode,
+        time: time
       });
 
       console.log(log[log.length - 1]);
