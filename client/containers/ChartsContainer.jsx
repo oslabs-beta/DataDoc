@@ -1,15 +1,18 @@
-import React from 'react';
-import DonutChart from '../components/DonutChart.jsx';
-import Histogram from '../components/Histogram.jsx';
+import React from "react";
+import LineChart from "../components/LineChart.jsx";
+import DonutChart from "../components/DonutChart.jsx";
+import Histogram from "../components/Histogram.jsx";
+import '../styles/Charts.scss';
 
 const ChartsContainer = (props) => {
-    return (
-        <div>
-        <div>This is Dashboard</div>
-        <Histogram />
-        <DonutChart />
-        </div>
-    );
+  return (
+    <div class="charts-container">
+      <LineChart />
+      <Histogram />
+      <LineChart />
+      <DonutChart />
+    </div>
+  );
 };
 
 export default ChartsContainer;

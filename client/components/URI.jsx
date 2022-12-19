@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 
 const URI=(props)=>{
   const {endpoint, status, method} = props
   const {checked, setChecked} = useState(true)
 
-  const handleClick = (e) =>{
+  const handleClick = (e) => {
     //incorporate functionality to stop the element from being tracked
-    setChecked(!checked)
-  }
+    setChecked(!checked);
+  };
 
   return(
     <div>
@@ -45,4 +45,4 @@ const URI=(props)=>{
   )
 }
 
-export default URI
+export default URI;

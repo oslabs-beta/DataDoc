@@ -1,15 +1,13 @@
-const { app, BrowserWindow } = require("electron");
-const path = require("path");
-const url = require("url");
-const fs = require("fs");
 require("dotenv").config();
+const { app, BrowserWindow } = require("electron");
+const url = require("url");
 
 const { SERVER_URL } = process.env;
 
 function createWindow() {
   let win = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 960,
+    height: 700,
     webPreferences: {
       nodeIntegration: true,
     },
@@ -29,8 +27,10 @@ function createWindow() {
       slashes: true
     })
   }
-  console.log(indexPath)
-  setTimeout(() => win.loadURL(indexPath), 1000);
+  setTimeout(() => win.loadURL(indexPath), 0);
+  win.once('ready-to-show', () => {
+    win.show()
+  })
 }
 
 app.whenReady().then(() => {

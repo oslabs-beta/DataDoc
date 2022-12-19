@@ -8,8 +8,7 @@ import NavBar from "./NavBar.jsx";
 const Production = () => {
   return (
     <div className='productionContainer'>
-      <h1>This is from production</h1>
-      <NavBar/>
+      {/* <h1>This is from production</h1> */}
       <URIList />
       {/* <Charts/> */}
       <ChartsContainer />

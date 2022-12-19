@@ -50,6 +50,17 @@ app.get("/histogram", (req, res) => {
   });
 });
 
+app.get("/linechart", (req, res) => {
+  return res.status(200).json({
+    0: 2,
+    1: 6,
+    2: 3,
+    3: 2,
+    4: 1,
+    5: 0,
+  });
+});
+
 app.post("/monitoring", (req, res) => {
   const { active, interval } = req.body; // active is a boolean, interval is in seconds
   if (active)
