@@ -12,11 +12,11 @@ app.use(express.json());
 // ? Should be included in our package
 app.use(
   responseTime((req, res, time) => {
-    console.log(Object.keys(req));
-    console.log('baseURL:', req.baseUrl);
-    console.log('originalURL:', req.originalUrl);
+    // console.log(Object.keys(req));
+    // console.log('baseURL:', req.baseUrl);
+    // console.log('originalURL:', req.originalUrl);
     // console.log('route:', req.route);
-    console.log('path:', req.route.path);
+    // console.log('path:', req.route.path);
     if (req.url) {
       log.push({
         date_created: new Date(),
@@ -31,29 +31,17 @@ app.use(
   })
 );
 
-app.get(
-  "/specific/:id",
-  module2.registerEndpoint,
-  (req, res) => {
-    res.status(201).send("specific");
-  }
-);
+app.get("/specific/:id", module2.registerEndpoint, (req, res) => {
+  res.status(201).send("specific");
+});
 
-app.get(
-  "/routewithquery",
-  module2.registerEndpoint,
-  (req, res) => {
-    res.status(201).send("query");
-  }
-);
+app.get("/routewithquery", module2.registerEndpoint, (req, res) => {
+  res.status(201).send("query");
+});
 
-app.get(
-  "/fast",
-  module2.registerEndpoint,
-  (req, res) => {
-    res.status(201).send("fast");
-  }
-);
+app.get("/fast", module2.registerEndpoint, (req, res) => {
+  res.status(201).send("fast");
+});
 
 app.get("/slow", (req, res) => {
   setTimeout(() => res.status(200).send("slow"), Math.random() * 200 + 50);
@@ -61,6 +49,7 @@ app.get("/slow", (req, res) => {
 
 app.patch(
   "/good",
+  module2.registerEndpoint,
   function customMiddleware(req, res, next) {
     return next();
   },
@@ -69,7 +58,7 @@ app.patch(
   }
 );
 
-app.get("/good", (req, res) => {
+app.get("/good", module2.registerEndpoint, (req, res) => {
   const statusCode = Math.floor(Math.random() * 200 + 200);
   console.log(statusCode);
   return res.sendStatus(statusCode);
@@ -103,11 +92,11 @@ app.get(
 
 app.use("/", (req, res) => res.send("HELLO WORLD"));
 
-
 app.listen(PORT, () => {
-  console.log(`Express server started on port ${PORT}`);
+  console.log(`Target server started on port ${PORT}`);
 
   // ? Should be included in our package
-  module2.registerAllEndpoints(app);
+  module2.exportEndpoints(app);
+  // module2.registerAllEndpoints(app);
   module2.startMetricsServer();
 });
