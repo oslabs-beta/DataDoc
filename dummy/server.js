@@ -2,13 +2,7 @@ const express = require("express");
 const app = express();
 const PORT = 3000;
 const fetch = require("node-fetch");
-const listEndPoints = require("express-list-endpoints");
 const responseTime = require("response-time");
-// const {
-//   startMetricsServer,
-//   restResponseTimeHistogram,
-//   restCounter,
-// } = require("./metrics.js");
 const log = [];
 const module2 = require("./index.js");
 
@@ -18,22 +12,48 @@ app.use(express.json());
 // ? Should be included in our package
 app.use(
   responseTime((req, res, time) => {
+    console.log(Object.keys(req));
+    console.log('baseURL:', req.baseUrl);
+    console.log('originalURL:', req.originalUrl);
+    // console.log('route:', req.route);
+    console.log('path:', req.route.path);
     if (req.url) {
       log.push({
         date_created: new Date(),
-        path: req.url,
+        path: req.route?.path,
+        url: req.url,
         method: req.method,
         status_code: res.statusCode,
-        response_time: Number(time.toFixed(3))
+        response_time: Number(time.toFixed(3)),
       });
       console.log(log[log.length - 1]);
     }
   })
 );
 
-app.get("/fast", (req, res) => {
-  res.status(201).send("fast");
-});
+app.get(
+  "/specific/:id",
+  module2.registerEndpoint,
+  (req, res) => {
+    res.status(201).send("specific");
+  }
+);
+
+app.get(
+  "/routewithquery",
+  module2.registerEndpoint,
+  (req, res) => {
+    res.status(201).send("query");
+  }
+);
+
+app.get(
+  "/fast",
+  module2.registerEndpoint,
+  (req, res) => {
+    res.status(201).send("fast");
+  }
+);
 
 app.get("/slow", (req, res) => {
   setTimeout(() => res.status(200).send("slow"), Math.random() * 200 + 50);
@@ -70,8 +90,6 @@ app.get("/error", (req, res) => {
 
 app.get("/arbitrarily/nested/route", (req, res) => res.sendStatus(200));
 
-app.use("/allroutes", (req, res) => res.json(allroutes));
-
 app.get(
   "/someotherroute",
   (req, res, next) => {
@@ -85,13 +103,11 @@ app.get(
 
 app.use("/", (req, res) => res.send("HELLO WORLD"));
 
-let allroutes;
 
 app.listen(PORT, () => {
   console.log(`Express server started on port ${PORT}`);
 
   // ? Should be included in our package
-  allroutes = module2.listAllEndpoints(app);
+  module2.registerAllEndpoints(app);
   module2.startMetricsServer();
-
 });

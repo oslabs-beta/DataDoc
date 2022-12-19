@@ -4,19 +4,32 @@ const listAllEndpoints = require("express-list-endpoints");
 
 const app = express();
 
-let endpoints;
+let endpoints = [];
 
 module.exports = {
   
   func: () => console.log('func'),
 
-  listAllEndpoints: (app) => {
+  registerAllEndpoints: (app) => {
     return endpoints = listAllEndpoints(app);
   },
 
+  registerEndpoint: (req, res, next) => {
+    const existingRoute = endpoints.find(e => e.path === req.url);
+    if (existingRoute) {
+      if (existingRoute.methods.includes(req.method)) {
+        console.log('Endpoint already registered');
+      }
+      else (existingRoute.methods.push(req.method));
+    }
+    else (endpoints.push({
+      path: req.route?.path,
+      methods: [req.method],
+    }))
+    return next();
+  },
+
   startMetricsServer: async function (PORT = 9991) {
-    const routes = await (await fetch('http://localhost:3000/allroutes')).json();
-    console.log('Discovered:\n', routes.map((e) => e.path + ' ' + e.methods));
 
     app.get("/metrics", async (req, res) => {
       res.set("Content-Type", client.register.contentType);
