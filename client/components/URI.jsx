@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 const URI = (props) => {
   const { path, method, status } = props;
   const { checked, setChecked } = useState(true);
+  console.log("this is PROPS", props)
 
   const handleClick = (e) => {
     //incorporate functionality to stop the element from being tracked

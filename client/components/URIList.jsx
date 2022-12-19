@@ -39,7 +39,6 @@ const URIList=(props)=>{
     }, []);
 
 
-
   
   return(
     <div className='URIListContainer'>
@@ -66,7 +65,7 @@ const URIList=(props)=>{
             }
           }).map((element)=> {
             console.log("this IS FROM MAPP", element)
-          return <URI key={uuidv4()} endpoint={element.path} status={element.status}/>
+          return <URI key={uuidv4()} path={element.path} status={element.status} method={element.method}/>
         })}
         </tbody>
         </table>
