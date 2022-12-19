@@ -11,7 +11,7 @@ app.use(express.json());
 
 // ? Should be included in our package
 app.use(
-  module2.logMetrics
+  module2.gatherMetrics
 );
 
 app.get("/specific/:id", module2.registerEndpoint, (req, res) => {

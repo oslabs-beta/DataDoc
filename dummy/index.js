@@ -9,7 +9,7 @@ let logs = [];
 
 module.exports = {
 
-  logMetrics: responseTime((req, res, time) => {
+  gatherMetrics: responseTime((req, res, time) => {
     if (req.url) {
       logs.push({
         date_created: new Date(),
@@ -52,7 +52,10 @@ module.exports = {
   },
 
   startMetricsServer: async function (PORT = 9991) {
-    app.get("/metrics", async (req, res) => {});
+    app.get("/metrics", async (req, res) => {
+      res.status(200).json(logs)
+      return logs = [];
+    });
     app.get("/endpoints", (req, res) => {
       return res.json(endpoints);
     });
