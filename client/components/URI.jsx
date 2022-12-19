@@ -2,10 +2,10 @@ import React, { useEffect, useState } from "react";
 
 const URI = (props) => {
   const { path, method, status } = props;
-  const { checked, setChecked } = useState(true);
+  const [ checked, setChecked ] = useState(true);
 
   const handleClick = (e) => {
-    //incorporate functionality to stop the element from being tracked
+    // * incorporate functionality to stop the element from being tracked
     setChecked(!checked);
   };
 
@@ -15,21 +15,19 @@ const URI = (props) => {
         <td>
           <input
             type="checkbox"
-            id="checked"
             name="checkTrackingURI"
             onClick={(e) => handleClick(e)}
           >
-            {checked}
           </input>
         </td>
         <td>
-          <field>{path}</field>
+          {path}
         </td>
         <td>
-          <field>{method}</field>
+          {method}
         </td>
         <td>
-          <field
+          <span
             style={
               status === 200
                 ? { backgroundColor: "green" }
@@ -37,7 +35,7 @@ const URI = (props) => {
             }
           >
             {status}
-          </field>
+          </span>
         </td>
       </tr>
     </>
