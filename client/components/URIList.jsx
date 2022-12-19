@@ -50,7 +50,8 @@ const URIList=(props)=>{
           <thead>
             <tr>
               <th>Tracking</th>
-              <th>URI Endpoint</th>
+              <th>Path</th>
+              <th>Method</th>
               <th>Status Code</th>
             </tr>
           </thead>

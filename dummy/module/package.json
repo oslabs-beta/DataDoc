@@ -1,0 +1,14 @@
+{
+  "name": "express-endpoints-monitor",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "express-list-endpoints": "^6.0.0",
+    "response-time": "^2.3.2"
+  }
+}
