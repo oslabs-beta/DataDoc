@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 const URI = (props) => {
-  const { endpoint, status } = props;
+  const { path, method, status } = props;
   const { checked, setChecked } = useState(true);
 
   const handleClick = (e) => {
@@ -23,11 +23,21 @@ const URI = (props) => {
           </input>
         </td>
         <td>
-          <field>{endpoint}</field>
+          <field>{path}</field>
         </td>
         <td>
-          {/* <field style= {{status === 200 ? backgroundColor:'green' : backgroundColor: 'red' }}>{status}</field> */}
-          <field>{status}</field>
+          <field>{method}</field>
+        </td>
+        <td>
+          <field
+            style={
+              status === 200
+                ? { backgroundColor: "green" }
+                : { backgroundColor: "red" }
+            }
+          >
+            {status}
+          </field>
         </td>
       </tr>
     </>
