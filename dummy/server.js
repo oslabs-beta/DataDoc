@@ -11,24 +11,7 @@ app.use(express.json());
 
 // ? Should be included in our package
 app.use(
-  responseTime((req, res, time) => {
-    // console.log(Object.keys(req));
-    // console.log('baseURL:', req.baseUrl);
-    // console.log('originalURL:', req.originalUrl);
-    // console.log('route:', req.route);
-    // console.log('path:', req.route.path);
-    if (req.url) {
-      log.push({
-        date_created: new Date(),
-        path: req.route?.path,
-        url: req.url,
-        method: req.method,
-        status_code: res.statusCode,
-        response_time: Number(time.toFixed(3)),
-      });
-      console.log(log[log.length - 1]);
-    }
-  })
+  module2.logMetrics
 );
 
 app.get("/specific/:id", module2.registerEndpoint, (req, res) => {
@@ -60,7 +43,6 @@ app.patch(
 
 app.get("/good", module2.registerEndpoint, (req, res) => {
   const statusCode = Math.floor(Math.random() * 200 + 200);
-  console.log(statusCode);
   return res.sendStatus(statusCode);
 });
 
