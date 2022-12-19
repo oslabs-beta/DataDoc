@@ -2,15 +2,11 @@ const express = require("express");
 const app = express();
 const PORT = 3000;
 const fetch = require("node-fetch");
-const responseTime = require("response-time");
-const log = [];
 const module2 = require("./index.js");
 
 app.use(express.json());
-// Inject response time; response time will send metrics to Histogram
-
-// ? Should be included in our package
 app.use(
+  // ? Should be included in our package
   module2.gatherMetrics
 );
 
@@ -79,6 +75,6 @@ app.listen(PORT, () => {
 
   // ? Should be included in our package
   module2.exportEndpoints(app);
-  // module2.registerAllEndpoints(app);
+  // module2.exportAllEndpoints(app);
   module2.startMetricsServer();
 });
