@@ -1,43 +1,53 @@
 const express = require("express");
 const app = express();
-const PORT = 3001;
+const PORT = 3000;
 const fetch = require("node-fetch");
-const listEndPoints = require("express-list-endpoints")
-// const responseTime = require("response-time");
-// const { startMetricsServer, restResponseTimeHistogram } = require("./metrics.js");
+const module2 = require("express-endpoints-monitor");
 
-// // Inject response time; response time will send metrics to Histogram
-// app.use(responseTime((req, res, time) => {
-//   if (req.url) {
-//     console.log('time:',time);
-//     restResponseTimeHistogram.observe({
-//       method: req.method,
-//       route: req.url,
-//       status_code: res.statusCode
-//     }, time / 1000)
-//   }
-// }));
 app.use(express.json());
+app.use(
+  // ? Should be included in our package
+  module2.gatherMetrics
+);
 
-app.use(require("api-express-exporter")());
+app.get("/specific/:id", module2.registerEndpoint, (req, res) => {
+  res.status(201).send("specific");
+});
 
-app.get("/fast", (req, res) => {
-  res.status(200).send("fast");
+app.get("/routewithquery", module2.registerEndpoint, (req, res) => {
+  res.status(201).send("query");
+});
+
+app.get("/fast", module2.registerEndpoint, (req, res) => {
+  res.status(201).send("fast");
 });
 
 app.get("/slow", (req, res) => {
-  setTimeout(() => res.status(200).send("slow"), 1000);
+  setTimeout(() => res.status(200).send("slow"), Math.random() * 200 + 50);
 });
 
-app.patch("/good", (req, res) => {
-  return res.sendStatus(202);
+app.patch(
+  "/good",
+  module2.registerEndpoint,
+  function customMiddleware(req, res, next) {
+    return next();
+  },
+  (req, res) => {
+    return res.sendStatus(202);
+  }
+);
+
+app.get("/good", module2.registerEndpoint, (req, res) => {
+  const statusCode = Math.floor(Math.random() * 200 + 200);
+  return res.sendStatus(statusCode);
 });
 
-app.use("/bad", (req, res) => {
-  return res.sendStatus(505);
+app.get("/bad", (req, res) => {
+  const statusCode = Math.floor(Math.random() * 200 + 400);
+  return res.sendStatus(statusCode);
 });
 
-app.use("/error", (req, res) => {
+app.get("/error", (req, res) => {
   try {
     throw new Error("something broke...");
   } catch (error) {
@@ -45,14 +55,12 @@ app.use("/error", (req, res) => {
   }
 });
 
-app.use("/allroutes", (req, res) => res.send(allroutes))
+app.get("/arbitrarily/nested/route", (req, res) => res.sendStatus(200));
 
 app.get(
   "/someotherroute",
   (req, res, next) => {
     fetch("https://google.com");
-    // .then((fetchResponse) => fetchResponse.text())
-    // .then((responseText) => console.log(responseText));
     return next();
   },
   (req, res) => {
@@ -62,9 +70,11 @@ app.get(
 
 app.use("/", (req, res) => res.send("HELLO WORLD"));
 
-let allroutes;
-
 app.listen(PORT, () => {
-  console.log(`Express server started on port ${PORT}`);
-  allroutes = listEndPoints(app);
+  console.log(`Target server started on port ${PORT}`);
+
+  // ? Should be included in our package
+  module2.exportEndpoints(app);
+  // module2.exportAllEndpoints(app);
+  module2.startMetricsServer();
 });

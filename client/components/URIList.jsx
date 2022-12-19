@@ -34,7 +34,8 @@ const URIList = (props) => {
           <thead>
             <tr>
               <th>Tracking</th>
-              <th>URI Endpoint</th>
+              <th>Path</th>
+              <th>Method</th>
               <th>Status Code</th>
             </tr>
           </thead>
@@ -44,7 +45,7 @@ const URIList = (props) => {
                 <URI
                   key={uuidv4()}
                   method={element.method}
-                  endpoint={element.path}
+                  path={element.path}
                   status={element.status}
                 />
               );
