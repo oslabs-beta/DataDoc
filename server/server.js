@@ -30,14 +30,14 @@ const fetchDataFromPromServer = async (req, res) => {
   }
 };
 
-// app.get("/routes", (req, res) => {
-//   res.status(200).json([
-//     { endpoint: "route1", status: 200 },
-//     { endpoint: "route2", status: 200 },
-//     { endpoint: "route3", status: 200 },
-//     { endpoint: "route4", status: 200 },
-//   ]);
-// });
+app.get("/routes", (req, res) => {
+  res.status(200).json([
+    { endpoint: "route1", status: 200 },
+    { endpoint: "route2", status: 200 },
+    { endpoint: "route3", status: 200 },
+    { endpoint: "route4", status: 200 },
+  ]);
+});
 
 app.get("/histogram", (req, res) => {
   return res.status(200).json({
