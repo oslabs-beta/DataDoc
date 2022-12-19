@@ -1,5 +1,5 @@
 {
-  "name": "osp",
+  "name": "express-endpoints-monitor",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -10,11 +10,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "api-express-exporter": "^1.0.0",
     "express": "^4.18.2",
     "express-list-endpoints": "^6.0.0",
     "node-fetch": "^2.6.7",
-    "prom-client": "^14.1.0",
     "response-time": "^2.3.2"
   }
 }
