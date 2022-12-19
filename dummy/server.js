@@ -91,7 +91,7 @@ app.listen(PORT, () => {
   console.log(`Express server started on port ${PORT}`);
 
   // ? Should be included in our package
-  allroutes = listEndPoints(app);
+  allroutes = module2.listAllEndpoints(app);
   module2.startMetricsServer();
 
 });
