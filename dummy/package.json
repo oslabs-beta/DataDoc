@@ -1,0 +1,16 @@
+{
+  "name": "dummy",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express-endpoints-monitor": "^1.0.0",
+    "nodemon": "^2.0.20"
+  }
+}

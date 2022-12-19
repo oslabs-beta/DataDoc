@@ -1,5 +1,4 @@
 const express = require("express");
-const fetch = require("node-fetch");
 const responseTime = require("response-time");
 const listAllEndpoints = require("express-list-endpoints");
 

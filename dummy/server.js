@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 const PORT = 3000;
 const fetch = require("node-fetch");
-const module2 = require("./module/index.js");
+const module2 = require("express-endpoints-monitor");
 
 app.use(express.json());
 app.use(
