@@ -13,24 +13,35 @@ const dbController = {};
 
 const range = '12h';
 
-dbController.getData = (req, res, next) => {
+// declare a data object to store chart data
+const data = {
+    'respTimeLineData': {},
+    'respTimeHistData': { 'labels': [], 'data': []},
+    'reqFreqLineData': { 'labels': [], 'data': []},
+    'statusPieData': { 'labels': [], 'data': []}
+};
+
+dbController.getRespTimeLineData = (req, res, next) => {
     // query
     // const fluxQuery =
     //     `from(bucket: "dev-bucket") |> range(start: -1h)`;
-    const stats = {};
     const fluxQuery = 
-        `from(bucket: "dev-bucket")
-        |> range(start: -6h)
-        |> filter(fn: (r) => r["_measurement"] == "metrics")
-        |> filter(fn: (r) => r["_field"] == "status_code")
-        |> filter(fn: (r) => r["method"] == "GET")
-        |> filter(fn: (r) => r["path"] == "/good")
-        |> yield(name: "mean")`
-
+    `from(bucket: "dev-bucket")
+    |> range(start: -6h)
+    |> filter(fn: (r) => r["_measurement"] == "metrics")
+    |> filter(fn: (r) => r["_field"] == "res_time")
+    |> filter(fn: (r) => r["method"] == "GET")
+    |> filter(fn: (r) => r["path"] == "/good")
+    |> yield(name: "mean")`
+    
+    // declare a stats object to collect labels and data
+    const stats = {'labels': [], 'data': []};
     queryApi.queryRows(fluxQuery, {
         next(row, tableMeta) {
             const o = tableMeta.toObject(row);
-            stats[o._time] = o._value;
+            stats["labels"].push(o._time)
+            stats["data"].push(o._value)
+            // stats[o._time] = o._value;
             // console.log(`${o._time} ${o._measurement}: ${o._field}=${o._value}`);
         },
         error(error) {
@@ -38,12 +49,38 @@ dbController.getData = (req, res, next) => {
             console.log('Query Finished ERROR');
         },
         complete() {
-            res.locals.stats = stats;
-            console.log('this is stats', res.locals.stats)
+            data.respTimeLineData = stats;
+            res.locals.data = data;
+            console.log('this is stats', res.locals.data)
             console.log('Query Finished SUCCESS');
             return next();
         },
     });
 };
+
+dbController.getRespTimeHistData = (req, res, next) => {
+
+    // set res.locals.data.respTimeHistData
+    data.respTimeHistData = {'label':'this is hist'}
+    res.locals.data = data;
+    return next()
+}
+
+dbController.getReqFreqLineData = (req, res, next) => {
+
+    // set res.locals.data.reqFreqLineData
+    data.reqFreqLineData = {'label':'this is freq line'}
+    res.locals.data = data;
+    return next()
+}
+
+dbController.getStatusPieData = (req, res, next) => {
+
+    // set res.locals.data.reqFreqLineData
+    data.statusPieData = {'label':'this is pie'}
+    res.locals.data = data;
+    return next()
+}
+
 
 module.exports = dbController;
