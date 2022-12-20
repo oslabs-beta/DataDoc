@@ -14,6 +14,7 @@ const { SERVER_URL } = process.env;
 console.log(SERVER_URL)
 
 const Histogram = (props) => {
+  const {id} = props
   const [histLabels, setHistLabels] = useState([]);
   const [histData, setHistData] = useState([]);
 
@@ -27,7 +28,7 @@ const Histogram = (props) => {
   );
 
   useEffect(() => {
-    fetch(`${SERVER_URL}/histogram`)
+    fetch(`${SERVER_URL}/histogram/${id}`)
       .then((serverResponse) => serverResponse.json())
       .then((serverResponseJson) => {
         const newLabels = new Array(Object.keys(serverResponseJson).length);

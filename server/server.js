@@ -52,7 +52,7 @@ app.get("/histogram", (req, res) => {
   });
 });
 
-app.get("/linechart", (req, res) => {
+app.get("/linechart/:id", (req, res) => {
   return res.status(200).json({
     0: 2,
     1: 6,

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "../styles/NavBar.scss";
 import HomeButton from "../components/HomeButton.jsx";
 import Settings from "../components/Settings.jsx";
+import { Link } from "react-router-dom";
 
 const NavBar = () => {
   const width = 300;
@@ -40,8 +41,9 @@ const NavBar = () => {
             transform: `translate(${width}px, 20vh)`,
           }}
         ></button>
-        <HomeButton />
-        <Settings />
+        <Link to='/' onClick={toggleMenu}><button>Home</button></Link>
+        <Link to='/urilist'onClick={toggleMenu}>Dashboard</Link>
+        <Settings/>
       </div>
     </React.Fragment>
   );
