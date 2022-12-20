@@ -5,12 +5,9 @@ import { MemoryRouter as Router } from 'react-router-dom';
 
 const HomeButton=(props)=>{
   return(
-    // <Router>
-    //   <div className="homeButton">
-    //     <Link to='/'>Home</Link>
-    //   </div>
-    // </Router>
-    <button>home</button>
+    <button>
+      <Link to='/'>Home</Link>
+    </button>
   )
 }
 

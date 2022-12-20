@@ -3,17 +3,35 @@ import React from "react";
 import NavBar from "./NavBar.jsx";
 import Development from "./Development.jsx";
 import Production from "./Production.jsx";
+import Header from "./Header.jsx";
+import Home from "../components/Home.jsx";
+import HomeButton from "../components/HomeButton.jsx";
+import ChartsContainer from "./ChartsContainer.jsx";
+import URIList from "../components/URIList.jsx";
+import URI from "../components/URI.jsx";
+import Settings from "../components/Settings.jsx";
+import { HashRouter as Router, Route, Routes } from "react-router-dom";
 
 import "../styles/globals.scss";
 
 function App() {
   return (
-    <div>
-      <NavBar/>
-      <Development />
-      <Production />
-    </div>
+    <Router>
+      <div className="fullApp">
+        <NavBar/>
+        <div className="content">
+          <Routes>
+            <Route path='/' element={<Home />}/>
+            <Route path='/urilist' element ={<URIList />}/>
+            <Route path='/uri' element={<URI />}/>
+            <Route path='/uri/:id' element={<ChartsContainer />}/>
+            <Route path='/settings' element={<Settings />}/>
+          </Routes>
+        </div>
+      </div>
+    </Router>
   );
 }
+
 
 export default App;

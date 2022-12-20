@@ -11,7 +11,7 @@ const Production = () => {
       {/* <h1>This is from production</h1> */}
       <URIList />
       {/* <Charts/> */}
-      <ChartsContainer />
+      {/* <ChartsContainer /> */}
     </div>
   )
 }
