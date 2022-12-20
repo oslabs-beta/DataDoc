@@ -32,7 +32,7 @@
     "electron": "^22.0.0",
     "html-webpack-plugin": "^5.5.0",
     "jest": "^29.3.1",
-    "react-router-dom": "^6.4.5",
+    "react-router-dom": "^6.5.0",
     "sass-loader": "^13.2.0",
     "style-loader": "^3.3.1",
     "webpack": "^5.75.0",

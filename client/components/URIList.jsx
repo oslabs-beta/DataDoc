@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from "react";
 // * generates unique keys
 import { v4 as uuidv4 } from "uuid";
+import { Link } from "react-router-dom";
 
 // * import other components here
-import URI from './URI.jsx'
-import FlashError from './FlashError.jsx';
-import SearchBar from './SearchBar.jsx';
+import URI from "./URI.jsx";
+import FlashError from "./FlashError.jsx";
+import SearchBar from "./SearchBar.jsx";
+import Page from "../Page.jsx";
 
-const URIList=(props)=>{
+const URIList = (props) => {
   const [URIList, setURIList] = useState([]);
-  const [errorMessage, setErrorMessage] = useState('');
-  const [searchInput, setSearch] = useState('');
+  const [errorMessage, setErrorMessage] = useState("");
+  const [searchInput, setSearch] = useState("");
 
   const inputHandler = (e) => {
     // * convert input text to lower case
@@ -34,13 +36,15 @@ const URIList=(props)=>{
         // * reset the error message
         setTimeout(() => setErrorMessage(""), 5000);
       });
-    }, []);
-  
-  return(
-    <div className='URIListContainer'>
-      <SearchBar searchInput = {searchInput} setSearch = {setSearch}/>
-      <div className='URIEntries'>
-        {errorMessage !== '' ? <FlashError errorMessage={errorMessage}/> : null}
+  }, []);
+
+  return (
+    <div className="URIListContainer">
+      <SearchBar searchInput={searchInput} setSearch={setSearch} />
+      <div className="URIEntries">
+        {errorMessage !== "" ? (
+          <FlashError errorMessage={errorMessage} />
+        ) : null}
         <table>
           <thead>
             <tr>
@@ -51,28 +55,34 @@ const URIList=(props)=>{
             </tr>
           </thead>
           <tbody>
-        { 
-          URIList.filter(uriObject => {
-              if (searchInput === '') {
+            {URIList.filter((uriObject) => {
+              if (searchInput === "") {
                 return uriObject;
               } else if (uriObject.path.toLowerCase() == searchInput) {
                 // console.log("this is from insidr FILTER", uriObject.path)
                 return uriObject.path;
               }
-            }).map((element)=> {
+            }).map((element) => {
               // console.log("this IS FROM MAP", element)
-            return <URI 
-              key={uuidv4()} 
-              path={element.path} 
-              method={element.method}
-              status={element.status} 
-            />
-          })}
+              return (
+                <>
+                  <Link to="/URI">
+                    <URI
+                      key={uuidv4()}
+                      path={element.path}
+                      method={element.method}
+                      status={element.status}
+                    />
+                  </Link>
+                  <Page />
+                </>
+              );
+            })}
           </tbody>
         </table>
       </div>
     </div>
-    
-    )}
+  );
+};
 
 export default URIList;
