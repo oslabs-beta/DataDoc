@@ -80,7 +80,7 @@ const Histogram = (props) => {
   };
   
   return (
-    <div class="histogram">
+    <div className="histogram">
       <Bar data={data} options={options} />
     </div>
   );
