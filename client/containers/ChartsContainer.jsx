@@ -6,7 +6,7 @@ import '../styles/Charts.scss';
 
 const ChartsContainer = (props) => {
   return (
-    <div class="charts-container">
+    <div className="charts-container">
       <LineChart />
       <Histogram />
       <LineChart />

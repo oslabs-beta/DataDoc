@@ -10,6 +10,8 @@ function createWindow() {
     height: 700,
     webPreferences: {
       nodeIntegration: true,
+      worldSafeExecuteJavaScript: true,
+      contextIsolation: true,
     },
   });
   if (process.env.NODE_ENV === 'production') {
@@ -27,7 +29,7 @@ function createWindow() {
       slashes: true
     })
   }
-  setTimeout(() => win.loadURL(indexPath), 0);
+  setTimeout(() => win.loadURL(indexPath), 1000);
   win.once('ready-to-show', () => {
     win.show()
   })

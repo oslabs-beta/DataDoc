@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 
 const URI = (props) => {
-  const { endpoint, status } = props;
-  const { checked, setChecked } = useState(true);
+  const { path, method, status } = props;
+  const [ checked, setChecked ] = useState(true);
 
   const handleClick = (e) => {
-    //incorporate functionality to stop the element from being tracked
+    // * incorporate functionality to stop the element from being tracked
     setChecked(!checked);
   };
 
@@ -15,19 +15,27 @@ const URI = (props) => {
         <td>
           <input
             type="checkbox"
-            id="checked"
             name="checkTrackingURI"
             onClick={(e) => handleClick(e)}
           >
-            {checked}
           </input>
         </td>
         <td>
-          <field>{endpoint}</field>
+          {path}
         </td>
         <td>
-          {/* <field style= {{status === 200 ? backgroundColor:'green' : backgroundColor: 'red' }}>{status}</field> */}
-          <field>{status}</field>
+          {method}
+        </td>
+        <td>
+          <span
+            style={
+              status === 200
+                ? { backgroundColor: "green" }
+                : { backgroundColor: "red" }
+            }
+          >
+            {status}
+          </span>
         </td>
       </tr>
     </>

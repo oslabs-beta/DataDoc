@@ -33,7 +33,7 @@ const data = {
 
 export default function DonutChart() {
   return (
-    <div class="donut-chart">
+    <div className="donut-chart">
       <Doughnut data={data} />
     </div>
   );

@@ -3,7 +3,6 @@ const express = require("express");
 const app = express();
 const path = require("path");
 const fetch = require("node-fetch");
-const prom2Json = require("prom2json-se");
 const cors = require("cors");
 dotenv.config({path: path.resolve(__dirname, "../.env")});
 
@@ -18,27 +17,22 @@ if (MODE === "production") {
 }
 
 let intervalId;
-let promData;
+let logs = [];
 
-const fetchDataFromPromServer = async (req, res) => {
+const fetchDataFromMetricsServer = async (req, res) => {
   try {
-    const promServerResponse = await fetch("http://localhost:9991/metrics");
-    const { status } = promServerResponse;
-    console.log(new Date().toUTCString(), status);
-    promData = prom2Json.convert(await promServerResponse.text());
+    const metricsServerResponse = await fetch("http://localhost:9991/metrics");
+    logs = logs.concat(await metricsServerResponse.json());
+    console.clear();
+    console.log(new Date().toUTCString(), '\n', 'LAST LOG:\n', logs[logs.length - 1]);
+    // logs.forEach((e) => console.table(e));
+    fetch("http://localhost:9991/metrics", {
+      method: "DELETE",
+    });
   } catch (err) {
     console.error(err);
   }
 };
-
-// app.get("/routes", (req, res) => {
-//   res.status(200).json([
-//     { endpoint: "route1", status: 200 },
-//     { endpoint: "route2", status: 200 },
-//     { endpoint: "route3", status: 200 },
-//     { endpoint: "route4", status: 200 },
-//   ]);
-// });
 
 app.get("/histogram", (req, res) => {
   return res.status(200).json({
@@ -64,26 +58,28 @@ app.get("/linechart", (req, res) => {
 
 app.post("/monitoring", (req, res) => {
   const { active, interval } = req.body; // active is a boolean, interval is in seconds
-  if (active)
-    intervalId = setInterval(fetchDataFromPromServer, interval * 1000);
+  if (active) {
+    if (intervalId) clearInterval(intervalId);
+    intervalId = setInterval(fetchDataFromMetricsServer, interval * 1000);
+  }
   else clearInterval(intervalId);
   console.log("ACTIVE:", active);
   res.sendStatus(200);
 });
 
 app.get("/metrics", async (req, res) => {
-  return res.status(200).json(promData);
+  return res.status(200).json(logs);
 });
 
 app.get("/routes", async (req, res) => {
-  const response = await fetch('http://localhost:3001/allroutes');
+  const response = await fetch("http://localhost:9991/endpoints");
   const routes = await response.json();
-  // TO BE REMOVED: hard code status code 200
+  // ! TO BE REMOVED: hard code status code 200
   routes.forEach((route) => {
-    route.status = 200
-  })
+    route.status = 200;
+  });
   return res.status(200).json(routes);
-})
+});
 
 app.listen(PORT, () => {
   console.log(
