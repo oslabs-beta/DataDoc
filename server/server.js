@@ -6,11 +6,18 @@ const fetch = require("node-fetch");
 const cors = require("cors");
 dotenv.config({path: path.resolve(__dirname, "../.env")});
 
+// require router
+const chartRouter = require('./routes/chartdata')
+
 const MODE = process.env.NODE_ENV || "production";
 const PORT = process.env.PORT || 9990;
 
 app.use(express.json());
 app.use(cors());
+
+// routing all /chartdata endpoint traffic to chartRouter
+app.use('/chartdata', chartRouter);
+
 
 if (MODE === "production") {
   app.use(express.static(path.join(__dirname, "../dist")));
