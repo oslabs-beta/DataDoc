@@ -1,10 +1,11 @@
-require("dotenv").config();
+const dotenv = require("dotenv");
 const express = require("express");
 const app = express();
 const path = require("path");
 const fetch = require("node-fetch");
 const prom2Json = require("prom2json-se");
 const cors = require("cors");
+dotenv.config({path: path.resolve(__dirname, "../.env")});
 
 const MODE = process.env.NODE_ENV || "production";
 const PORT = process.env.PORT || 9990;
