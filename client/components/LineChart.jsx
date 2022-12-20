@@ -14,6 +14,7 @@ import { Line } from "react-chartjs-2";
 const { SERVER_URL } = process.env;
 
 const LineChart = (props) => {
+  const {id} = props
   const [lineLabels, setLineLabels] = useState([]);
   const [lineData, setLineData] = useState([]);
 
@@ -28,7 +29,7 @@ const LineChart = (props) => {
   );
 
   useEffect(() => {
-    fetch(`${SERVER_URL}/linechart`)
+    fetch(`${SERVER_URL}/linechart/${id}`)
       .then((serverResponse) => serverResponse.json())
       .then((serverResponseJson) => {
         setLineLabels(Object.keys(serverResponseJson));

@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 // * generates unique keys
 import { v4 as uuidv4 } from "uuid";
+import {Link} from 'react-router-dom'
+
 
 // * import other components here
 import URI from './URI.jsx'
@@ -61,8 +63,8 @@ const URIList=(props)=>{
               }
             }).map((element)=> {
               // console.log("this IS FROM MAP", element)
-            return <URI 
-              key={uuidv4()} 
+             return <URI 
+              id={uuidv4()} 
               path={element.path} 
               method={element.method}
               status={element.status} 
@@ -72,7 +74,6 @@ const URIList=(props)=>{
         </table>
       </div>
     </div>
-    
     )}
 
 export default URIList;
