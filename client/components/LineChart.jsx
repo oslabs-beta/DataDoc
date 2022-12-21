@@ -29,11 +29,12 @@ const LineChart = (props) => {
   );
 
   useEffect(() => {
-    fetch(`${SERVER_URL}/linechart/${id}`)
+    fetch(`${SERVER_URL}/chartdata/linechart/${id}`)
       .then((serverResponse) => serverResponse.json())
       .then((serverResponseJson) => {
-        setLineLabels(Object.keys(serverResponseJson));
-        setLineData(Object.values(serverResponseJson));
+        const {labels, data } = serverResponseJson.respTimeLineData;
+        setLineLabels(labels);
+        setLineData(data);
       });
   }, []);
 

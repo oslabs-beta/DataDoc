@@ -41,7 +41,6 @@ dbController.getRespTimeLineData = (req, res, next) => {
             const o = tableMeta.toObject(row);
             stats["labels"].push(o._time)
             stats["data"].push(o._value)
-            // stats[o._time] = o._value;
             // console.log(`${o._time} ${o._measurement}: ${o._field}=${o._value}`);
         },
         error(error) {
@@ -81,6 +80,5 @@ dbController.getStatusPieData = (req, res, next) => {
     res.locals.data = data;
     return next()
 }
-
 
 module.exports = dbController;
