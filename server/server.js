@@ -33,9 +33,9 @@ const scrapeDataFromMetricsServer = async () => {
     console.clear();
     console.log(new Date().toUTCString(), '\n', 'LAST LOG:\n', logs[logs.length - 1]);
     // logs.forEach((e) => console.table(e));
-    fetch("http://localhost:9991/metrics", {
-      method: "DELETE",
-    });
+    // fetch("http://localhost:9991/metrics", {
+    //   method: "DELETE",
+    // });
   } catch (err) {
     console.error(err);
   }
@@ -43,10 +43,15 @@ const scrapeDataFromMetricsServer = async () => {
 
 const pingTargetEndpoints = async () => {
   for (endpoint of selectedEndpoints) {
-    await fetch('http://localhost:3000' + endpoint.path,
-    {
-      method: endpoint.method
-    });
+    try {
+      await fetch('http://localhost:3000' + endpoint.path, 
+      {
+        method: endpoint.method
+      });
+    }
+    catch (e) {
+
+    }
     // console.log(endpoint.path, endpoint.method);
   }
 }
@@ -84,7 +89,7 @@ app.post("/monitoring", (req, res) => {
   }
   else clearInterval(intervalId);
   console.log("ACTIVE:", active);
-  res.sendStatus(200);
+  res.sendStatus(204);
 });
 
 app.get("/metrics", async (req, res) => {
