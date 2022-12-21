@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import "chartjs-adapter-moment";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -35,8 +36,8 @@ const LineChart = (props) => {
       .then((serverResponse) => serverResponse.json())
       .then((serverResponseJson) => {
         const { labels, data } = serverResponseJson.respTimeLineData;
-        console.log(labels.map(e => new Date(e).getTime()));
-        setLineLabels(labels.map(e => new Date(e).getTime()));
+        // console.log(labels.map(e => new Date(e)));
+        setLineLabels(labels.map(e => new Date(e)));
         setLineData(data);
       });
   }, []);
@@ -61,11 +62,12 @@ const LineChart = (props) => {
   ];
 
   const data = {
-    // labels: lineLabels,
+    labels: lineLabels.map((e) => e.toUTCString()),
     datasets: [
       {
-        // label: "My First Dataset",
-        data: values,
+        label: "My First Dataset",
+        // data: values,
+        data: lineData,
         fill: false,
         borderColor: [
           "rgb(75, 192, 192)",
@@ -81,7 +83,7 @@ const LineChart = (props) => {
       x: {
         type: "time",
         time: {
-          unit: "day"
+          unit: "second"
         }
       }
     }
@@ -89,7 +91,7 @@ const LineChart = (props) => {
 
   return (
     <div className="line-chart">
-      <Line data={data} />
+      <Line data={data} options={options} />
     </div>
   );
 };
