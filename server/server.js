@@ -18,15 +18,15 @@ app.use(cors());
 // routing all /chartdata endpoint traffic to chartRouter
 app.use('/chartdata', chartRouter);
 
-
 if (MODE === "production") {
   app.use(express.static(path.join(__dirname, "../dist")));
 }
 
 let intervalId;
 let logs = [];
+let selectedEndpoints = [];
 
-const fetchDataFromMetricsServer = async (req, res) => {
+const scrapeDataFromMetricsServer = async () => {
   try {
     const metricsServerResponse = await fetch("http://localhost:9991/metrics");
     logs = logs.concat(await metricsServerResponse.json());
@@ -40,6 +40,16 @@ const fetchDataFromMetricsServer = async (req, res) => {
     console.error(err);
   }
 };
+
+const pingTargetEndpoints = async () => {
+  for (endpoint of selectedEndpoints) {
+    await fetch('http://localhost:3000' + endpoint.path,
+    {
+      method: endpoint.method
+    });
+    // console.log(endpoint.path, endpoint.method);
+  }
+}
 
 app.get("/histogram", (req, res) => {
   return res.status(200).json({
@@ -67,7 +77,10 @@ app.post("/monitoring", (req, res) => {
   const { active, interval } = req.body; // active is a boolean, interval is in seconds
   if (active) {
     if (intervalId) clearInterval(intervalId);
-    intervalId = setInterval(fetchDataFromMetricsServer, interval * 1000);
+    intervalId = setInterval(() => {
+      scrapeDataFromMetricsServer();
+      pingTargetEndpoints();
+    }, interval * 1000);
   }
   else clearInterval(intervalId);
   console.log("ACTIVE:", active);
@@ -86,6 +99,11 @@ app.get("/routes", async (req, res) => {
     route.status = 200;
   });
   return res.status(200).json(routes);
+});
+
+app.post("/routes", async (req, res) => {
+  selectedEndpoints = req.body;
+  return res.sendStatus(204);
 });
 
 app.listen(PORT, () => {
