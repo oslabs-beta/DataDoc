@@ -35,12 +35,13 @@ dbController.getRespTimeLineData = (req, res, next) => {
     |> yield(name: "mean")`
     
     // declare a stats object to collect labels and data
-    const stats = {'labels': [], 'data': []};
+    const stats = [];
     queryApi.queryRows(fluxQuery, {
         next(row, tableMeta) {
             const o = tableMeta.toObject(row);
-            stats["labels"].push(o._time);
-            stats["data"].push(o._value);
+            stats.push({"x": o._time, "y": o._value})
+            // stats["labels"].push(o._time);
+            // stats["data"].push(o._value);
             // console.log(`${o._time} ${o._measurement}: ${o._field}=${o._value}`);
         },
         error(error) {
