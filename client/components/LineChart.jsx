@@ -38,30 +38,10 @@ const LineChart = (props) => {
       });
   }, []);
 
-  const values = [
-    {
-      x: new Date("2020-01-01"),
-      y: 100.2
-    },
-    {
-      x: new Date("2020-01-02"),
-      y: 102.2
-    },
-    {
-      x: new Date("2020-01-03"),
-      y: 105.3
-    },
-    {
-      x: new Date("2020-01-11"),
-      y: 104.4
-    }
-  ];
-
   const data = {
     datasets: [
       {
         label: "My First Dataset",
-        // data: values,
         data: lineData,
         fill: false,
         borderColor: [
