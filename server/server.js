@@ -102,7 +102,7 @@ app.get("/routes", async (req, res) => {
 });
 
 app.post("/routes", async (req, res) => {
-  selectedEndpoints = req.body;
+  selectedEndpoints = req.body.routes || req.body;
   return res.sendStatus(204);
 });
 
