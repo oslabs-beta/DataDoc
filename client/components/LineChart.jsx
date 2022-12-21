@@ -17,7 +17,6 @@ const { SERVER_URL } = process.env;
 
 const LineChart = (props) => {
   const {id} = props
-  const [lineLabels, setLineLabels] = useState([]);
   const [lineData, setLineData] = useState([]);
 
   ChartJS.register(
@@ -35,10 +34,7 @@ const LineChart = (props) => {
     fetch(`${SERVER_URL}/chartdata/linechart/${id}`)
       .then((serverResponse) => serverResponse.json())
       .then((serverResponseJson) => {
-        const { labels, data } = serverResponseJson.respTimeLineData;
-        // console.log(labels.map(e => new Date(e)));
-        setLineLabels(labels.map(e => new Date(e)));
-        setLineData(data);
+        setLineData(serverResponseJson.respTimeLineData);
       });
   }, []);
 
@@ -62,7 +58,6 @@ const LineChart = (props) => {
   ];
 
   const data = {
-    labels: lineLabels.map((e) => e.toUTCString()),
     datasets: [
       {
         label: "My First Dataset",

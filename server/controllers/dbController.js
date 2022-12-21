@@ -35,17 +35,18 @@ dbController.getRespTimeLineData = (req, res, next) => {
     |> yield(name: "mean")`
     
     // declare a stats object to collect labels and data
-    const stats = {'labels': [], 'data': []};
+    const stats = [];
     queryApi.queryRows(fluxQuery, {
         next(row, tableMeta) {
             const o = tableMeta.toObject(row);
-            stats["labels"].push(o._time)
-            stats["data"].push(o._value)
+            stats.push({"x": o._time, "y": o._value})
+            // stats["labels"].push(o._time);
+            // stats["data"].push(o._value);
             // console.log(`${o._time} ${o._measurement}: ${o._field}=${o._value}`);
         },
         error(error) {
-            console.error(error);
             console.log('Query Finished ERROR');
+            return next(error);
         },
         complete() {
             data.respTimeLineData = stats;
@@ -58,6 +59,8 @@ dbController.getRespTimeLineData = (req, res, next) => {
 };
 
 dbController.getRespTimeHistData = (req, res, next) => {
+    // labels: time buckets
+    // data: aggregated to be the count of response time that falls within the time bucket
 
     // set res.locals.data.respTimeHistData
     data.respTimeHistData = {'label':'this is hist'}
@@ -66,6 +69,8 @@ dbController.getRespTimeHistData = (req, res, next) => {
 }
 
 dbController.getReqFreqLineData = (req, res, next) => {
+    // labels: time
+    // data: aggregated to be the count of request frequency at the given time (number of records)
 
     // set res.locals.data.reqFreqLineData
     data.reqFreqLineData = {'label':'this is freq line'}
@@ -74,11 +79,45 @@ dbController.getReqFreqLineData = (req, res, next) => {
 }
 
 dbController.getStatusPieData = (req, res, next) => {
-
+    // labels: status codes
+    // data: aggregated to be the count of status codes
+    const influxQuery = 
+    `from(bucket: "dev-bucket") 
+    |> range(start: -6h)
+    |> filter(fn: (r) => r["_measurement"] == "metrics")
+    |> filter(fn: (r) => r["_field"] == "status_code")
+    |> filter(fn: (r) => r["method"] == "GET")
+    |> filter(fn: (r) => r["path"] == "/good")
+    |> group(columns: ["_value"])
+    |> count(column: "_field")
+    |> group()`
+    
+    // declare a stats object to collect labels and data
+    const stats = {'labels': [], 'data': []};
+    queryApi.queryRows(influxQuery, {
+        next(row, tableMeta) {
+            const o = tableMeta.toObject(row);
+            // stats["labels"].push(o._time);
+            // stats["data"].push(o._value);
+            console.log(o._value, o._field)
+            // console.log(`${o._time} ${o._measurement}: ${o._field}=${o._value}`);
+        },
+        error(error) {
+            console.log('Query Finished ERROR');
+            return next(error);
+        },
+        complete() {
+            // data.respTimeLineData = stats;
+            // res.locals.data = data;
+            // console.log('this is stats', res.locals.data)
+            console.log('Query Finished SUCCESS');
+            return next();
+        },
+    });
     // set res.locals.data.reqFreqLineData
-    data.statusPieData = {'label':'this is pie'}
-    res.locals.data = data;
-    return next()
+    // data.statusPieData = {'label':'this is pie'}
+    // res.locals.data = data;
+    // return next()
 }
 
 module.exports = dbController;
