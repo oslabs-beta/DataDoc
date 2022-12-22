@@ -32,8 +32,7 @@ const updateTimeElapsed = function() {
   monitoringEndTime = new Date();
   timeElapsed = new Date(monitoringEndTime - monitoringStartTime);
   if (timeElapsed < 60 * 1000) return timeElapsed.getSeconds() + 's';
-  if (timeElapsed < 60 * 60 * 1000) return timeElapsed.getMinutes() + 'm' + timeElapsed % (60 * 1000) / 1000 + 's';
-  else return timeElapsed.getHours() + timeElapsed % (60 * 60 * 1000) / 1000 + 'm' + timeElapsed % (60 * 1000) / 1000 + 's';
+  return timeElapsed.getMinutes() + 'm' + timeElapsed.getSeconds() % 60 + 's';
 }
 
 const scrapeDataFromMetricsServer = async () => {
@@ -120,7 +119,7 @@ app.post("/monitoring", async (req, res) => {
       scrapeDataFromMetricsServer();
     }, interval * 1000);
   } else clearInterval(intervalId);
-  console.log("ACTIVE:", active);
+  if (verbose) console.log("ACTIVE:", active);
   res.sendStatus(204);
 });
 
