@@ -19,8 +19,8 @@ const insertToDB = () => {
     const point = new Point('metrics')
         .tag('path','/good')
         .tag('method','GET')
-        .intField('res_time', 305)
-        .intField('status_code', 230)
+        .floatField('res_time', 60)
+        .intField('status_code', 200)
         // .timestamp()
         
     writeApi.writePoint(point)
