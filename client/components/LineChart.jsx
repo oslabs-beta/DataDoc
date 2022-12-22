@@ -53,20 +53,34 @@ const LineChart = (props) => {
   };
 
   const options = {
-    response: true,
+    responsive: true,
+    maintainAspectRatio: false,
     scales: {
       x: {
         type: "time",
-        time: {
-          unit: "second"
-        }
-      }
-    }
+      },
+    },
   }
 
+  // ! Temporary live-fetching data; ideally use sockets
+  setTimeout(() => {
+    fetch(`${SERVER_URL}/chartdata/linechart/${id}`)
+      .then((serverResponse) => serverResponse.json())
+      .then((serverResponseJson) => {
+        setLineData(serverResponseJson.respTimeLineData);
+      });
+  }, 2000);
+
   return (
-    <div className="line-chart">
-      <Line data={data} options={options} />
+    <div class="chartWrapper">
+      <div class="chartAreaWrapper">
+        <div class="line-chart">
+          <Line 
+            data={data} 
+            options={options} 
+          />
+        </div>
+      </div>
     </div>
   );
 };

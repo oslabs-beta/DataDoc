@@ -6,8 +6,8 @@ const getMessage = () => {
   const body =
     "This is a notifaction from the Datatective team. We have found an outage in your system, please open up the Datatective desktop application for more information.";
   return {
-    to: "jamie.abrams.schiff@gmail.com", // Change to your recipient
-    from: "jamie.abrams.schiff@gmail.com", // Change to your verified sender
+    to: "", // Change to your recipient
+    from: "", // Change to your verified sender
     subject: "IMPORTANT: outage detected from datatective",
     text: body,
     html: "<strong>{body}</stSrong>",

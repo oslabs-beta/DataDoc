@@ -7,8 +7,8 @@
   "scripts": {
     "start": "NODE_ENV=production nodemon server/server.js & NODE_ENV=production electron .",
     "build": "NODE_ENV=production webpack",
-    "dev": "NODE_ENV=development webpack serve & NODE_ENV=development nodemon server/server.js & electron .",
-    "dev:mock": "nodemon dummy/server.js & npm run dev",
+    "dev": "clear & NODE_ENV=development webpack serve & NODE_ENV=development nodemon server/server.js & electron .",
+    "dev:mock": "npm run dev & nodemon dummy/server.js",
     "test": "jest --verbose",
     "electron": "electron ."
   },
@@ -44,7 +44,10 @@
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
     "@influxdata/influxdb-client": "^1.33.0",
+<<<<<<< HEAD
     "@mui/material": "^5.11.1",
+=======
+>>>>>>> dev
     "@sendgrid/mail": "^7.7.0",
     "chart.js": "^4.0.1",
     "chartjs-adapter-moment": "^1.0.1",
@@ -59,6 +62,7 @@
     "react": "^18.2.0",
     "react-chartjs-2": "^5.0.1",
     "react-dom": "^18.2.0",
+    "react-draggable": "^4.4.5",
     "react-router": "^6.4.5",
     "response-time": "^2.3.2",
     "sass": "^1.56.2",

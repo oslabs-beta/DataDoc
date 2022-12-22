@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import '../styles/Header.scss'
 
 //header to create links that will be used to navigate between routes
 const Header = (props) => {
@@ -7,17 +8,13 @@ const Header = (props) => {
   <header>
     <nav>
       <div>
-        <span style={{textAlign: 'right'}}>
-          <div >
-            <button style={
-              monitoring ? {backgroundColor: 'lightgray'} : {backgroundColor: 'white'}
+        <span>
+            <button className='header-button' style={
+              monitoring ? {backgroundColor: 'gray'} : {backgroundColor: 'white'}
             }>MONITORING</button>
-          </div>
-          <div>
-            <button style={
-              simulation ? {backgroundColor: 'lightgray'} : {backgroundColor: 'white'}
+            <button className='header-button' style={
+              simulation ? {backgroundColor: 'gray'} : {backgroundColor: 'white'}
             }>SIMULATION</button>
-          </div>
         </span>
       </div>
     </nav>

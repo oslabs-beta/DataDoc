@@ -31,46 +31,32 @@ const URIList=(props)=>{
     setSearch(lowerCase);
   };
 
-  // const setTracking = (method, path) => {
-  //   console.log('IN SET TRACKING: ', trackingURI)
-  //   setTrackingURI(trackingURI => [...trackingURI, {
-  //     method: method,
-  //     path : path
-  //   }])
-  //   console.log('IN SET TRACKING: ', trackingURI)
-  // }
-
-  // const addToTracking = (method, path)=>{
-  //   console.log('in the addToTracking function before anything has been added: ', trackingURI)
-  //   setTrackingURI(trackingURI => [...trackingURI, {
-  //     method: method,
-  //     path : path
-  //   }])
-  //   console.log('UPDATED TRACKING LIST AFTER ADDING AN ELEMENT: ', trackingURI)
-  // }
-
   const addToTracking = (method, path)=>{
     console.log('in the addToTracking function before anything has been added: ', trackingURI)
     const newObject = {
       method: method,
-      path: path
+      path : path
     }
-    console.log('this is the new object: ', newObject)
-    if(trackingURI.length === 0){
-      setTrackingURI([newObject])
-    } else {
-      setTrackingURI(trackingURI => [...trackingURI, newObject])
-    }
-    console.log('UPDATED TRACKING LIST AFTER ADDING AN ELEMENT: ', trackingURI)
+    console.log('THIS IS THE NEW OBJECT: ', newObject)
+    // if(trackingURI.length === 0) setTrackingURI([newObject])
+    setTrackingURI(trackingURI => [...trackingURI, newObject])
+    setTrackingURI((trackingURI)=>{
+      return trackingURI
+    })
   }
 
+
   const removeFromTracking = (method, path) => {
+    console.log(`method: ${method}, path: ${path}`)
     console.log('in the removeFromTracking function before anything has been removed', trackingURI)
     const updatedTrackingURI = trackingURI.filter((element)=>{
-      element.method !== method && element.path !== path
+      return(element.method !== method || element.path !== path)
     })
     setTrackingURI(updatedTrackingURI)
-    console.log('UPDATED TRACKING LIST AFTER REMOVING AN ELEMENT: ', trackingURI)
+    setTrackingURI((updatedTrackingURI)=>{
+      console.log(updatedTrackingURI)
+      return updatedTrackingURI
+    })
   }
 
   //fetch the URI List from the backend when the component mounts
@@ -97,7 +83,7 @@ const URIList=(props)=>{
         },
         body: JSON.stringify(trackingURI)
       }).then((data)=>{
-        console.log('THIS IS FROM THE URILIST POST METHOD:', data)
+        // console.log('THIS IS FROM THE URILIST POST METHOD:', data)
       }).catch((err)=>{
         console.log(`there was an error sending the URI tracking list, error: ${err}`)
         setErrorMessage('Invalid POST request from the URI List')
