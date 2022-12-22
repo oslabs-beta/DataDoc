@@ -16,7 +16,8 @@ import { Line } from "react-chartjs-2";
 const { SERVER_URL } = process.env;
 
 const LineChart = (props) => {
-  const {id} = props
+  const {id, chartData} = props
+  // console.log('CHART DATA: ', chartData)
   const [lineData, setLineData] = useState([]);
 
   ChartJS.register(
@@ -63,13 +64,13 @@ const LineChart = (props) => {
   }
 
   // ! Temporary live-fetching data; ideally use sockets
-  setTimeout(() => {
-    fetch(`${SERVER_URL}/chartdata/linechart/${id}`)
-      .then((serverResponse) => serverResponse.json())
-      .then((serverResponseJson) => {
-        setLineData(serverResponseJson.respTimeLineData);
-      });
-  }, 2000);
+  // setTimeout(() => {
+  //   fetch(`${SERVER_URL}/chartdata/linechart/${id}`)
+  //     .then((serverResponse) => serverResponse.json())
+  //     .then((serverResponseJson) => {
+  //       setLineData(serverResponseJson.respTimeLineData);
+  //     });
+  // }, 2000);
 
   return (
     <div class="chartWrapper">

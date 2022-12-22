@@ -1,16 +1,18 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const dbController = require('../controllers/dbController');
+const dbController = require("../controllers/dbController");
 
 // get line chart data
-router.get('/linechart/:id',
-    dbController.getRespTimeLineData,
-    dbController.getRespTimeHistData,
-    dbController.getReqFreqLineData,
-    dbController.getStatusPieData,
-    (req, res) => {
-        console.log('chart data', res.locals.data)
-        return res.status(200).json(res.locals.data);
-    });
+router.get(
+  "/linechart/:id",
+  dbController.getRespTimeLineData,
+  dbController.getRespTimeHistData,
+  dbController.getReqFreqLineData,
+  dbController.getStatusPieData,
+  (req, res) => {
+    // console.log('chart data', res.locals.data)
+    return res.status(200).json(res.locals.data);
+  }
+);
 
 module.exports = router;
