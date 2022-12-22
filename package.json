@@ -44,6 +44,7 @@
     "@influxdata/influxdb-client": "^1.33.0",
     "@sendgrid/mail": "^7.7.0",
     "chart.js": "^4.0.1",
+    "chartjs-adapter-moment": "^1.0.1",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "dotenv-webpack": "^8.0.1",

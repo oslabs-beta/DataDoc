@@ -19,8 +19,8 @@ const insertToDB = () => {
     const point = new Point('metrics')
         .tag('path','/good')
         .tag('method','GET')
-        .intField('res_time', 300)
-        .intField('status_code', 205)
+        .intField('res_time', 305)
+        .intField('status_code', 230)
         // .timestamp()
         
     writeApi.writePoint(point)
@@ -30,5 +30,16 @@ const insertToDB = () => {
     })
 }
 
-insertToDB()
-module.exports = insertToDB;
+const insertMultiple = (pointsArr) => {
+  try {
+    const client = new InfluxDB({ url: "http://localhost:8086", token: token });
+    const writeApi = client.getWriteApi(org, bucket, "ms");
+    writeApi.writePoints(pointsArr);
+    writeApi.close();
+    return true;
+  } catch (e) {
+    return false;
+  }
+};
+
+module.exports = { insertToDB, insertMultiple };
