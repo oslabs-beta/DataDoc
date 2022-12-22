@@ -103,10 +103,8 @@ app.post("/monitoring", async (req, res) => {
   if (active) {
     if (intervalId) clearInterval(intervalId);
     intervalId = setInterval(() => {
-      // storeLogsToDatabase(
-        scrapeDataFromMetricsServer()
-      // );
       pingTargetEndpoints();
+      scrapeDataFromMetricsServer()
     }, interval * 1000);
   }
   else clearInterval(intervalId);
