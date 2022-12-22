@@ -1,15 +1,24 @@
-import React from "react";
-import {Link} from "react-router-dom"
+import React, { useEffect, useState } from "react";
 
 //header to create links that will be used to navigate between routes
-const Header = () => {
+const Header = (props) => {
+  const {monitoring, simulation } = props
   return(
   <header>
     <nav>
       <div>
-        <Link to='/'><h5>Home</h5></Link>
-        <Link to='/urilist'>Dashboard</Link>
-        <Link to='/settings'>Settings</Link>
+        <span>
+          <div>
+            <button style={
+              monitoring ? {backgroundColor: 'lightgray'} : {backgroundColor: 'white'}
+            }>MONITORING</button>
+          </div>
+          <div>
+            <button style={
+              simulation ? {backgroundColor: 'lightgray'} : {backgroundColor: 'white'}
+            }>SIMULATION</button>
+          </div>
+        </span>
       </div>
     </nav>
   </header>

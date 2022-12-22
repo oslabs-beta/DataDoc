@@ -2,10 +2,14 @@ import React, { useEffect, useState, useCallback } from "react";
 import {Link, useNavigate} from 'react-router-dom'
 // import ChartsContainer from "../containers/ChartsContainer";
 const URI = (props) => {
-  const { id, path, method, status, addToTracking, removeFromTracking, setTracking } = props;
+  const { id, path, method, status, addToTracking, removeFromTracking, setMonitoring } = props;
   const [ checked, setChecked ] = useState(false);
   const [charts, setCharts] = useState(false)
   // const navigate = useNavigate()
+
+  useEffect(()=>{
+    setMonitoring(true)
+  })
 
   const handleClick = (method, path) => {
     //if we are not currently tracking the element, add it to the list of URIs we are tracking

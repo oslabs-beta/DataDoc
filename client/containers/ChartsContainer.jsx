@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import LineChart from "../components/LineChart.jsx";
 import DonutChart from "../components/DonutChart.jsx";
 import Histogram from "../components/Histogram.jsx";
@@ -9,6 +9,14 @@ import Test from "../components/test.jsx";
 
 const ChartsContainer = (props) => {
   const {id} = useParams()
+  const {setMonitoring, setSimulation} = props
+
+  useEffect(()=>{
+    setMonitoring(true)
+    setSimulation(false)
+  })
+
+
 
   console.log('THIS IS THE ID: ', id)
 

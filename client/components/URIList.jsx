@@ -8,16 +8,19 @@ import {Link} from 'react-router-dom'
 import URI from './URI.jsx'
 import FlashError from './FlashError.jsx';
 import SearchBar from './SearchBar.jsx';
-// import { E } from "chart.js/dist/chunks/helpers.core.js";
-// import e from "express";
+
 
 const URIList=(props)=>{
   const [URIList, setURIList] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
   const [searchInput, setSearch] = useState('');
   const [trackingURI, setTrackingURI] = useState([])
+  const {setSimulation, setMonitoring} = props
 
-  // setTrackingURI=this.bind(setTrackingURI)
+  useEffect(()=>{
+    setSimulation(false)
+    setMonitoring(false)
+  })
 
   const inputHandler = (e) => {
     // * convert input text to lower case
@@ -120,6 +123,7 @@ const URIList=(props)=>{
               // setTracking={setTracking}
               addToTracking={addToTracking} 
               removeFromTracking={removeFromTracking}
+              setMonitoring={setMonitoring}
             />
           })}
           </tbody>
