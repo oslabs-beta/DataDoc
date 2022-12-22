@@ -1,14 +1,33 @@
 .charts-container {
   display: grid;
-  grid-template-rows:    1fr 1fr;
-  grid-template-columns: 1fr 1fr;
-  flex-direction: row;
-  width: 100%;
-  box-sizing: border-box;
-  align-content: space-between;
-  align-items: center;
-  justify-items: center;
-  div {
-    flex: 1;
+  width: 100vw;
+  grid-template-areas:
+    "2fr 1fr"
+    "2fr 1fr";
+  // box-sizing: border-box;
+}
+
+// .chartWrapper {
+//   position: relative;
+//  }
+
+.chartWrapper > canvas {
+  position: absolute;
+  left: 0;
+  top: 0;
+  pointer-events: none;
+  // width: 100%;
+}
+
+.chartAreaWrapper {
+  width: 60vw;
+  overflow-x: scroll;
+}
+
+.line-chart {
+  width: 80vw;
+  height: 40vh;
+  > canvas {
+    cursor: crosshair;
   }
 }
