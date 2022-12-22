@@ -11,7 +11,7 @@ import SearchBar from './SearchBar.jsx';
 // import { E } from "chart.js/dist/chunks/helpers.core.js";
 // import e from "express";
 
-function URIList(props){
+const URIList=(props)=>{
   const [URIList, setURIList] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
   const [searchInput, setSearch] = useState('');
@@ -28,11 +28,31 @@ function URIList(props){
     setSearch(lowerCase);
   };
 
-  const setTracking = (method, path) => {
+  // const setTracking = (method, path) => {
+  //   console.log('IN SET TRACKING: ', trackingURI)
+  //   setTrackingURI(trackingURI => [...trackingURI, {
+  //     method: method,
+  //     path : path
+  //   }])
+  //   console.log('IN SET TRACKING: ', trackingURI)
+  // }
+
+  const addToTracking = (method, path)=>{
+    console.log('in the addToTracking function before anything has been added: ', trackingURI)
     setTrackingURI(trackingURI => [...trackingURI, {
       method: method,
       path : path
     }])
+    console.log('UPDATED TRACKING LIST AFTER ADDING AN ELEMENT: ', trackingURI)
+  }
+
+  const removeFromTracking = (method, path) => {
+    console.log('in the removeFromTracking function before anything has been removed', trackingURI)
+    const updatedTrackingURI = trackingURI.filter((element)=>{
+      element.method !== method && element.path !== path
+    })
+    setTrackingURI(updatedTrackingURI)
+    console.log('UPDATED TRACKING LIST AFTER REMOVING AN ELEMENT: ', trackingURI)
   }
 
   //fetch the URI List from the backend when the component mounts
@@ -52,16 +72,17 @@ function URIList(props){
 
     useEffect(()=>{
       fetch(`http://localhost:${process.env.PORT}/routes`, {
-        "mode": 'no-cors',
-        "method": 'POST',
-        'headers': {
+        // mode: 'no-cors',
+        method: 'POST',
+        headers: {
           'Content-Type': 'application/json'
         },
-        'body': JSON.stringify(trackingURI)
+        body: JSON.stringify(trackingURI)
       }).then((data)=>{
-        console.log(data)
+        console.log('THIS IS FROM THE URILIST POST METHOD:', data)
       }).catch((err)=>{
         console.log(`there was an error sending the URI tracking list, error: ${err}`)
+        setErrorMessage('Invalid POST request from the URI List')
       })
     }, [trackingURI])
   
@@ -77,6 +98,7 @@ function URIList(props){
               <th>Path</th>
               <th>Method</th>
               <th>Status Code</th>
+              <th>Simulate</th>
             </tr>
           </thead>
           <tbody>
@@ -95,7 +117,9 @@ function URIList(props){
               path={element.path} 
               method={element.method}
               status={element.status}
-              setTracking={setTrackingURI} 
+              // setTracking={setTracking}
+              addToTracking={addToTracking} 
+              removeFromTracking={removeFromTracking}
             />
           })}
           </tbody>

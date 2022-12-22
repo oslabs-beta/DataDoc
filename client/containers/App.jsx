@@ -26,6 +26,7 @@ function App() {
             <Route path='/uri' element={<URI />}/>
             <Route path='/uri/:id' element={<ChartsContainer />}/>
             <Route path='/settings' element={<Settings />}/>
+            <Route path='/development/:id' element={<Development/>}/>
           </Routes>
         </div>
       </div>

@@ -2,23 +2,28 @@ import React, { useEffect, useState, useCallback } from "react";
 import {Link, useNavigate} from 'react-router-dom'
 // import ChartsContainer from "../containers/ChartsContainer";
 const URI = (props) => {
-  const { id, path, method, status, setTracking } = props;
+  const { id, path, method, status, addToTracking, removeFromTracking, setTracking } = props;
   const [ checked, setChecked ] = useState(false);
   const [charts, setCharts] = useState(false)
   // const navigate = useNavigate()
 
-  // const handleClick = (e) => {
-  //   // * incorporate functionality to stop the element from being tracked
-
-  //   setChecked(!checked);
-    
-  // };
+  const handleClick = (method, path) => {
+    //if we are not currently tracking the element, add it to the list of URIs we are tracking
+    if(!checked){
+      addToTracking(props.method, props.path)
+    } else{
+      removeFromTracking(props.method, props.path)
+    }
+    console.log(`in the handle click function, the method is ${props.method} and the path is ${props.path}`)
+    setChecked(!checked);
+    // setTracking(props.method, props.path)
+  };
 
 
   const handleOnClick = () =>{
     setCharts(true)
   }
-  console.log('PROPS: ', props)
+  // console.log('PROPS: ', props)
 
   return (
     <>
@@ -28,9 +33,11 @@ const URI = (props) => {
             type="checkbox"
             name="checkTrackingURI"
             onChange={()=>{
-              setChecked(!checked)
-              setTracking(method, path)
+              handleClick()
+              // setChecked(!checked)
+              // setTracking(method, path)
             }}
+            // onClick={()=>setChecked(!checked)}
             checked={checked}
           >
           </input>
@@ -52,6 +59,9 @@ const URI = (props) => {
           >
             {status}
           </span>
+        </td>
+        <td>
+          <Link to={`/development/${id}`} id={id} path={path}><button>CLICK ME</button></Link>
         </td>
       </tr>
     </>
