@@ -7,8 +7,8 @@
   "scripts": {
     "start": "NODE_ENV=production nodemon server/server.js & NODE_ENV=production electron .",
     "build": "NODE_ENV=production webpack",
-    "dev": "NODE_ENV=development webpack serve & NODE_ENV=development nodemon server/server.js & electron .",
-    "dev:mock": "nodemon dummy/server.js & npm run dev",
+    "dev": "clear & NODE_ENV=development webpack serve & NODE_ENV=development nodemon server/server.js & electron .",
+    "dev:mock": "npm run dev & nodemon dummy/server.js",
     "test": "jest --verbose",
     "electron": "electron ."
   },

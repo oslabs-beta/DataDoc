@@ -10,7 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express-endpoints-monitor": "^1.0.0",
+    "express-endpoints-monitor": "^1.0.2",
     "nodemon": "^2.0.20"
   }
 }

@@ -2,9 +2,22 @@ const express = require("express");
 const responseTime = require("response-time");
 const listAllEndpoints = require("express-list-endpoints");
 
+/**
+ * Start a new Express server that will store and serve a
+ * list of logs and endpoints of the target server
+ */
 const app = express();
-const trackedEndpoints = {};
+
+/**
+ * Registed endpoints are stored in memory and can be exported 
+ * through the /endpoints endpoint
+ */
 let endpoints = [];
+
+/**
+ * Logs are stored in memory until they are cleared by a request 
+ * made to the DELETE /metrics endpoint
+ */
 let logs = [];
 
 module.exports = {
@@ -18,7 +31,6 @@ module.exports = {
         status_code: res.statusCode,
         response_time: Number(time.toFixed(3)),
       });
-      // console.log(logs[logs.length - 1]);
     }
   }),
 
@@ -57,8 +69,9 @@ module.exports = {
       return res.status(200).json(logs);
     });
     app.delete("/metrics", (req, res) => {
+      res.status(200).json(logs);
       logs = [];
-      return res.sendStatus(204);
+      return;
     });
     app.get("/endpoints", (req, res) => {
       return res.json(endpoints);
