@@ -1,19 +1,18 @@
 const path = require("path");
-require("dotenv").config({path: path.resolve(__dirname, "../.env")});
+require("dotenv").config({ path: path.resolve(__dirname, "../.env") });
 const express = require("express");
-const app = express();
 const fetch = require("node-fetch");
 const cors = require("cors");
 const db = require("./models/database.js");
-const { Point } = require("@influxdata/influxdb-client")
-
 // require router
-const chartRouter = require('./routes/chartdata');
+const chartRouter = require("./routes/chartdata");
 const dbController = require("./controllers/dbController");
+const { Point } = require("@influxdata/influxdb-client");
 
 const MODE = process.env.NODE_ENV || "production";
 const PORT = process.env.PORT || 9990;
 
+const app = express();
 app.use(express.json());
 app.use(cors());
 
@@ -22,7 +21,7 @@ if (MODE === "production") {
 }
 
 // routing all /chartdata endpoint traffic to chartRouter
-app.use('/chartdata', chartRouter);
+app.use("/chartdata", chartRouter);
 
 let intervalId;
 let logs = [];
@@ -30,7 +29,9 @@ let selectedEndpoints = [];
 
 const scrapeDataFromMetricsServer = async () => {
   try {
-    const metricsServerResponse = await fetch("http://localhost:9991/metrics");
+    const metricsServerResponse = await fetch("http://localhost:9991/metrics", {
+      method: "DELETE",
+    });
     logs = await metricsServerResponse.json();
     // console.clear();
     // console.log(new Date().toUTCString(), '\n', 'LAST LOG:\n', logs[logs.length - 1], logs.length);
@@ -52,9 +53,8 @@ const storeLogsToDatabase = async (logsArr) => {
         .tag("method", log.method)
         .floatField("res_time", log.response_time)
         .intField("status_code", log.status_code)
-        .timestamp((new Date(log.date_created)).getTime());
-      }
-    );
+        .timestamp(new Date(log.date_created).getTime());
+    });
     return db.insertMultiple(pointsArr);
   } catch (e) {
     return false;
@@ -64,17 +64,12 @@ const storeLogsToDatabase = async (logsArr) => {
 const pingTargetEndpoints = async () => {
   for (endpoint of selectedEndpoints) {
     try {
-      await fetch('http://localhost:3000' + endpoint.path, 
-      {
-        method: endpoint.method
+      await fetch("http://localhost:3000" + endpoint.path, {
+        method: endpoint.method,
       });
-    }
-    catch (e) {
-
-    }
-    // console.log(endpoint.path, endpoint.method);
+    } catch (e) {}
   }
-}
+};
 
 app.get("/histogram", (req, res) => {
   return res.status(200).json({
@@ -104,10 +99,9 @@ app.post("/monitoring", async (req, res) => {
     if (intervalId) clearInterval(intervalId);
     intervalId = setInterval(() => {
       pingTargetEndpoints();
-      scrapeDataFromMetricsServer()
+      scrapeDataFromMetricsServer();
     }, interval * 1000);
-  }
-  else clearInterval(intervalId);
+  } else clearInterval(intervalId);
   console.log("ACTIVE:", active);
   res.sendStatus(204);
 });
