@@ -16,6 +16,10 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
+// routing all /chartdata endpoint traffic to chartRouter
+app.use('/chartdata', chartRouter);
+
+
 if (MODE === "production") {
   app.use(express.static(path.join(__dirname, "../dist")));
 }
