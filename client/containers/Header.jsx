@@ -10,10 +10,10 @@ const Header = (props) => {
       <div>
         <span>
             <button className='header-button' style={
-              monitoring ? {backgroundColor: 'lightgray'} : {backgroundColor: 'white'}
+              monitoring ? {backgroundColor: 'gray'} : {backgroundColor: 'white'}
             }>MONITORING</button>
             <button className='header-button' style={
-              simulation ? {backgroundColor: 'lightgray'} : {backgroundColor: 'white'}
+              simulation ? {backgroundColor: 'gray'} : {backgroundColor: 'white'}
             }>SIMULATION</button>
         </span>
       </div>

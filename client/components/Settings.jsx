@@ -8,7 +8,6 @@ const Settings = (props) =>{
     alertStatus: '',
     monitoringFrequency: 0
   })
-  // console.log('these are the setting values: ', settingValues)
 
   function handleChange(e, updateValue){
     const settingsUpdate = {[updateValue] : e.target.value}

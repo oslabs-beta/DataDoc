@@ -5,29 +5,20 @@ const URI = (props) => {
   const { id, path, method, status, addToTracking, removeFromTracking, setMonitoring } = props;
   const [ checked, setChecked ] = useState(false);
   const [charts, setCharts] = useState(false)
-  // const navigate = useNavigate()
 
   useEffect(()=>{
     setMonitoring(true)
   })
 
   const handleClick = (method, path) => {
-    //if we are not currently tracking the element, add it to the list of URIs we are tracking
     if(checked === false){
       addToTracking(props.method, props.path)
     } else if (checked === true){
       removeFromTracking(props.method, props.path)
     }
-    // console.log(`in the handle click function, the method is ${props.method} and the path is ${props.path}`)
-    // setTracking(props.method, props.path)
     setChecked(!checked);
   };
 
-
-  const handleOnClick = () =>{
-    setCharts(true)
-  }
-  // console.log('PROPS: ', props)
 
   return (
     <>
@@ -38,8 +29,6 @@ const URI = (props) => {
             name="checkTrackingURI"
             onChange={()=>{
               handleClick()
-              // setChecked(!checked)
-              // setTracking(method, path)
             }}
             checked={checked}
           >
