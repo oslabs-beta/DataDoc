@@ -5,7 +5,7 @@ const app = express();
 const fetch = require("node-fetch");
 const cors = require("cors");
 const db = require("./models/database.js");
-const { Point } = require("@influxdata/influxdb-client")
+const { Point, consoleLogger } = require("@influxdata/influxdb-client")
 
 // require router
 const chartRouter = require('./routes/chartdata');
@@ -119,6 +119,13 @@ app.post("/monitoring", async (req, res) => {
 app.get("/metrics", async (req, res) => {
   return res.status(200).json(logs);
 });
+
+
+app.post("/simulation", async (req, res) => {
+  const {RPS} = req.body
+  return res.status(200).json({RPS})
+})
+
 
 app.get("/routes", async (req, res) => {
   const response = await fetch("http://localhost:9991/endpoints");
