@@ -1,13 +1,15 @@
-const dotenv = require("dotenv");
+const path = require("path");
+require("dotenv").config({path: path.resolve(__dirname, "../.env")});
 const express = require("express");
 const app = express();
-const path = require("path");
 const fetch = require("node-fetch");
 const cors = require("cors");
-dotenv.config({path: path.resolve(__dirname, "../.env")});
+const db = require("./models/database.js");
+const { Point } = require("@influxdata/influxdb-client")
 
 // require router
-const chartRouter = require('./routes/chartdata')
+const chartRouter = require('./routes/chartdata');
+const dbController = require("./controllers/dbController");
 
 const MODE = process.env.NODE_ENV || "production";
 const PORT = process.env.PORT || 9990;
@@ -15,12 +17,12 @@ const PORT = process.env.PORT || 9990;
 app.use(express.json());
 app.use(cors());
 
-// routing all /chartdata endpoint traffic to chartRouter
-app.use('/chartdata', chartRouter);
-
 if (MODE === "production") {
   app.use(express.static(path.join(__dirname, "../dist")));
 }
+
+// routing all /chartdata endpoint traffic to chartRouter
+app.use('/chartdata', chartRouter);
 
 let intervalId;
 let logs = [];
@@ -29,15 +31,33 @@ let selectedEndpoints = [];
 const scrapeDataFromMetricsServer = async () => {
   try {
     const metricsServerResponse = await fetch("http://localhost:9991/metrics");
-    logs = logs.concat(await metricsServerResponse.json());
-    console.clear();
-    console.log(new Date().toUTCString(), '\n', 'LAST LOG:\n', logs[logs.length - 1]);
-    // logs.forEach((e) => console.table(e));
-    // fetch("http://localhost:9991/metrics", {
-    //   method: "DELETE",
-    // });
+    logs = await metricsServerResponse.json();
+    // console.clear();
+    // console.log(new Date().toUTCString(), '\n', 'LAST LOG:\n', logs[logs.length - 1], logs.length);
+    // console.log(logs);
+    storeLogsToDatabase(logs);
+    return logs;
   } catch (err) {
     console.error(err);
+    return [];
+  }
+};
+
+const storeLogsToDatabase = async (logsArr) => {
+  try {
+    const pointsArr = logsArr.map((log) => {
+      return new Point("metrics")
+        .tag("path", log.path)
+        .tag("url", log.url)
+        .tag("method", log.method)
+        .floatField("res_time", log.response_time)
+        .intField("status_code", log.status_code)
+        .timestamp((new Date(log.date_created)).getTime());
+      }
+    );
+    return db.insertMultiple(pointsArr);
+  } catch (e) {
+    return false;
   }
 };
 
@@ -78,12 +98,14 @@ app.get("/linechart/:id", (req, res) => {
   });
 });
 
-app.post("/monitoring", (req, res) => {
+app.post("/monitoring", async (req, res) => {
   const { active, interval } = req.body; // active is a boolean, interval is in seconds
   if (active) {
     if (intervalId) clearInterval(intervalId);
     intervalId = setInterval(() => {
-      scrapeDataFromMetricsServer();
+      // storeLogsToDatabase(
+        scrapeDataFromMetricsServer()
+      // );
       pingTargetEndpoints();
     }, interval * 1000);
   }
