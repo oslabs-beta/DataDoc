@@ -40,12 +40,27 @@ const URIList=(props)=>{
   //   console.log('IN SET TRACKING: ', trackingURI)
   // }
 
+  // const addToTracking = (method, path)=>{
+  //   console.log('in the addToTracking function before anything has been added: ', trackingURI)
+  //   setTrackingURI(trackingURI => [...trackingURI, {
+  //     method: method,
+  //     path : path
+  //   }])
+  //   console.log('UPDATED TRACKING LIST AFTER ADDING AN ELEMENT: ', trackingURI)
+  // }
+
   const addToTracking = (method, path)=>{
     console.log('in the addToTracking function before anything has been added: ', trackingURI)
-    setTrackingURI(trackingURI => [...trackingURI, {
+    const newObject = {
       method: method,
-      path : path
-    }])
+      path: path
+    }
+    console.log('this is the new object: ', newObject)
+    if(trackingURI.length === 0){
+      setTrackingURI([newObject])
+    } else {
+      setTrackingURI(trackingURI => [...trackingURI, newObject])
+    }
     console.log('UPDATED TRACKING LIST AFTER ADDING AN ELEMENT: ', trackingURI)
   }
 

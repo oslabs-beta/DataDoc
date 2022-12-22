@@ -7,8 +7,8 @@ const Header = (props) => {
   <header>
     <nav>
       <div>
-        <span>
-          <div>
+        <span style={{textAlign: 'right'}}>
+          <div >
             <button style={
               monitoring ? {backgroundColor: 'lightgray'} : {backgroundColor: 'white'}
             }>MONITORING</button>
