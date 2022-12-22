@@ -13,14 +13,14 @@ const URI = (props) => {
 
   const handleClick = (method, path) => {
     //if we are not currently tracking the element, add it to the list of URIs we are tracking
-    if(!checked){
+    if(checked === false){
       addToTracking(props.method, props.path)
-    } else{
+    } else if (checked === true){
       removeFromTracking(props.method, props.path)
     }
-    console.log(`in the handle click function, the method is ${props.method} and the path is ${props.path}`)
-    setChecked(!checked);
+    // console.log(`in the handle click function, the method is ${props.method} and the path is ${props.path}`)
     // setTracking(props.method, props.path)
+    setChecked(!checked);
   };
 
 
@@ -41,7 +41,6 @@ const URI = (props) => {
               // setChecked(!checked)
               // setTracking(method, path)
             }}
-            // onClick={()=>setChecked(!checked)}
             checked={checked}
           >
           </input>
