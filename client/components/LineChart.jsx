@@ -57,9 +57,6 @@ const LineChart = (props) => {
     scales: {
       x: {
         type: "time",
-        time: {
-          unit: "second"
-        }
       }
     }
   }

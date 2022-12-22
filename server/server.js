@@ -26,6 +26,15 @@ app.use("/chartdata", chartRouter);
 let intervalId;
 let logs = [];
 let selectedEndpoints = [];
+let monitoringStartTime, monitoringEndTime, timeElapsed;
+
+const updateTimeElapsed = function() {
+  monitoringEndTime = new Date();
+  timeElapsed = new Date(monitoringEndTime - monitoringStartTime);
+  if (timeElapsed < 60 * 1000) return timeElapsed.getSeconds() + 's';
+  if (timeElapsed < 60 * 60 * 1000) return timeElapsed.getMinutes() + 'm' + timeElapsed % (60 * 1000) / 1000 + 's';
+  else return timeElapsed.getHours() + timeElapsed % (60 * 60 * 1000) / 1000 + 'm' + timeElapsed % (60 * 1000) / 1000 + 's';
+}
 
 const scrapeDataFromMetricsServer = async () => {
   try {
@@ -33,13 +42,10 @@ const scrapeDataFromMetricsServer = async () => {
       method: "DELETE",
     });
     logs = await metricsServerResponse.json();
-    // console.clear();
-    // console.log(new Date().toUTCString(), '\n', 'LAST LOG:\n', logs[logs.length - 1], logs.length);
-    // console.log(logs);
     storeLogsToDatabase(logs);
     return logs;
-  } catch (err) {
-    console.error(err);
+  } catch (e) {
+    console.error(e);
     return [];
   }
 };
@@ -57,6 +63,7 @@ const storeLogsToDatabase = async (logsArr) => {
     });
     return db.insertMultiple(pointsArr);
   } catch (e) {
+    console.error(e);
     return false;
   }
 };
@@ -67,7 +74,9 @@ const pingTargetEndpoints = async () => {
       await fetch("http://localhost:3000" + endpoint.path, {
         method: endpoint.method,
       });
-    } catch (e) {}
+    } catch (e) {
+      console.error(e);
+    }
   }
 };
 
@@ -94,10 +103,19 @@ app.get("/linechart/:id", (req, res) => {
 });
 
 app.post("/monitoring", async (req, res) => {
-  const { active, interval } = req.body; // active is a boolean, interval is in seconds
+  // * active is a boolean, interval is in seconds
+  let { active, interval, verbose } = req.body; 
   if (active) {
+    // * Enforce a minimum interval
+    interval = interval < 0.5 ? 0.5 : interval;
     if (intervalId) clearInterval(intervalId);
+    monitoringStartTime = new Date();
     intervalId = setInterval(() => {
+      const timeElapsedString = updateTimeElapsed();
+      if (verbose) {
+        console.clear();
+        console.log(`Monitoring for ${timeElapsedString}`);
+      }
       pingTargetEndpoints();
       scrapeDataFromMetricsServer();
     }, interval * 1000);
