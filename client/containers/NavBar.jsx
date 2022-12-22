@@ -8,9 +8,6 @@ const NavBar = () => {
   const width = 300;
   const height = "100vh";
   const [xPosition, setX] = useState(-width);
-  // const [open, setOpen] = useState('')
-  // const hide = () => setOpen('translateX(100%)')
-  // const show = () => setOpen("translateX(0)")
 
   const toggleMenu = () => {
     if (xPosition < 0) {

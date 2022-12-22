@@ -8,11 +8,16 @@ import {Link} from 'react-router-dom'
 import URI from './URI.jsx'
 import FlashError from './FlashError.jsx';
 import SearchBar from './SearchBar.jsx';
+// import { E } from "chart.js/dist/chunks/helpers.core.js";
+// import e from "express";
 
-const URIList=(props)=>{
+function URIList(props){
   const [URIList, setURIList] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
   const [searchInput, setSearch] = useState('');
+  const [trackingURI, setTrackingURI] = useState([])
+
+  // setTrackingURI=this.bind(setTrackingURI)
 
   const inputHandler = (e) => {
     // * convert input text to lower case
@@ -22,6 +27,13 @@ const URIList=(props)=>{
     // console.log("SEARCH INPUT:", searchInput)
     setSearch(lowerCase);
   };
+
+  const setTracking = (method, path) => {
+    setTrackingURI(trackingURI => [...trackingURI, {
+      method: method,
+      path : path
+    }])
+  }
 
   //fetch the URI List from the backend when the component mounts
   useEffect(() => {
@@ -37,6 +49,21 @@ const URIList=(props)=>{
         setTimeout(() => setErrorMessage(""), 5000);
       });
     }, []);
+
+    useEffect(()=>{
+      fetch(`http://localhost:${process.env.PORT}/routes`, {
+        "mode": 'no-cors',
+        "method": 'POST',
+        'headers': {
+          'Content-Type': 'application/json'
+        },
+        'body': JSON.stringify(trackingURI)
+      }).then((data)=>{
+        console.log(data)
+      }).catch((err)=>{
+        console.log(`there was an error sending the URI tracking list, error: ${err}`)
+      })
+    }, [trackingURI])
   
   return(
     <div className='URIListContainer'>
@@ -67,7 +94,8 @@ const URIList=(props)=>{
               id={uuidv4()} 
               path={element.path} 
               method={element.method}
-              status={element.status} 
+              status={element.status}
+              setTracking={setTrackingURI} 
             />
           })}
           </tbody>
