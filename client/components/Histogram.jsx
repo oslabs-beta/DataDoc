@@ -49,10 +49,12 @@ const Histogram = (props) => {
 
   const data = {
     // labels: histLabels,
+    labels: histData.map((point) => point.x),
     datasets: [
       {
         label: "Frequency",
-        data: histData,
+        // data: histData,
+        data: histData.map((point) => point.y),
         backgroundColor: [
           "rgba(255, 99, 132, 0.5)",
         ],

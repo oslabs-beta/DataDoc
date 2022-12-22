@@ -11,7 +11,7 @@ const queryApi = new InfluxDB({url: 'http://localhost:8086', token: token}).getQ
 
 const dbController = {};
 
-const range = '12h';
+const range = '1m';
 
 // declare a data object to store chart data
 const data = {
@@ -25,7 +25,7 @@ dbController.getRespTimeLineData = (req, res, next) => {
 
     const fluxQuery = 
     `from(bucket: "dev-bucket")
-    |> range(start: -6h)
+    |> range(start: -${range})
     |> filter(fn: (r) => r["_measurement"] == "metrics")
     |> filter(fn: (r) => r["_field"] == "res_time")
     |> filter(fn: (r) => r["method"] == "GET")
@@ -57,7 +57,7 @@ dbController.getRespTimeHistData = (req, res, next) => {
 
     const fluxQuery = 
     `from(bucket: "dev-bucket")
-    |> range(start: -6h)
+    |> range(start: -${range})
     |> filter(fn: (r) => r["_measurement"] == "metrics")
     |> filter(fn: (r) => r["_field"] == "res_time")
     |> filter(fn: (r) => r["method"] == "GET")
@@ -101,7 +101,7 @@ dbController.getReqFreqLineData = (req, res, next) => {
     
     const fluxQuery = 
     `from(bucket: "dev-bucket")
-    |> range(start: -6h)
+    |> range(start: -${range})
     |> filter(fn: (r) => r["_measurement"] == "metrics")
     |> filter(fn: (r) => r["_field"] == "res_time")
     |> filter(fn: (r) => r["method"] == "GET")
@@ -133,7 +133,7 @@ dbController.getStatusPieData = (req, res, next) => {
 
     const influxQuery = 
     `from(bucket: "dev-bucket") 
-    |> range(start: -6h)
+    |> range(start: -${range})
     |> filter(fn: (r) => r["_measurement"] == "metrics")
     |> filter(fn: (r) => r["_field"] == "status_code")
     |> filter(fn: (r) => r["method"] == "GET")
