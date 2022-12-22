@@ -30,5 +30,16 @@ const insertToDB = () => {
     })
 }
 
-insertToDB()
-module.exports = insertToDB;
+const insertMultiple = (pointsArr) => {
+  try {
+    const client = new InfluxDB({ url: "http://localhost:8086", token: token });
+    const writeApi = client.getWriteApi(org, bucket, "ms");
+    writeApi.writePoints(pointsArr);
+    writeApi.close();
+    return true;
+  } catch (e) {
+    return false;
+  }
+};
+
+module.exports = { insertToDB, insertMultiple };

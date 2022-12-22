@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
+import "chartjs-adapter-moment";
 import {
   Chart as ChartJS,
   CategoryScale,
+  TimeScale,
   LinearScale,
   PointElement,
   LineElement,
@@ -18,7 +20,8 @@ const LineChart = (props) => {
   const [lineData, setLineData] = useState([]);
 
   ChartJS.register(
-    CategoryScale,
+    // CategoryScale,
+    TimeScale,
     LinearScale,
     PointElement,
     LineElement,
@@ -43,21 +46,27 @@ const LineChart = (props) => {
         fill: false,
         borderColor: [
           "rgb(75, 192, 192)",
-          "rgb(75, 192, 192)",
-          "rgb(75, 192, 192)",
-          "rgb(75, 192, 192)",
-          "rgb(75, 192, 192)",
-          "rgb(75, 192, 192)",
-          "rgb(75, 192, 192)",
         ],
         tension: 0.1,
       },
     ],
   };
 
+  const options = {
+    response: true,
+    scales: {
+      x: {
+        type: "time",
+        time: {
+          unit: "second"
+        }
+      }
+    }
+  }
+
   return (
     <div className="line-chart">
-      <Line data={data} />
+      <Line data={data} options={options} />
     </div>
   );
 };
