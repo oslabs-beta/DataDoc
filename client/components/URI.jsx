@@ -19,7 +19,6 @@ const URI = (props) => {
     setChecked(!checked);
   };
 
-
   return (
     <>
       <tr>
@@ -35,7 +34,10 @@ const URI = (props) => {
           </input>
         </td>
         <td>
-          <Link to={`/uri/${id}`} id={id} path={path}>{path}</Link>
+          <Link to={`/uri/${id}`} state={{
+              method: method,
+              path: path
+            }} id={id} method={method} path={path}>{path}</Link>
         </td>
         <td>
           {method}
