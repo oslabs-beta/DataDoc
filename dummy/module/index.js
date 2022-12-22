@@ -53,10 +53,10 @@ module.exports = {
   },
 
   startMetricsServer: async function (PORT = 9991) {
-    app.get("/metrics", async (req, res) => {
+    app.get("/metrics", (req, res) => {
       return res.status(200).json(logs);
     });
-    app.delete("/metrics", async (req, res) => {
+    app.delete("/metrics", (req, res) => {
       logs = [];
       return res.sendStatus(204);
     });

@@ -10,21 +10,24 @@ app.use(
   module2.gatherMetrics
 );
 
-app.get("/specific/:id", module2.registerEndpoint, (req, res) => {
+app.get("/specific/:id", (req, res) => {
   res.status(201).send("specific");
 });
 
-app.get("/routewithquery", module2.registerEndpoint, (req, res) => {
+app.get("/routewithquery", (req, res) => {
   res.status(201).send("query");
 });
 
-app.get("/fast", module2.registerEndpoint, (req, res) => {
+app.get("/fast", (req, res) => {
   res.status(201).send("fast");
 });
 
-app.get("/slow", (req, res) => {
-  setTimeout(() => res.status(200).send("slow"), Math.random() * 200 + 50);
-});
+app.get("/slow", 
+  module2.registerEndpoint,
+  (req, res) => {
+    setTimeout(() => res.status(200).send("slow"), Math.random() * 200 + 50);
+  }
+);
 
 app.patch(
   "/good",
