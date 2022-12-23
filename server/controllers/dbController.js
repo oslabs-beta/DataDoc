@@ -11,7 +11,7 @@ const queryApi = new InfluxDB({url: 'http://localhost:8086', token: token}).getQ
 
 const dbController = {};
 
-const range = '12h';
+const range = '1m';
 
 // declare a data object to store chart data
 const data = {
@@ -25,11 +25,11 @@ dbController.getRespTimeLineData = (req, res, next) => {
 
     const fluxQuery = 
     `from(bucket: "dev-bucket")
-    |> range(start: -6h)
+    |> range(start: -${range})
     |> filter(fn: (r) => r["_measurement"] == "metrics")
     |> filter(fn: (r) => r["_field"] == "res_time")
     |> filter(fn: (r) => r["method"] == "GET")
-    |> filter(fn: (r) => r["path"] == "/good")
+    |> filter(fn: (r) => r["path"] == "/slow")
     |> yield(name: "mean")`
     
     // declare a metrics object to collect labels and data
@@ -57,11 +57,11 @@ dbController.getRespTimeHistData = (req, res, next) => {
 
     const fluxQuery = 
     `from(bucket: "dev-bucket")
-    |> range(start: -6h)
+    |> range(start: -${range})
     |> filter(fn: (r) => r["_measurement"] == "metrics")
     |> filter(fn: (r) => r["_field"] == "res_time")
     |> filter(fn: (r) => r["method"] == "GET")
-    |> filter(fn: (r) => r["path"] == "/good")
+    |> filter(fn: (r) => r["path"] == "/slow")
     |> histogram(bins : linearBins(start: 0.0, width: 50.0, count: 6), normalize: false)`
 
     // declare a metrics object to collect labels and data
@@ -101,11 +101,11 @@ dbController.getReqFreqLineData = (req, res, next) => {
     
     const fluxQuery = 
     `from(bucket: "dev-bucket")
-    |> range(start: -6h)
+    |> range(start: -${range})
     |> filter(fn: (r) => r["_measurement"] == "metrics")
     |> filter(fn: (r) => r["_field"] == "res_time")
     |> filter(fn: (r) => r["method"] == "GET")
-    |> filter(fn: (r) => r["path"] == "/good")
+    |> filter(fn: (r) => r["path"] == "/slow")
     |> aggregateWindow(every: 1m, fn: count, createEmpty: false)`
     
     // declare a metrics object to collect labels and data
@@ -133,11 +133,11 @@ dbController.getStatusPieData = (req, res, next) => {
 
     const influxQuery = 
     `from(bucket: "dev-bucket") 
-    |> range(start: -6h)
+    |> range(start: -${range})
     |> filter(fn: (r) => r["_measurement"] == "metrics")
     |> filter(fn: (r) => r["_field"] == "status_code")
     |> filter(fn: (r) => r["method"] == "GET")
-    |> filter(fn: (r) => r["path"] == "/good")
+    |> filter(fn: (r) => r["path"] == "/slow")
     |> group(columns: ["_value"])
     |> count(column: "_field")
     |> group()`

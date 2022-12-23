@@ -64,16 +64,14 @@ const Histogram = (props) => {
       },[]);
 
   const data = {
-    labels: histLabels,
+    // labels: histLabels,
+    labels: histData.map((point) => point.x),
     datasets: [
       {
         label: "Frequency",
-        data: histData,
+        // data: histData,
+        data: histData.map((point) => point.y),
         backgroundColor: [
-          "rgba(255, 99, 132, 0.5)",
-          "rgba(255, 99, 132, 0.5)",
-          "rgba(255, 99, 132, 0.5)",
-          "rgba(255, 99, 132, 0.5)",
           "rgba(255, 99, 132, 0.5)",
         ],
         barPercentage: 1.0,
@@ -95,10 +93,20 @@ const Histogram = (props) => {
       },
     },
   };
+
+  // ! Temporary live-fetching data; ideally use sockets
+  setTimeout(() => {
+    fetch(`${SERVER_URL}/chartdata/linechart/${id}`)
+      .then((serverResponse) => serverResponse.json())
+      .then((serverResponseJson) => {
+        setHistData(serverResponseJson.respTimeHistData);
+      });
+  }, 2000);
   
   return (
     <div className="histogram">
-      <Bar data={data} options={options} />
+      <Bar data={data} 
+      options={options} />
     </div>
   );
 };

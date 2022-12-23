@@ -19,6 +19,7 @@ const URI = (props) => {
       removeFromTracking(props.method, props.path)
     }
     setChecked(!checked);
+    // setTracking(props.method, props.path)
   };
 
   return (
