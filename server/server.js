@@ -16,6 +16,10 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
+// routing all /chartdata endpoint traffic to chartRouter
+app.use('/chartdata', chartRouter);
+
+
 if (MODE === "production") {
   app.use(express.static(path.join(__dirname, "../dist")));
 }
@@ -126,6 +130,13 @@ app.post("/monitoring", async (req, res) => {
 app.get("/metrics", async (req, res) => {
   return res.status(200).json(logs);
 });
+
+
+app.post("/simulation", async (req, res) => {
+  const {RPS} = req.body
+  return res.status(200).json({RPS})
+})
+
 
 app.get("/routes", async (req, res) => {
   const response = await fetch("http://localhost:9991/endpoints");

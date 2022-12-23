@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import NavBar from "./NavBar.jsx";
 import Development from "./Development.jsx";
@@ -14,18 +14,23 @@ import { HashRouter as Router, Route, Routes } from "react-router-dom";
 
 import "../styles/globals.scss";
 
-function App() {
+const App = () => {
+  const [monitoring, setMonitoring] = useState(false)
+  const [simulation, setSimulation] = useState(false)
+
   return (
     <Router>
       <div className="fullApp">
         <NavBar/>
+        <Header simulation={simulation} monitoring={monitoring}/>
         <div className="content">
           <Routes>
-            <Route path='/' element={<Home />}/>
-            <Route path='/urilist' element ={<URIList />}/>
-            <Route path='/uri' element={<URI />}/>
-            <Route path='/uri/:id' element={<ChartsContainer />}/>
+            <Route path='/' element={<Home setMonitoring={setMonitoring} setSimulation={setSimulation}/>}/>
+            <Route path='/urilist' element ={<URIList setMonitoring={setMonitoring} setSimulation={setSimulation}/>}/>
+            <Route path='/uri' element={<URI setMonitoring={setMonitoring}/>}/>
+            <Route path='/uri/:id' element={<ChartsContainer setMonitoring={setMonitoring} setSimulation={setSimulation}/>}/>
             <Route path='/settings' element={<Settings />}/>
+            <Route path='/development/:id' element={<Development setSimulation={setSimulation}/>}/>
           </Routes>
         </div>
       </div>

@@ -9,10 +9,18 @@ import URI from './URI.jsx'
 import FlashError from './FlashError.jsx';
 import SearchBar from './SearchBar.jsx';
 
+
 const URIList=(props)=>{
   const [URIList, setURIList] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
   const [searchInput, setSearch] = useState('');
+  const [trackingURI, setTrackingURI] = useState([])
+  const {setSimulation, setMonitoring} = props
+
+  useEffect(()=>{
+    setSimulation(false)
+    setMonitoring(false)
+  })
 
   const inputHandler = (e) => {
     // * convert input text to lower case
@@ -22,6 +30,34 @@ const URIList=(props)=>{
     // console.log("SEARCH INPUT:", searchInput)
     setSearch(lowerCase);
   };
+
+  const addToTracking = (method, path)=>{
+    console.log('in the addToTracking function before anything has been added: ', trackingURI)
+    const newObject = {
+      method: method,
+      path : path
+    }
+    console.log('THIS IS THE NEW OBJECT: ', newObject)
+    // if(trackingURI.length === 0) setTrackingURI([newObject])
+    setTrackingURI(trackingURI => [...trackingURI, newObject])
+    setTrackingURI((trackingURI)=>{
+      return trackingURI
+    })
+  }
+
+
+  const removeFromTracking = (method, path) => {
+    console.log(`method: ${method}, path: ${path}`)
+    console.log('in the removeFromTracking function before anything has been removed', trackingURI)
+    const updatedTrackingURI = trackingURI.filter((element)=>{
+      return(element.method !== method || element.path !== path)
+    })
+    setTrackingURI(updatedTrackingURI)
+    setTrackingURI((updatedTrackingURI)=>{
+      console.log(updatedTrackingURI)
+      return updatedTrackingURI
+    })
+  }
 
   //fetch the URI List from the backend when the component mounts
   useEffect(() => {
@@ -37,6 +73,22 @@ const URIList=(props)=>{
         setTimeout(() => setErrorMessage(""), 5000);
       });
     }, []);
+
+    useEffect(()=>{
+      fetch(`http://localhost:${process.env.PORT}/routes`, {
+        // mode: 'no-cors',
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(trackingURI)
+      }).then((data)=>{
+        // console.log('THIS IS FROM THE URILIST POST METHOD:', data)
+      }).catch((err)=>{
+        console.log(`there was an error sending the URI tracking list, error: ${err}`)
+        setErrorMessage('Invalid POST request from the URI List')
+      })
+    }, [trackingURI])
   
   return(
     <div className='URIListContainer'>
@@ -50,6 +102,7 @@ const URIList=(props)=>{
               <th>Path</th>
               <th>Method</th>
               <th>Status Code</th>
+              <th>Simulate</th>
             </tr>
           </thead>
           <tbody>
@@ -67,7 +120,11 @@ const URIList=(props)=>{
               id={uuidv4()} 
               path={element.path} 
               method={element.method}
-              status={element.status} 
+              status={element.status}
+              // setTracking={setTracking}
+              addToTracking={addToTracking} 
+              removeFromTracking={removeFromTracking}
+              setMonitoring={setMonitoring}
             />
           })}
           </tbody>
