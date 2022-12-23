@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JONATHAN'S WEBSITE</title>
+  <style>
+    #snail {
+      animation-name: example;
+      animation-duration: 20s;
+      animation-iteration-count: infinite;
+    }
+    @keyframes example {
+  0%   {margin-left: 0px;}
+  50%  {margin-left: 600px;}
+  100% {margin-left: 0px;}
+}
+    #leopard {
+      animation-name: example;
+      animation-duration: 10s;
+      animation-iteration-count: infinite;
+    }
+    @keyframes example {
+  0%   {margin-left: 0px;}
+  50%  {margin-left: 600px;}
+  100% {margin-left: 0px;}
+}
+  </style>
+</head>
+<body>
+  <h1>Welcome to jonathan.org</h1>
+  <a href="/fast">
+    <p>
+      fast
+      <span id="leopard">🐆</span></p>
+  </a>
+  <a href="/slow">
+    <p>
+      slow
+      <span id="snail">🐌</span></p>
+  </a>
+  <a href="/error">
+    <p>
+      new link
+    </p>
+  </a>
+</body>
+</html>

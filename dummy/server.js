@@ -3,6 +3,7 @@ const app = express();
 const PORT = 3000;
 const fetch = require("node-fetch");
 const module2 = require("express-endpoints-monitor");
+const path = require("path");
 
 app.use(express.json());
 app.use(
@@ -25,7 +26,10 @@ app.get("/fast", (req, res) => {
 app.get("/slow", 
   module2.registerEndpoint,
   (req, res) => {
-    setTimeout(() => res.status(200).send("slow"), Math.random() * 200 + 50);
+    const validStatusCodes = [200, 202, 203, 204, 210, 400, 401, 403, 500]
+    const statusCode = validStatusCodes[Math.floor(Math.random() * validStatusCodes.length)];
+    const artificialDelay = Math.random() * 100 + 100;
+    setTimeout(() => res.status(statusCode).send("slow"), artificialDelay);
   }
 );
 
@@ -69,6 +73,9 @@ app.get(
   (req, res) => {
     res.send();
   }
+);
+
+app.get("/", (req, res) => res.sendFile(path.resolve(__dirname, './index.html'))
 );
 
 app.use("/", (req, res) => res.send("HELLO WORLD"));

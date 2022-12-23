@@ -9,7 +9,7 @@ router.get('/linechart/:id',
     dbController.getReqFreqLineData,
     dbController.getStatusPieData,
     (req, res) => {
-        console.log('chart data', res.locals.data)
+        console.log('this is res.locals.data', res.locals.data)
         return res.status(200).json(res.locals.data);
     });
 

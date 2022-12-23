@@ -72,9 +72,9 @@ const LineChart = (props) => {
   }, 2000);
 
   return (
-    <div class="chartWrapper">
-      <div class="chartAreaWrapper">
-        <div class="line-chart">
+    <div className="chartWrapper">
+      <div className="chartAreaWrapper">
+        <div className="line-chart">
           <Line 
             data={data} 
             options={options} 

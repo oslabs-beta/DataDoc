@@ -15,7 +15,7 @@ console.log(SERVER_URL)
 
 const Histogram = (props) => {
   const {id} = props
-  const [histLabels, setHistLabels] = useState([]);
+  // const [histLabels, setHistLabels] = useState([]);
   const [histData, setHistData] = useState([]);
 
   ChartJS.register(
@@ -31,33 +31,31 @@ const Histogram = (props) => {
     fetch(`${SERVER_URL}/histogram/${id}`)
       .then((serverResponse) => serverResponse.json())
       .then((serverResponseJson) => {
-        const newLabels = new Array(Object.keys(serverResponseJson).length);
-        const newData = new Array(Object.keys(serverResponseJson).length);
-        Object.entries(serverResponseJson)
-          .sort((a, b) => {
-            return Number(a[0]) - Number(b[0]);
-          })
-          .forEach((e, i) => {
-            newLabels[i] = e[0];
-            newData[i] = e[1];
-            return;
-          });
-        setHistLabels(newLabels);
-        setHistData(newData);
+        // const newLabels = new Array(Object.keys(serverResponseJson).length);
+        // const newData = new Array(Object.keys(serverResponseJson).length);
+        // Object.entries(serverResponseJson)
+        //   .sort((a, b) => {
+        //     return Number(a[0]) - Number(b[0]);
+        //   })
+        //   .forEach((e, i) => {
+        //     newLabels[i] = e[0];
+        //     newData[i] = e[1];
+        //     return;
+        //   });
+        // setHistLabels(newLabels);
+        setHistData(serverResponseJson.respTimeHistData);
       });
   }, []);
 
   const data = {
-    labels: histLabels,
+    // labels: histLabels,
+    labels: histData.map((point) => point.x),
     datasets: [
       {
         label: "Frequency",
-        data: histData,
+        // data: histData,
+        data: histData.map((point) => point.y),
         backgroundColor: [
-          "rgba(255, 99, 132, 0.5)",
-          "rgba(255, 99, 132, 0.5)",
-          "rgba(255, 99, 132, 0.5)",
-          "rgba(255, 99, 132, 0.5)",
           "rgba(255, 99, 132, 0.5)",
         ],
         barPercentage: 1.0,
@@ -79,10 +77,20 @@ const Histogram = (props) => {
       },
     },
   };
+
+  // ! Temporary live-fetching data; ideally use sockets
+  setTimeout(() => {
+    fetch(`${SERVER_URL}/chartdata/linechart/${id}`)
+      .then((serverResponse) => serverResponse.json())
+      .then((serverResponseJson) => {
+        setHistData(serverResponseJson.respTimeHistData);
+      });
+  }, 2000);
   
   return (
     <div className="histogram">
-      <Bar data={data} options={options} />
+      <Bar data={data} 
+      options={options} />
     </div>
   );
 };
