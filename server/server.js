@@ -131,6 +131,13 @@ app.get("/metrics", async (req, res) => {
   return res.status(200).json(logs);
 });
 
+
+app.post("/simulation", async (req, res) => {
+  const {RPS} = req.body
+  return res.status(200).json({RPS})
+})
+
+
 app.get("/routes", async (req, res) => {
   const response = await fetch("http://localhost:9991/endpoints");
   const routes = await response.json();
