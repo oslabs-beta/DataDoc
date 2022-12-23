@@ -33,7 +33,7 @@ const LineChart = (props) => {
     datasets: [
       {
         label: "My First Dataset",
-        data: props.chartData,
+        data: chartData,
         fill: false,
         borderColor: [
           "rgb(75, 192, 192)",
