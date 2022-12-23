@@ -15,6 +15,7 @@ const PORT = process.env.PORT || 9990;
 const app = express();
 app.use(express.json());
 app.use(cors());
+app.use(express.urlencoded({ extended: true }));
 
 // routing all /chartdata endpoint traffic to chartRouter
 app.use("/chartdata", chartRouter);

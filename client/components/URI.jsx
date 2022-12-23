@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import {Link, useNavigate} from 'react-router-dom'
-// import ChartsContainer from "../containers/ChartsContainer";
+
 const URI = (props) => {
   const { id, path, method, status, addToTracking, removeFromTracking, setMonitoring } = props;
   const [ checked, setChecked ] = useState(false);
@@ -12,10 +12,10 @@ const URI = (props) => {
 
   const handleClick = (method, path) => {
     if(checked === false){
-      console.log('checked should be false: ', checked)
+      // console.log('checked should be false: ', checked)
       addToTracking(props.method, props.path)
     } else if (checked === true){
-      console.log('checked should be true: ', checked)
+      // console.log('checked should be true: ', checked)
       removeFromTracking(props.method, props.path)
     }
     setChecked(!checked);
@@ -49,7 +49,7 @@ const URI = (props) => {
           <span
             style={
               status === 200
-                ? { backgroundColor: "green" }
+                ? { backgroundColor: "limegreen" }
                 : status > 200 && status < 400 ? {backgroundColor : "yellow"}
                 : { backgroundColor: "red" }
             }

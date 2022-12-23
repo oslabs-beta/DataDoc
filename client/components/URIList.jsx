@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 // * generates unique keys
 import { v4 as uuidv4 } from "uuid";
 import { Link } from "react-router-dom";
+import Settings from "./Settings.jsx";
 
 // * import other components here
 import URI from "./URI.jsx";
@@ -110,7 +111,10 @@ const URIList = (props) => {
       },
       body: JSON.stringify(),
     })
-      .then((data) => console.log(data))
+      .then((data) => {
+        console.log("data from the handle monitoring response: ", data);
+        console.log(data);
+      })
       .catch((err) => {
         console.log("there was an error attempting to start monitoring: ", err);
         setErrorMessage(
@@ -118,6 +122,10 @@ const URIList = (props) => {
         );
       });
   };
+
+  useEffect(() => {
+    console.log(monitoringFreq);
+  }, [monitoringFreq])
 
   return (
     <div className="URIListContainer">
@@ -144,6 +152,8 @@ const URIList = (props) => {
         </div>
       </form>
       <br></br>
+      <Settings />
+      <br></br>
       <div className="URIEntries">
         {errorMessage !== "" ? (
           <FlashError errorMessage={errorMessage} />
@@ -155,7 +165,7 @@ const URIList = (props) => {
               <th>Path</th>
               <th>Method</th>
               <th>Status Code</th>
-              <th>Monitor</th>
+              <th>Simulate User Activity</th>
             </tr>
           </thead>
           <tbody>

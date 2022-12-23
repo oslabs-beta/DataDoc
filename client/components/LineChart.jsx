@@ -13,13 +13,11 @@ import {
 } from "chart.js";
 import { Line } from "react-chartjs-2";
 
-const { SERVER_URL } = process.env;
-
 const LineChart = (props) => {
-  const {id, chartData} = props
+
+  const { id, chartData } = props;
 
   ChartJS.register(
-    // CategoryScale,
     TimeScale,
     LinearScale,
     PointElement,
@@ -35,10 +33,8 @@ const LineChart = (props) => {
         label: "My First Dataset",
         data: chartData,
         fill: false,
-        borderColor: [
-          "rgb(75, 192, 192)",
-        ],
-        tension: 0.1,
+        borderColor: ["rgb(75, 192, 192)"],
+        tension: 0.25,
       },
     ],
   };
@@ -51,25 +47,14 @@ const LineChart = (props) => {
         type: "time",
       },
     },
-  }
+    animation: false,
+  };
 
-  // ! Temporary live-fetching data; ideally use sockets
-  // setTimeout(() => {
-  //   fetch(`${SERVER_URL}/chartdata/linechart/${id}`)
-  //     .then((serverResponse) => serverResponse.json())
-  //     .then((serverResponseJson) => {
-  //       setLineData(serverResponseJson.respTimeLineData);
-  //     });
-  // }, 2000);
-
-  return (
+return (
     <div className="chartWrapper">
       <div className="chartAreaWrapper">
         <div className="line-chart">
-          <Line 
-            data={data} 
-            options={options} 
-          />
+          <Line data={data} options={options} />
         </div>
       </div>
     </div>
