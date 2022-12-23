@@ -14,6 +14,7 @@ import {
 import { Line } from "react-chartjs-2";
 
 const LineChart = (props) => {
+
   const { id, chartData } = props;
 
   ChartJS.register(
@@ -49,7 +50,7 @@ const LineChart = (props) => {
     animation: false,
   };
 
-  return (
+return (
     <div className="chartWrapper">
       <div className="chartAreaWrapper">
         <div className="line-chart">

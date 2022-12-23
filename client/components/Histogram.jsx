@@ -11,6 +11,7 @@ import {
 import { Bar } from "react-chartjs-2";
 
 const Histogram = (props) => {
+
   const { id, chartData } = props;
 
   ChartJS.register(
