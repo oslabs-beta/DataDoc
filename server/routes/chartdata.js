@@ -1,6 +1,6 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const dbController = require('../controllers/dbController');
+const dbController = require("../controllers/dbController");
 
 // get line chart data
 router.get('/linechart/:id',

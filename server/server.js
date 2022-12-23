@@ -17,8 +17,7 @@ app.use(express.json());
 app.use(cors());
 
 // routing all /chartdata endpoint traffic to chartRouter
-app.use('/chartdata', chartRouter);
-
+app.use("/chartdata", chartRouter);
 
 if (MODE === "production") {
   app.use(express.static(path.join(__dirname, "../dist")));
@@ -32,12 +31,12 @@ let logs = [];
 let selectedEndpoints = [];
 let monitoringStartTime, monitoringEndTime, timeElapsed;
 
-const updateTimeElapsed = function() {
+const updateTimeElapsed = function () {
   monitoringEndTime = new Date();
   timeElapsed = new Date(monitoringEndTime - monitoringStartTime);
-  if (timeElapsed < 60 * 1000) return timeElapsed.getSeconds() + 's';
-  return timeElapsed.getMinutes() + 'm' + timeElapsed.getSeconds() % 60 + 's';
-}
+  if (timeElapsed < 60 * 1000) return timeElapsed.getSeconds() + "s";
+  return timeElapsed.getMinutes() + "m" + (timeElapsed.getSeconds() % 60) + "s";
+};
 
 const scrapeDataFromMetricsServer = async () => {
   try {
@@ -107,7 +106,8 @@ app.get("/linechart/:id", (req, res) => {
 
 app.post("/monitoring", async (req, res) => {
   // * active is a boolean, interval is in seconds
-  let { active, interval, verbose } = req.body; 
+  console.log("in server /monitoring");
+  let { active, interval, verbose } = req.body;
   if (active) {
     // * Enforce a minimum interval
     interval = interval < 0.5 ? 0.5 : interval;
@@ -131,12 +131,10 @@ app.get("/metrics", async (req, res) => {
   return res.status(200).json(logs);
 });
 
-
 app.post("/simulation", async (req, res) => {
-  const {RPS} = req.body
-  return res.status(200).json({RPS})
-})
-
+  const { RPS } = req.body;
+  return res.status(200).json({ RPS });
+});
 
 app.get("/routes", async (req, res) => {
   const response = await fetch("http://localhost:9991/endpoints");

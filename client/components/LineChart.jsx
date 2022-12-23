@@ -16,8 +16,7 @@ import { Line } from "react-chartjs-2";
 const { SERVER_URL } = process.env;
 
 const LineChart = (props) => {
-  const {id} = props
-  const [lineData, setLineData] = useState([]);
+  const {id, chartData} = props
 
   ChartJS.register(
     // CategoryScale,
@@ -30,19 +29,11 @@ const LineChart = (props) => {
     Legend
   );
 
-  useEffect(() => {
-    fetch(`${SERVER_URL}/chartdata/linechart/${id}`)
-      .then((serverResponse) => serverResponse.json())
-      .then((serverResponseJson) => {
-        setLineData(serverResponseJson.respTimeLineData);
-      });
-  }, []);
-
   const data = {
     datasets: [
       {
         label: "My First Dataset",
-        data: lineData,
+        data: chartData,
         fill: false,
         borderColor: [
           "rgb(75, 192, 192)",
@@ -63,13 +54,13 @@ const LineChart = (props) => {
   }
 
   // ! Temporary live-fetching data; ideally use sockets
-  setTimeout(() => {
-    fetch(`${SERVER_URL}/chartdata/linechart/${id}`)
-      .then((serverResponse) => serverResponse.json())
-      .then((serverResponseJson) => {
-        setLineData(serverResponseJson.respTimeLineData);
-      });
-  }, 2000);
+  // setTimeout(() => {
+  //   fetch(`${SERVER_URL}/chartdata/linechart/${id}`)
+  //     .then((serverResponse) => serverResponse.json())
+  //     .then((serverResponseJson) => {
+  //       setLineData(serverResponseJson.respTimeLineData);
+  //     });
+  // }, 2000);
 
   return (
     <div className="chartWrapper">

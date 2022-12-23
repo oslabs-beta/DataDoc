@@ -12,14 +12,15 @@ const URI = (props) => {
 
   const handleClick = (method, path) => {
     if(checked === false){
+      console.log('checked should be false: ', checked)
       addToTracking(props.method, props.path)
     } else if (checked === true){
+      console.log('checked should be true: ', checked)
       removeFromTracking(props.method, props.path)
     }
     setChecked(!checked);
     // setTracking(props.method, props.path)
   };
-
 
   return (
     <>
@@ -36,7 +37,10 @@ const URI = (props) => {
           </input>
         </td>
         <td>
-          <Link to={`/uri/${id}`} id={id} path={path}>{path}</Link>
+          <Link to={`/uri/${id}`} state={{
+              method: method,
+              path: path
+            }} id={id} method={method} path={path}>{path}</Link>
         </td>
         <td>
           {method}
