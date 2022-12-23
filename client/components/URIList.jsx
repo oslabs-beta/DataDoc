@@ -15,7 +15,9 @@ const URIList=(props)=>{
   const [errorMessage, setErrorMessage] = useState('');
   const [searchInput, setSearch] = useState('');
   const [trackingURI, setTrackingURI] = useState([])
+  const [monitoringFreq, setMonitoringFreq] = useState('')
   const {setSimulation, setMonitoring} = props
+
 
   useEffect(()=>{
     setSimulation(false)
@@ -43,6 +45,7 @@ const URIList=(props)=>{
     setTrackingURI((trackingURI)=>{
       return trackingURI
     })
+    console.log('this is trackingURI from add to tracking: ', trackingURI)
   }
 
 
@@ -89,10 +92,43 @@ const URIList=(props)=>{
         setErrorMessage('Invalid POST request from the URI List')
       })
     }, [trackingURI])
+
+    const handleMonitoringClick = (e) =>{
+      e.prevendDefault()
+      const bodyObj = {
+        active: true,
+        interval: monitoringFreq,
+        verbose: false
+      }
+      fetch(`http://localhost:${process.env.PORT}/monitoring`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify()
+      }).then((data)=>
+      console.log(data))
+      .catch((err)=>{
+        console.log('there was an error attempting to start monitoring: ', err)
+        setErrorMessage(`Invalid POST request to start monitoring, error: ${err}`)
+      })
+    }
   
   return(
     <div className='URIListContainer'>
       <SearchBar searchInput = {searchInput} setSearch = {setSearch}/>
+      <br></br>
+      <form className='monitoring' onSubmit={handleMonitoringClick}>
+        <div>
+          <label for='monitoring-time'>Set monitoring frequency:</label>
+          <input type='number' id='monitoring-time' value={monitoringFreq} placeholder='5 seconds' size='30' required onChange={e=>setMonitoringFreq(e.target.value)}></input>
+        </div>
+        <br></br>
+        <div>
+        <button type='submit'>START MONITORING</button>
+        </div>
+      </form>
+      <br></br>
       <div className='URIEntries'>
         {errorMessage !== '' ? <FlashError errorMessage={errorMessage}/> : null}
         <table>
@@ -102,7 +138,7 @@ const URIList=(props)=>{
               <th>Path</th>
               <th>Method</th>
               <th>Status Code</th>
-              <th>Simulate</th>
+              <th>Monitor</th>
             </tr>
           </thead>
           <tbody>

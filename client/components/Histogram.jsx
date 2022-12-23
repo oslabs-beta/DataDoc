@@ -14,7 +14,7 @@ const { SERVER_URL } = process.env;
 console.log(SERVER_URL)
 
 const Histogram = (props) => {
-  const {id} = props
+  const {id, chartData} = props
   const [histLabels, setHistLabels] = useState([]);
   const [histData, setHistData] = useState([]);
 
@@ -27,13 +27,30 @@ const Histogram = (props) => {
     Legend
   );
 
-  useEffect(() => {
-    fetch(`${SERVER_URL}/histogram/${id}`)
-      .then((serverResponse) => serverResponse.json())
-      .then((serverResponseJson) => {
-        const newLabels = new Array(Object.keys(serverResponseJson).length);
-        const newData = new Array(Object.keys(serverResponseJson).length);
-        Object.entries(serverResponseJson)
+  // useEffect(() => {
+  //   fetch(`${SERVER_URL}/histogram/${id}`)
+  //     .then((serverResponse) => serverResponse.json())
+  //     .then((serverResponseJson) => {
+  //       const newLabels = new Array(Object.keys(serverResponseJson).length);
+  //       const newData = new Array(Object.keys(serverResponseJson).length);
+  //       Object.entries(serverResponseJson)
+  //         .sort((a, b) => {
+  //           return Number(a[0]) - Number(b[0]);
+  //         })
+  //         .forEach((e, i) => {
+  //           newLabels[i] = e[0];
+  //           newData[i] = e[1];
+  //           return;
+  //         });
+  //       setHistLabels(newLabels);
+  //       setHistData(newData);
+  //     });
+  // }, []);
+
+  useEffect(()=>{
+    const newLabels = new Array(Object.keys(chartData).length)
+    const newData = new Array(Object.keys(chartData).length)
+    Object.entries(props.chartData)
           .sort((a, b) => {
             return Number(a[0]) - Number(b[0]);
           })
@@ -44,8 +61,7 @@ const Histogram = (props) => {
           });
         setHistLabels(newLabels);
         setHistData(newData);
-      });
-  }, []);
+      },[]);
 
   const data = {
     labels: histLabels,

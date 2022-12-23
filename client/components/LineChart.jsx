@@ -17,8 +17,6 @@ const { SERVER_URL } = process.env;
 
 const LineChart = (props) => {
   const {id, chartData} = props
-  // console.log('CHART DATA: ', chartData)
-  const [lineData, setLineData] = useState([]);
 
   ChartJS.register(
     // CategoryScale,
@@ -31,19 +29,11 @@ const LineChart = (props) => {
     Legend
   );
 
-  useEffect(() => {
-    fetch(`${SERVER_URL}/chartdata/linechart/${id}`)
-      .then((serverResponse) => serverResponse.json())
-      .then((serverResponseJson) => {
-        setLineData(serverResponseJson.respTimeLineData);
-      });
-  }, []);
-
   const data = {
     datasets: [
       {
         label: "My First Dataset",
-        data: lineData,
+        data: props.chartData,
         fill: false,
         borderColor: [
           "rgb(75, 192, 192)",
