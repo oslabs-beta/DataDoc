@@ -1,33 +1,28 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
 
 const { SERVER_URL } = process.env;
 
 const DonutChart = (props) => {
-  const { id } = props;
-  const [donutData, setDonutData] = useState([])
-  
+
+  console.log(chartData);
+  const { id, chartData } = props;
+  const [donutData, setDonutData] = useState([]);
+
   ChartJS.register(ArcElement, Tooltip, Legend);
-  
-  useEffect(() => {
-    fetch(`${SERVER_URL}/chartdata/linechart/${id}`)
-    .then((serverResponse) => serverResponse.json())
-    .then((serverResponseJson) => {
-        console.log('getting data back from res', serverResponseJson)
-        setDonutData(serverResponseJson.statusPieData);
-      });
-  }, []);
+
+  // const dummyData = [10, 20, 30]
 
   const data = {
     // labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
-    labels: donutData.map((point) => point.x),
+    labels: chartData.map((point) => point.x),
     datasets: [
       {
         label: "Status Codes",
         // data: [12, 19, 3, 5, 2, 3],
-        data: donutData.map((point) => point.y),
- 
+        data: chartData.map((point) => point.y),
+
         backgroundColor: [
           "rgba(255, 99, 132, 0.2)",
           "rgba(54, 162, 235, 0.2)",
@@ -48,15 +43,6 @@ const DonutChart = (props) => {
       },
     ],
   };
-
-  // ! Temporary live-fetching data; ideally use sockets
-  setTimeout(() => {
-    fetch(`${SERVER_URL}/chartdata/linechart/${id}`)
-      .then((serverResponse) => serverResponse.json())
-      .then((serverResponseJson) => {
-        setDonutData(serverResponseJson.statusPieData);
-      });
-  }, 2000);
 
   return (
     <div className="donut-chart">

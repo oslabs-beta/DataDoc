@@ -29,8 +29,8 @@ dbController.getRespTimeLineData = (req, res, next) => {
     |> range(start: -${range})
     |> filter(fn: (r) => r["_measurement"] == "metrics")
     |> filter(fn: (r) => r["_field"] == "res_time")
-    |> filter(fn: (r) => r["method"] == "GET")
-    |> filter(fn: (r) => r["path"] == "/slow")
+    |> filter(fn: (r) => r["method"] == "${req.query.method}")
+    |> filter(fn: (r) => r["path"] == "${req.query.path}")
     |> yield(name: "mean")`;
 
   // declare a metrics object to collect labels and data
@@ -48,7 +48,7 @@ dbController.getRespTimeLineData = (req, res, next) => {
     complete() {
       data.respTimeLineData = metrics;
       res.locals.data = data;
-      console.log("Query Finished SUCCESS");
+      //   console.log("Query Finished SUCCESS");
       return next();
     },
   });
@@ -59,8 +59,8 @@ dbController.getRespTimeHistData = (req, res, next) => {
     |> range(start: -${range})
     |> filter(fn: (r) => r["_measurement"] == "metrics")
     |> filter(fn: (r) => r["_field"] == "res_time")
-    |> filter(fn: (r) => r["method"] == "GET")
-    |> filter(fn: (r) => r["path"] == "/slow")
+    |> filter(fn: (r) => r["method"] == "${req.query.method}")
+    |> filter(fn: (r) => r["path"] == "${req.query.path}")
     |> histogram(bins : linearBins(start: 0.0, width: 50.0, count: 6), normalize: false)`;
 
   // declare a metrics object to collect labels and data
@@ -90,7 +90,7 @@ dbController.getRespTimeHistData = (req, res, next) => {
       }
       data.respTimeHistData = metrics;
       res.locals.data = data;
-      console.log("Query Finished SUCCESS");
+      //   console.log("Query Finished SUCCESS");
       return next();
     },
   });
@@ -101,8 +101,8 @@ dbController.getReqFreqLineData = (req, res, next) => {
     |> range(start: -${range})
     |> filter(fn: (r) => r["_measurement"] == "metrics")
     |> filter(fn: (r) => r["_field"] == "res_time")
-    |> filter(fn: (r) => r["method"] == "GET")
-    |> filter(fn: (r) => r["path"] == "/slow")
+    |> filter(fn: (r) => r["method"] == "${req.query.method}")
+    |> filter(fn: (r) => r["path"] == "${req.query.path}")
     |> aggregateWindow(every: 1s, fn: count, createEmpty: false)`;
 
   // declare a metrics object to collect labels and data
@@ -120,7 +120,7 @@ dbController.getReqFreqLineData = (req, res, next) => {
     complete() {
       data.reqFreqLineData = metrics;
       res.locals.data = data;
-      console.log("Query Finished SUCCESS");
+      //   console.log("Query Finished SUCCESS");
       return next();
     },
   });
@@ -131,8 +131,8 @@ dbController.getStatusPieData = (req, res, next) => {
     |> range(start: -${range})
     |> filter(fn: (r) => r["_measurement"] == "metrics")
     |> filter(fn: (r) => r["_field"] == "status_code")
-    |> filter(fn: (r) => r["method"] == "GET")
-    |> filter(fn: (r) => r["path"] == "/slow")
+    |> filter(fn: (r) => r["method"] == "${req.query.method}")
+    |> filter(fn: (r) => r["path"] == "${req.query.path}")
     |> group(columns: ["_value"])
     |> count(column: "_field")
     |> group()`;
@@ -153,7 +153,7 @@ dbController.getStatusPieData = (req, res, next) => {
     complete() {
       data.statusPieData = metrics;
       res.locals.data = data;
-      console.log("Query Finished SUCCESS");
+      //   console.log("Query Finished SUCCESS");
       return next();
     },
   });

@@ -16,7 +16,7 @@ import { Line } from "react-chartjs-2";
 const { SERVER_URL } = process.env;
 
 const LineChart = (props) => {
-  const {id, chartData} = props
+  const { id, chartData } = props;
 
   ChartJS.register(
     // CategoryScale,
@@ -35,9 +35,7 @@ const LineChart = (props) => {
         label: "My First Dataset",
         data: chartData,
         fill: false,
-        borderColor: [
-          "rgb(75, 192, 192)",
-        ],
+        borderColor: ["rgb(75, 192, 192)"],
         tension: 0.1,
       },
     ],
@@ -51,7 +49,7 @@ const LineChart = (props) => {
         type: "time",
       },
     },
-  }
+  };
 
   // ! Temporary live-fetching data; ideally use sockets
   // setTimeout(() => {
@@ -66,10 +64,7 @@ const LineChart = (props) => {
     <div className="chartWrapper">
       <div className="chartAreaWrapper">
         <div className="line-chart">
-          <Line 
-            data={data} 
-            options={options} 
-          />
+          <Line data={data} options={options} />
         </div>
       </div>
     </div>

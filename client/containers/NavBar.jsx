@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import "../styles/NavBar.scss";
 import HomeButton from "../components/HomeButton.jsx";
-import Settings from "../components/Settings.jsx";
 import { Link } from "react-router-dom";
-import Draggable from 'react-draggable'
+import Draggable from "react-draggable";
 
 const NavBar = () => {
   const width = 300;
@@ -33,19 +32,22 @@ const NavBar = () => {
         }}
       >
         <Draggable axis="y">
-        <div>
-        <button
-          className="navbar-button"
-          onClick={() => toggleMenu()}
-          style={{
-            transform: `translate(${width}px, 20vh)`,
-          }}
-        ></button>
-      </div>
-      </Draggable>
-        <Link to='/' onClick={toggleMenu}><button>Home</button></Link>
-        <Link to='/urilist'onClick={toggleMenu}>Dashboard</Link>
-        <Settings/>
+          <div>
+            <button
+              className="navbar-button"
+              onClick={() => toggleMenu()}
+              style={{
+                transform: `translate(${width}px, 20vh)`,
+              }}
+            ></button>
+          </div>
+        </Draggable>
+        <Link to="/" onClick={toggleMenu}>
+          <button>Home</button>
+        </Link>
+        <Link to="/urilist" onClick={toggleMenu}>
+          URI List
+        </Link>
       </div>
     </React.Fragment>
   );

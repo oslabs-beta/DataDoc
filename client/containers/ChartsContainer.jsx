@@ -12,34 +12,29 @@ const ChartsContainer = (props) => {
   const { method } = location.state;
   const { path } = location.state;
   const { setMonitoring, setSimulation } = props;
-  const [respTimeLineData, setRespTimeLineData] = useState({});
-  const [reqFreqLineData, setReqFreqLineData] = useState({});
-  const [respTimeHistData, setRespTimeHistData] = useState({});
-  const [statusPieData, setStatusPieData] = useState({});
+  const [respTimeLineData, setRespTimeLineData] = useState([]);
+  const [reqFreqLineData, setReqFreqLineData] = useState([]);
+  const [respTimeHistData, setRespTimeHistData] = useState([]);
+  const [statusPieData, setStatusPieData] = useState([]);
 
   const { SERVER_URL } = process.env;
-  console.log("SERVER URL: ", SERVER_URL);
-
-  // console.log('ID: ', id)
-  console.log("METHOD: ", method);
-  console.log("PATH: ", path);
 
   useEffect(() => {
     setMonitoring(true);
     setSimulation(false);
   });
 
-  //fetch request for the chart data
-  useEffect(() => {}, []);
-
   setTimeout(() => {
-    fetch(`${SERVER_URL}/chartdata/linechart/2`)
+    const encodedPath = path.replaceAll("/", "%2F");
+    fetch(`${SERVER_URL}/chartdata/?method=${method}&path=${encodedPath}`)
       .then((response) => response.json())
       .then((dataObj) => {
         setRespTimeLineData(dataObj.respTimeLineData);
         setReqFreqLineData(dataObj.reqFreqLineData);
         setRespTimeHistData(dataObj.respTimeHistData);
         setStatusPieData(dataObj.statusPieData);
+        console.log("TEST 2: ", dataObj.statusPieData);
+        console.log("TEST 1: ", statusPieData);
       })
       .catch((err) => {
         console.log(
@@ -50,7 +45,7 @@ const ChartsContainer = (props) => {
 
   return (
     <>
-      <h1>Charts Container</h1>
+      <h1>Dashboard</h1>
       <h3>Path: {path}</h3>
       <h3>Method: {method}</h3>
       <div className="charts-container">
