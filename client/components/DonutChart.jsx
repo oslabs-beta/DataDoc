@@ -2,25 +2,17 @@ import React, { useState, useEffect } from "react";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
 
-const { SERVER_URL } = process.env;
-
 const DonutChart = (props) => {
 
-  console.log(chartData);
   const { id, chartData } = props;
-  const [donutData, setDonutData] = useState([]);
 
   ChartJS.register(ArcElement, Tooltip, Legend);
 
-  // const dummyData = [10, 20, 30]
-
   const data = {
-    // labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
     labels: chartData.map((point) => point.x),
     datasets: [
       {
         label: "Status Codes",
-        // data: [12, 19, 3, 5, 2, 3],
         data: chartData.map((point) => point.y),
 
         backgroundColor: [

@@ -123,6 +123,10 @@ const URIList = (props) => {
       });
   };
 
+  useEffect(() => {
+    console.log(monitoringFreq);
+  }, [monitoringFreq])
+
   return (
     <div className="URIListContainer">
       <SearchBar searchInput={searchInput} setSearch={setSearch} />

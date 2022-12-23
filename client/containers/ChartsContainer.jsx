@@ -4,7 +4,6 @@ import DonutChart from "../components/DonutChart.jsx";
 import Histogram from "../components/Histogram.jsx";
 import "../styles/Charts.scss";
 import { useParams, useLocation } from "react-router-dom";
-import Test from "../components/test.jsx";
 
 const ChartsContainer = (props) => {
   const { id } = useParams();
@@ -33,8 +32,6 @@ const ChartsContainer = (props) => {
         setReqFreqLineData(dataObj.reqFreqLineData);
         setRespTimeHistData(dataObj.respTimeHistData);
         setStatusPieData(dataObj.statusPieData);
-        console.log("TEST 2: ", dataObj.statusPieData);
-        console.log("TEST 1: ", statusPieData);
       })
       .catch((err) => {
         console.log(
