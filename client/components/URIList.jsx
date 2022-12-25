@@ -97,19 +97,18 @@ const URIList = (props) => {
   }, [trackingURI]);
 
   const handleMonitoringClick = (e) => {
-    console.log("in the handleMonitoringClick function");
+    // console.log("in the handleMonitoringClick function");
     e.preventDefault();
-    const bodyObj = {
-      active: true,
-      interval: Number(monitoringFreq),
-      verbose: false,
-    };
     fetch(`http://localhost:${process.env.PORT}/monitoring`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(),
+      body: JSON.stringify({
+        active: true,
+        interval: monitoringFreq,
+        verbose: true,
+      }),
     })
       .then((data) => {
         console.log("data from the handle monitoring response: ", data);

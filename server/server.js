@@ -76,6 +76,9 @@ const pingTargetEndpoints = async () => {
     try {
       await fetch("http://localhost:3000" + endpoint.path, {
         method: endpoint.method,
+        headers: {
+          'Cache-Control': 'no-cache', 
+        }
       });
     } catch (e) {
       console.error(e);
@@ -107,7 +110,6 @@ app.get("/linechart/:id", (req, res) => {
 
 app.post("/monitoring", async (req, res) => {
   // * active is a boolean, interval is in seconds
-  console.log("in server /monitoring");
   let { active, interval, verbose } = req.body;
   if (active) {
     // * Enforce a minimum interval
