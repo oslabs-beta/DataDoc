@@ -1,10 +1,6 @@
 import React, { useEffect, useState } from "react";
-// * generates unique keys
-import { v4 as uuidv4 } from "uuid";
 import { Link } from "react-router-dom";
 import Settings from "./Settings.jsx";
-
-// * import other components here
 import URI from "./URI.jsx";
 import FlashError from "./FlashError.jsx";
 import SearchBar from "./SearchBar.jsx";
@@ -14,7 +10,7 @@ const URIList = (props) => {
   const [errorMessage, setErrorMessage] = useState("");
   const [searchInput, setSearch] = useState("");
   const [trackingURI, setTrackingURI] = useState([]);
-  const [monitoringFreq, setMonitoringFreq] = useState(2);
+  const [monitoringFreq, setMonitoringFreq] = useState("");
   const { setSimulation, setMonitoring } = props;
 
   useEffect(() => {
@@ -23,7 +19,7 @@ const URIList = (props) => {
   });
 
   const inputHandler = (e) => {
-    // * convert input text to lower case
+    // * Convert input text to lower case
     let lowerCase = e.target.value.toLowerCase();
     setSearch(lowerCase);
   };
@@ -49,7 +45,7 @@ const URIList = (props) => {
     });
   };
 
-  //fetch the URI List from the backend when the component mounts
+  // * Fetch the URI List from the backend when the component mounts
   useEffect(() => {
     fetch(`http://localhost:${process.env.PORT}/routes`)
       .then((response) => response.json())
@@ -65,7 +61,6 @@ const URIList = (props) => {
 
   useEffect(() => {
     fetch(`http://localhost:${process.env.PORT}/routes`, {
-      // mode: 'no-cors',
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -80,8 +75,7 @@ const URIList = (props) => {
     });
   }, [trackingURI]);
 
-  const handleStartMonitoringClick = (e) => {
-    e.preventDefault();
+  const handleStartMonitoringClick = () => {
     fetch(`http://localhost:${process.env.PORT}/monitoring`, {
       method: "POST",
       headers: {
@@ -101,9 +95,7 @@ const URIList = (props) => {
     });
   };
 
-  const handleStopMonitoringClick = (e) => {
-    e.preventDefault();
-    alert('yo');
+  const handleStopMonitoringClick = () => {
     fetch(`http://localhost:${process.env.PORT}/monitoring`, {
       method: "POST",
       headers: {
@@ -138,10 +130,10 @@ const URIList = (props) => {
         ></input>
         <br></br>
         <div>
-          <button type="submit" onClick={(e) => handleStartMonitoringClick(e)}>
+          <button onClick={(e) => handleStartMonitoringClick(e)}>
             Start Monitoring
           </button>
-          <button type="submit" onClick={(e) => handleStopMonitoringClick(e)}>
+          <button onClick={(e) => handleStopMonitoringClick(e)}>
             Stop Monitoring
           </button>
         </div>
@@ -173,7 +165,7 @@ const URIList = (props) => {
             }).map((element) => {
               return (
                 <URI
-                  id={uuidv4()}
+                  key={crypto.randomUUID()}
                   path={element.path}
                   method={element.method}
                   status={element.status}
