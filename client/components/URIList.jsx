@@ -14,7 +14,7 @@ const URIList = (props) => {
   const [errorMessage, setErrorMessage] = useState("");
   const [searchInput, setSearch] = useState("");
   const [trackingURI, setTrackingURI] = useState([]);
-  const [monitoringFreq, setMonitoringFreq] = useState("");
+  const [monitoringFreq, setMonitoringFreq] = useState(2);
   const { setSimulation, setMonitoring } = props;
 
   useEffect(() => {
@@ -29,34 +29,22 @@ const URIList = (props) => {
   };
 
   const addToTracking = (method, path) => {
-    console.log(
-      "in the addToTracking function before anything has been added: ",
-      trackingURI
-    );
     const newObject = {
       method: method,
       path: path,
     };
-    console.log("THIS IS THE NEW OBJECT: ", newObject);
     setTrackingURI((trackingURI) => [...trackingURI, newObject]);
     setTrackingURI((trackingURI) => {
       return trackingURI;
     });
-    console.log("this is trackingURI from add to tracking: ", trackingURI);
   };
 
   const removeFromTracking = (method, path) => {
-    console.log(`method: ${method}, path: ${path}`);
-    console.log(
-      "in the removeFromTracking function before anything has been removed",
-      trackingURI
-    );
     const updatedTrackingURI = trackingURI.filter((element) => {
       return element.method !== method || element.path !== path;
     });
     setTrackingURI(updatedTrackingURI);
     setTrackingURI((updatedTrackingURI) => {
-      console.log(updatedTrackingURI);
       return updatedTrackingURI;
     });
   };
@@ -69,7 +57,6 @@ const URIList = (props) => {
         setURIList(() => data);
       })
       .catch((err) => {
-        console.log(err);
         setErrorMessage("Invalid fetch request for the URI List");
         // * reset the error message
         setTimeout(() => setErrorMessage(""), 5000);
@@ -85,19 +72,15 @@ const URIList = (props) => {
       },
       body: JSON.stringify(trackingURI),
     })
-      .then((data) => {
-        // console.log('THIS IS FROM THE URILIST POST METHOD:', data)
-      })
-      .catch((err) => {
-        console.log(
-          `there was an error sending the URI tracking list, error: ${err}`
-        );
-        setErrorMessage("Invalid POST request from the URI List");
-      });
+    .catch((err) => {
+      console.log(
+        `there was an error sending the URI tracking list, error: ${err}`
+      );
+      setErrorMessage("Invalid POST request from the URI List");
+    });
   }, [trackingURI]);
 
-  const handleMonitoringClick = (e) => {
-    // console.log("in the handleMonitoringClick function");
+  const handleStartMonitoringClick = (e) => {
     e.preventDefault();
     fetch(`http://localhost:${process.env.PORT}/monitoring`, {
       method: "POST",
@@ -110,43 +93,56 @@ const URIList = (props) => {
         verbose: true,
       }),
     })
-      .then((data) => {
-        console.log("data from the handle monitoring response: ", data);
-        console.log(data);
-      })
-      .catch((err) => {
-        console.log("there was an error attempting to start monitoring: ", err);
-        setErrorMessage(
-          `Invalid POST request to start monitoring, error: ${err}`
-        );
-      });
+    .catch((err) => {
+      console.log("there was an error attempting to start monitoring: ", err);
+      setErrorMessage(
+        `Invalid POST request to start monitoring, error: ${err}`
+      );
+    });
   };
 
-  useEffect(() => {
-    console.log(monitoringFreq);
-  }, [monitoringFreq])
+  const handleStopMonitoringClick = (e) => {
+    e.preventDefault();
+    alert('yo');
+    fetch(`http://localhost:${process.env.PORT}/monitoring`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        active: false,
+      }),
+    })
+    .catch((err) => {
+      console.log("there was an error attempting to stop monitoring: ", err);
+      setErrorMessage(
+        `Invalid POST request to stop monitoring, error: ${err}`
+      );
+    });
+  };
 
   return (
     <div className="URIListContainer">
       <SearchBar searchInput={searchInput} setSearch={setSearch} />
       <br></br>
       <form className="monitoring">
-        <div>
-          <label for="monitoring-time">Set monitoring frequency:</label>
-          <input
-            type="number"
-            id="monitoring-time"
-            value={monitoringFreq}
-            placeholder="5 seconds"
-            size="30"
-            required
-            onChange={(e) => setMonitoringFreq(e.target.value)}
-          ></input>
-        </div>
+        <label htmlFor="monitoring-time">Set monitoring frequency:</label>
+        <input
+          type="number"
+          id="monitoring-time"
+          value={monitoringFreq}
+          placeholder="5 seconds"
+          size="30"
+          required
+          onChange={(e) => setMonitoringFreq(e.target.value)}
+        ></input>
         <br></br>
         <div>
-          <button type="submit" onClick={(e) => handleMonitoringClick(e)}>
-            START MONITORING
+          <button type="submit" onClick={(e) => handleStartMonitoringClick(e)}>
+            Start Monitoring
+          </button>
+          <button type="submit" onClick={(e) => handleStopMonitoringClick(e)}>
+            Stop Monitoring
           </button>
         </div>
       </form>
