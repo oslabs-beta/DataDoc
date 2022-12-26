@@ -3,15 +3,10 @@ import { Box, Slider,Typography, Button } from '@mui/material';
 
 
 const Development=(props)=>{
-  const {setSimulation} = props
   const [settings, setSettings] = useState({
     RPS: 0,
     timeInterval: 0
   })
-  
-  useEffect(()=>{
-    setSimulation(true)
-  }, [])
 
   function valuetext(value) {
 		return `${value}`;

@@ -3,7 +3,7 @@ import '../styles/Header.scss'
 
 //header to create links that will be used to navigate between routes
 const Header = (props) => {
-  const {monitoring, simulation } = props
+  const { monitoring, simulation } = props
   return(
   <header>
     <nav>

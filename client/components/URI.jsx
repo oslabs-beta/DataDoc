@@ -6,10 +6,6 @@ const URI = (props) => {
   const [ checked, setChecked ] = useState(false);
   const [charts, setCharts] = useState(false)
 
-  useEffect(()=>{
-    setMonitoring(true)
-  })
-
   const handleClick = (method, path) => {
     if(checked === false){
       // console.log('checked should be false: ', checked)

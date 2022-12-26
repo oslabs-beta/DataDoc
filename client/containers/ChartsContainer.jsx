@@ -10,18 +10,12 @@ const ChartsContainer = (props) => {
   const location = useLocation();
   const { method } = location.state;
   const { path } = location.state;
-  const { setMonitoring, setSimulation } = props;
   const [respTimeLineData, setRespTimeLineData] = useState([]);
   const [reqFreqLineData, setReqFreqLineData] = useState([]);
   const [respTimeHistData, setRespTimeHistData] = useState([]);
   const [statusPieData, setStatusPieData] = useState([]);
 
   const { SERVER_URL } = process.env;
-
-  useEffect(() => {
-    setMonitoring(true);
-    setSimulation(false);
-  });
 
   setTimeout(() => {
     const encodedPath = path.replaceAll("/", "%2F");

@@ -1,17 +1,12 @@
-import React, { useEffect } from 'react'
+import React, { useEffect } from "react";
 
 const Home = (props) => {
-  const {setSimulation, setMonitoring} = props
-  useEffect(()=>{
-    setSimulation(false)
-    setMonitoring(false)
-  })
 
-  return(
-  <div>
-    <h1>Welcome to Datatective</h1>
-  </div>
-  )
-  }
+  return (
+    <>
+      <h1>Welcome to Datatective</h1>
+    </>
+  );
+};
 
-export default Home
+export default Home;

@@ -11,12 +11,6 @@ const URIList = (props) => {
   const [searchInput, setSearch] = useState("");
   const [trackingURI, setTrackingURI] = useState([]);
   const [monitoringFreq, setMonitoringFreq] = useState("");
-  const { setSimulation, setMonitoring } = props;
-
-  useEffect(() => {
-    setSimulation(false);
-    setMonitoring(false);
-  });
 
   const inputHandler = (e) => {
     // * Convert input text to lower case
@@ -171,7 +165,6 @@ const URIList = (props) => {
                   status={element.status}
                   addToTracking={addToTracking}
                   removeFromTracking={removeFromTracking}
-                  setMonitoring={setMonitoring}
                 />
               );
             })}
