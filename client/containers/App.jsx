@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 
 import NavBar from "./NavBar.jsx";
+import Back from "../components/Back.jsx"
+import Forward from "../components/Forward.jsx"
 import Development from "./Development.jsx";
 import Production from "./Production.jsx";
 import Header from "./Header.jsx";
@@ -24,6 +26,8 @@ const App = () => {
     <Router>
       <div className="fullApp">
         <NavBar />
+        <Back />
+        <Forward />
         <Header setSimulation={setSimulation} setMonitoring={setMonitoring} />
         <div className="content">
           <Routes>
