@@ -4,9 +4,7 @@ const express = require("express");
 const fetch = require("node-fetch");
 const cors = require("cors");
 const db = require("./models/database.js");
-// require router
 const chartRouter = require("./routes/chartdata");
-const dbController = require("./controllers/dbController");
 const { Point } = require("@influxdata/influxdb-client");
 
 const MODE = process.env.NODE_ENV || "production";
@@ -17,14 +15,11 @@ app.use(express.json());
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 
-// routing all /chartdata endpoint traffic to chartRouter
-app.use("/chartdata", chartRouter);
-
 if (MODE === "production") {
   app.use(express.static(path.join(__dirname, "../dist")));
 }
 
-// routing all /chartdata endpoint traffic to chartRouter
+// * Route all /chartdata requests to chartRouter
 app.use("/chartdata", chartRouter);
 
 let intervalId;
@@ -85,28 +80,6 @@ const pingTargetEndpoints = async () => {
     }
   }
 };
-
-app.get("/histogram", (req, res) => {
-  return res.status(200).json({
-    0: 2,
-    0.1: 6,
-    0.5: 3,
-    1: 2,
-    5: 1,
-    10: 0,
-  });
-});
-
-app.get("/linechart/:id", (req, res) => {
-  return res.status(200).json({
-    0: 2,
-    1: 6,
-    2: 3,
-    3: 2,
-    4: 1,
-    5: 0,
-  });
-});
 
 app.post("/monitoring", async (req, res) => {
   // * active is a boolean, interval is in seconds
