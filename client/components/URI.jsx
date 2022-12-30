@@ -2,20 +2,15 @@ import React, { useEffect, useState, useCallback } from "react";
 import {Link, useNavigate} from 'react-router-dom'
 
 const URI = (props) => {
-  const { id, path, method, status, addToTracking, removeFromTracking, setMonitoring } = props;
+  const { id, path, method, status, addToTracking, removeFromTracking } = props;
   const [ checked, setChecked ] = useState(false);
   const [charts, setCharts] = useState(false)
 
   const handleClick = (method, path) => {
-    if(checked === false){
-      // console.log('checked should be false: ', checked)
-      addToTracking(props.method, props.path)
-    } else if (checked === true){
-      // console.log('checked should be true: ', checked)
-      removeFromTracking(props.method, props.path)
-    }
     setChecked(!checked);
-    // setTracking(props.method, props.path)
+    console.log(props.method, props.path);
+    // if (checked) addToTracking(method, path)
+    // else removeFromTracking(method, path);
   };
 
   return (
@@ -25,9 +20,7 @@ const URI = (props) => {
           <input
             type="checkbox"
             name="checkTrackingURI"
-            onChange={()=>{
-              handleClick()
-            }}
+            onChange={handleClick}
             checked={checked}
           >
           </input>

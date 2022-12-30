@@ -6,6 +6,7 @@ const Dashboard = (props) => {
   return (
     <>
       <ChartsContainer />
+      <h1>Other Dashboard Components</h1>
     </>
   );
 };
