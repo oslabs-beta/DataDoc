@@ -6,7 +6,7 @@ const cors = require("cors");
 const db = require("./models/database.js");
 const chartRouter = require("./routes/chartdata");
 const { Point } = require("@influxdata/influxdb-client");
-const pg = require("./pg.js");
+const pg = require("./models/pg.js");
 
 const MODE = process.env.NODE_ENV || "production";
 const PORT = process.env.PORT || 9990;
