@@ -83,10 +83,7 @@ const pingTargetEndpoints = async () => {
 
 // endpoint to register user email and status codes to database
 app.post("/registration", (req, res, next) => {
-  console.log('this is req.body', req.body);
-
   let {subscribers, status300, status400, status500 } = req.body;
-  
   try {
     const point = new Point('registration')
       .tag('email', subscribers)
