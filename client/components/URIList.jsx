@@ -23,9 +23,23 @@ const URIList = (props) => {
   // * Fetch the URI List from the backend when the component mounts
   useEffect(() => {
     // * Populate URIList from database
+    getURIListFromDatabase()
   }, []);
 
-  const getURIList = () => {
+  const getURIListFromServer = () => {
+    fetch(`http://localhost:${process.env.PORT}/routes/server`)
+      .then((response) => response.json())
+      .then((data) => {
+        setURIList(data);
+      })
+      .catch((err) => {
+        setErrorMessage("Invalid fetch request for the URI List");
+        // * reset the error message
+        setTimeout(() => setErrorMessage(""), 5000);
+      });
+  }
+
+  const getURIListFromDatabase = () => {
     fetch(`http://localhost:${process.env.PORT}/routes`)
       .then((response) => response.json())
       .then((data) => {
@@ -156,7 +170,7 @@ const URIList = (props) => {
         {errorMessage !== "" ? (
           <FlashError errorMessage={errorMessage} />
         ) : null}
-        <button onClick={getURIList}>Refresh</button>
+        <button onClick={getURIListFromServer}>Refresh</button>
         <table>
           <thead>
             <tr>

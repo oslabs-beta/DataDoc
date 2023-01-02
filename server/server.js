@@ -113,7 +113,7 @@ app.post("/simulation", async (req, res) => {
   return res.status(200).json({ RPS });
 });
 
-app.get("/routes", async (req, res) => {
+app.get("/routes/server", async (req, res) => {
   const response = await fetch("http://localhost:9991/endpoints");
   const routes = await response.json();
   // ! TO BE REMOVED: hard code status code 200
@@ -122,6 +122,16 @@ app.get("/routes", async (req, res) => {
     // route.tracking = true;
   });
   return res.status(200).json(routes);
+});
+
+app.get("/routes", async (req, res) => {
+  const workspace_id = req.cookies?.workspace_id || 1;
+  const queryText = `
+    SELECT * 
+    FROM endpoints
+    WHERE workspace_id = $1;`
+  const dbResponse = await pg.query(queryText, [workspace_id]);
+  return res.status(200).json(dbResponse.rows);
 });
 
 app.post("/routes", async (req, res) => {
