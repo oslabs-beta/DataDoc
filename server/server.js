@@ -6,6 +6,7 @@ const cors = require("cors");
 const db = require("./models/database.js");
 const chartRouter = require("./routes/chartdata");
 const { Point } = require("@influxdata/influxdb-client");
+const pg = require("./pg.js");
 
 const MODE = process.env.NODE_ENV || "production";
 const PORT = process.env.PORT || 9990;
@@ -124,7 +125,16 @@ app.get("/routes", async (req, res) => {
 });
 
 app.post("/routes", async (req, res) => {
-  selectedEndpoints = req.body.routes || req.body;
+  let queryText = "";
+  req.body.forEach((URI) => {
+    queryText += `
+      INSERT INTO endpoints (method, path, tracking, workspace_id) 
+      VALUES ('${URI.method}', '${URI.path}', ${URI.tracking}, 1)
+      ON CONFLICT ON CONSTRAINT endpoints_uq
+      DO UPDATE SET tracking = ${URI.tracking};`
+  })
+  pg.query(queryText);
+  selectedEndpoints = req.body.filter((URI) => URI.tracking) || req.body;
   return res.sendStatus(204);
 });
 

@@ -71,8 +71,11 @@ const URIList = (props) => {
       headers: {
         "Content-Type": "application/json",
       },
-      // body: JSON.stringify(URIList.filter((URI) => URI.tracking)),
-      body: JSON.stringify(URIList),
+      body: JSON.stringify(URIList.map(URI => ({
+        method: URI.method,
+        path: URI.path,
+        tracking: URI.tracking || false,
+      }))),
     }).catch((err) => {
       console.log(
         `there was an error sending the URI tracking list, error: ${err}`
@@ -186,7 +189,6 @@ const URIList = (props) => {
             })}
           </tbody>
         </table>
-        <button>Save</button>
       </div>
     </div>
   );
