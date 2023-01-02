@@ -1,35 +1,48 @@
 import React, { useEffect, useState } from "react";
 import "../styles/Settings.scss";
 
+const { SERVER_URL } = process.env;
+
 const Settings = (props) => {
   const [showSettingsPopUp, setShowSettingsPopUp] = useState(false);
   const [settingValues, setSettingValues] = useState({
     subscribers: [],
-    alertStatus: "",
-    monitoringFrequency: 0,
+    status300: false,
+    status400: false,
+    status500: false,
   });
 
   function handleChange(e, updateValue) {
-    const settingsUpdate = { [updateValue]: e.target.value };
-    const updatedState = {
-      ...settingValues,
-      ...settingsUpdate,
-    };
+    let settingsUpdate;
+    let updatedState;
+    if(updateValue === 'status300' || updateValue === 'status400' || updateValue === 'status500'){
+      settingsUpdate = { [updateValue]: e.target.checked };
+      updatedState = {
+        ...settingValues,
+        ...settingsUpdate,
+      } 
+    } else {
+      settingsUpdate = { [updateValue]: e.target.value };
+      updatedState = {
+        ...settingValues,
+        ...settingsUpdate,
+      };
+    }
     setSettingValues(updatedState);
   }
   //send a post request to update the settings
   function handleSubmit(e) {
     e.preventDefault();
-    fetch("/SUBMIT USER SETTINGS", {
+    fetch(`${SERVER_URL}/registration`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(settingValues),
     }).then(() => {
-      //props.renderAfterPageUpdate()
       setSettingValues({
         subscribers: [],
-        alertStatus: "",
-        monitoringFrequency: 0,
+        status300: false,
+        status400: false,
+        status500: false
       });
     });
   }
@@ -37,15 +50,9 @@ const Settings = (props) => {
   const settingsForm = (
     <form className="modal">
       <div className="modal-content">
-        <button
-          className="close-button"
-          onClick={() => setShowSettingsPopUp(false)}
-        >
-          X
-        </button>
+        <button className="close-button" onClick={() => setShowSettingsPopUp(false)}>X</button>
         <p className="modal-header">Settings</p>
         <label for="subscribers">Enter all subscribers:</label>
-        <br></br>
         <input
           name="subscribers"
           className="subscribers"
@@ -54,30 +61,16 @@ const Settings = (props) => {
           multiple
           onChange={(e) => handleChange(e, "subscribers")}
         ></input>
-        <br></br>
-        <label for="alert">
-          Select the status code when you would like us to notify subscribers:
-        </label>
-        <br></br>
-        <select
-          name="alert"
-          className="alert-status-codes"
-          onChange={() => handleChange(e, "alertStatus")}
-          multiple
-        >
-          <option value="200">200</option>
-          <option value="300">300</option>
-          <option value="400">400</option>
-          <option value="500">500</option>
-        </select>
-        <br></br>
-        <button
-          className="submit-button"
-          type="submit"
-          onClick={(e) => handleSubmit(e)}
-        >
-          Update Settings
-        </button>
+        <table>
+          <label for="alert">Select the status code when you would like us to notify subscribers:</label>
+          <tr><input type="checkbox" id='checkbox300' value="300" onChange={(e) => handleChange(e, "status300")}></input>
+          <label htmlFor='checkbox300'>300</label></tr>
+          <tr><input type="checkbox" id='checkbox400' value="400" onChange={(e) => handleChange(e, "status400")}></input>
+          <label htmlFor='checkbox400'>400</label></tr>
+          <tr><input type="checkbox" id='checkbox500' value="500" onChange={(e) => handleChange(e, "status500")}></input>
+          <label htmlFor='checkbox500'>500</label></tr>
+        </table>
+        <button className="submit-button" type="submit" onClick={(e) => handleSubmit(e)}>Update Settings</button>
       </div>
     </form>
   );

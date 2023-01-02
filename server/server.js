@@ -81,6 +81,22 @@ const pingTargetEndpoints = async () => {
   }
 };
 
+// endpoint to register user email and status codes to database
+app.post("/registration", (req, res, next) => {
+  let {subscribers, status300, status400, status500 } = req.body;
+  try {
+    const point = new Point('registration')
+      .tag('email', subscribers)
+      .booleanField('300', status300)
+      .booleanField('400', status400)
+      .booleanField('500', status500)
+    db.insertRegistration(point);
+    return next();
+  } catch (e) {
+    console.error(e);
+  }},
+  (req, res) => res.sendStatus(200))
+
 app.post("/monitoring", async (req, res) => {
   // * active is a boolean, interval is in seconds
   let { active, interval, verbose } = req.body;
