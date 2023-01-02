@@ -13,7 +13,6 @@ const Settings = (props) => {
   });
 
   function handleChange(e, updateValue) {
-    console.log('in handle change', e.target.checked)
     let settingsUpdate;
     let updatedState;
     if(updateValue === 'status300' || updateValue === 'status400' || updateValue === 'status500'){
