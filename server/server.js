@@ -118,6 +118,7 @@ app.get("/routes", async (req, res) => {
   // ! TO BE REMOVED: hard code status code 200
   routes.forEach((route) => {
     route.status = 200;
+    // route.tracking = true;
   });
   return res.status(200).json(routes);
 });
