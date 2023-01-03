@@ -1,5 +1,3 @@
--- CREATE DATABASE datadoc;
-
 CREATE TABLE endpoints (
   _id SERIAL,
   method TEXT NOT NULL,
