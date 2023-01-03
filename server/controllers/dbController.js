@@ -61,7 +61,7 @@ dbController.getRespTimeHistData = (req, res, next) => {
     |> filter(fn: (r) => r["_field"] == "res_time")
     |> filter(fn: (r) => r["method"] == "${req.query.method}")
     |> filter(fn: (r) => r["path"] == "${req.query.path}")
-    |> histogram(bins : linearBins(start: 0.0, width: 50.0, count: 6), normalize: false)`;
+    |> histogram(bins: [0.1, 0.5, 1.0, 5.0, 10.0, 50.0, 100.0, 500.0, 1000.0, 5000.0])`;
 
   // declare a metrics object to collect labels and data
   const metrics = [];
