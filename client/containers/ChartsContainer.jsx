@@ -21,11 +21,6 @@ const ChartsContainer = (props) => {
       .then((response) => response.json())
       .then((dataObj) => {
         setChartsData(dataObj);
-        console.log('success', dataObj);
-        // setRespTimeLineData(dataObj.respTimeLineData);
-        // setReqFreqLineData(dataObj.reqFreqLineData);
-        // setRespTimeHistData(dataObj.respTimeHistData);
-        // setStatusPieData(dataObj.statusPieData);
       })
       .catch((err) => {
         console.log(
