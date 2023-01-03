@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import { ColorModeContext, useMode } from "./theme.js";
+import { CssBaseline, ThemeProvider } from "@mui/material";
 
 import NavBar from "./NavBar.jsx";
 import Topbar from "./Topbar.jsx";
@@ -22,8 +24,11 @@ const App = () => {
 
   const [simulation, setSimulation] = useState(false);
   const [monitoring, setMonitoring] = useState(false);
-
+  const [theme, colorMode] = useMode();
   return (
+    <ColorModeContext.Provider value = {colorMode}>
+    <ThemeProvider theme={theme}>
+    <CssBaseline />
     <Router>
       <div className="fullApp">
         <NavBar />
@@ -43,6 +48,8 @@ const App = () => {
         </div>
       </div>
     </Router>
+    </ThemeProvider>
+    </ColorModeContext.Provider>
   );
 };
 
