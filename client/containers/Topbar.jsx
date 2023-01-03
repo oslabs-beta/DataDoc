@@ -10,7 +10,6 @@ const Topbar = () => {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
     const colorMode = useContext(ColorModeContext);
-    console.log(theme.palette.mode)
     return (
         
         <Box display="flex">

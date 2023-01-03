@@ -3,6 +3,7 @@ import { ColorModeContext, useMode } from "./theme.js";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 
 import NavBar from "./NavBar.jsx";
+import Sidebar from "./Sidebar.jsx";
 import Topbar from "./Topbar.jsx";
 import Back from "../components/Back.jsx"
 import Forward from "../components/Forward.jsx"
@@ -32,11 +33,12 @@ const App = () => {
     <Router>
       <div className="fullApp">
         <NavBar />
-        <Topbar />
-        <Back />
-        <Forward />
-        <Header setSimulation={setSimulation} setMonitoring={setMonitoring} />
+        {/* <Sidebar /> */}
         <div className="content">
+          <Topbar />
+          <Back />
+          <Forward />
+          <Header setSimulation={setSimulation} setMonitoring={setMonitoring} />
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/urilist" element={<URIList />} />
