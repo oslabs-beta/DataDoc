@@ -55,6 +55,7 @@
     "express-endpoints-monitor": "^1.0.0",
     "node-fetch": "^2.6.7",
     "nodemon": "^2.0.20",
+    "pg": "^8.8.0",
     "prom2json-se": "^0.6.0",
     "react": "^18.2.0",
     "react-chartjs-2": "^5.0.1",

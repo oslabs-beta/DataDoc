@@ -6,6 +6,7 @@ const cors = require("cors");
 const db = require("./models/database.js");
 const chartRouter = require("./routes/chartdata");
 const { Point } = require("@influxdata/influxdb-client");
+const pg = require("../database/pg.js");
 
 const MODE = process.env.NODE_ENV || "production";
 const PORT = process.env.PORT || 9990;
@@ -128,7 +129,7 @@ app.post("/simulation", async (req, res) => {
   return res.status(200).json({ RPS });
 });
 
-app.get("/routes", async (req, res) => {
+app.get("/routes/server", async (req, res) => {
   const response = await fetch("http://localhost:9991/endpoints");
   const routes = await response.json();
   // ! TO BE REMOVED: hard code status code 200
@@ -139,8 +140,27 @@ app.get("/routes", async (req, res) => {
   return res.status(200).json(routes);
 });
 
+app.get("/routes", async (req, res) => {
+  const workspace_id = req.cookies?.workspace_id || 1;
+  const queryText = `
+    SELECT * 
+    FROM endpoints
+    WHERE workspace_id = $1;`
+  const dbResponse = await pg.query(queryText, [workspace_id]);
+  return res.status(200).json(dbResponse.rows);
+});
+
 app.post("/routes", async (req, res) => {
-  selectedEndpoints = req.body.routes || req.body;
+  let queryText = "";
+  req.body.forEach((URI) => {
+    queryText += `
+      INSERT INTO endpoints (method, path, tracking, workspace_id) 
+      VALUES ('${URI.method}', '${URI.path}', ${URI.tracking}, 1)
+      ON CONFLICT ON CONSTRAINT endpoints_uq
+      DO UPDATE SET tracking = ${URI.tracking};`
+  })
+  pg.query(queryText);
+  selectedEndpoints = req.body.filter((URI) => URI.tracking) || req.body;
   return res.sendStatus(204);
 });
 
