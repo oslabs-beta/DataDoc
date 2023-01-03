@@ -34,29 +34,31 @@ const DonutChart = (props) => {
   };
 
   const data = {
-    labels: chartData.map((point) => point.x),
+    labels: chartData.map((point) => String(point.x)),
     datasets: [
       {
         label: "Count",
         data: chartData.map((point) => point.y),
         backgroundColor: chartData
           .map((point) => point.x)
-          .map((status_code) => colorMapper(status_code, gradientFactor, backgroundOpacity)),
+          .map((status_code) =>
+            colorMapper(status_code, gradientFactor, backgroundOpacity)
+          ),
         borderColor: chartData
           .map((point) => point.x)
-          .map((status_code) => colorMapper(status_code, gradientFactor, borderOpacity)),
+          .map((status_code) =>
+            colorMapper(status_code, gradientFactor, borderOpacity)
+          ),
         borderWidth: 1,
       },
     ],
   };
 
   const options = {
-    legend: {
-      position: "right",
-    },
     plugins: {
       legend: {
-        // position: "right",
+        position: "left",
+        align: "top",
       },
     },
   };
