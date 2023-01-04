@@ -9,11 +9,11 @@ const { SERVER_URL } = process.env;
 
 const ChartsContainer = (props) => {
   const { id } = useParams();
+  const [chartsData, setChartsData] = useState({});
+  
   const location = useLocation();
   const { method } = location.state;
   const { path } = location.state;
-  const [chartsData, setChartsData] = useState({});
-
 
   setTimeout(() => {
     const encodedPath = path.replaceAll("/", "%2F");
@@ -38,7 +38,7 @@ const ChartsContainer = (props) => {
         <LineChart id={id} chartData={chartsData.respTimeLineData || [] } />
         <Histogram id={id} chartData={chartsData.respTimeHistData || [] } />
         <LineChart id={id} chartData={chartsData.reqFreqLineData || [] } />
-        <DonutChart id={id} chartData={chartsData.statusPieData || [] } />
+        <DonutChart id={id} chartData={chartsData.statusPieData || [{ x: "N/A", y: 1 }] } />
       </div>
     </>
   );

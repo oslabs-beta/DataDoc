@@ -11,7 +11,10 @@ const DonutChart = (props) => {
   const borderOpacity = 1;
   const gradientFactor = 4;
   const colorMapper = (value, gradientFactor, opacity) => {
-    if (value < 200)
+    if (value === "N/A") {
+      return `rgba(192, 192, 192, ${opacity})`
+    }
+    else if (value < 200)
       return `rgba(64, ${
         192 - (Number(value) % 100) * gradientFactor
       }, 192, ${opacity})`;
