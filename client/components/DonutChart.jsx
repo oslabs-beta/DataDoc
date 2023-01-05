@@ -3,42 +3,72 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
 
 const DonutChart = (props) => {
-
   const { id, chartData } = props;
 
   ChartJS.register(ArcElement, Tooltip, Legend);
 
+  const backgroundOpacity = 0.75;
+  const borderOpacity = 1;
+  const gradientFactor = 4;
+  const colorMapper = (value, gradientFactor, opacity) => {
+    if (value === "N/A") {
+      return `rgba(192, 192, 192, ${opacity})`
+    }
+    else if (value < 200)
+      return `rgba(64, ${
+        192 - (Number(value) % 100) * gradientFactor
+      }, 192, ${opacity})`;
+    else if (value < 300)
+      return `rgba(64, ${
+        255 - (Number(value) % 200) * gradientFactor
+      }, 64, ${opacity})`;
+    else if (value < 400)
+      return `rgba(${255 - (Number(value) % 300) * gradientFactor},${
+        255 - (Number(value) % 300) * gradientFactor
+      }, 128, ${opacity})`;
+    else if (value < 500)
+      return `rgba(${
+        255 - (Number(value) % 400) * gradientFactor
+      }, 64, 64, ${opacity})`;
+    else if (value < 600)
+      return `rgba(${
+        128 - (Number(value) % 500) * gradientFactor
+      }, 64, 255, ${opacity})`;
+  };
+
   const data = {
-    labels: chartData.map((point) => point.x),
+    labels: chartData.map((point) => String(point.x)),
     datasets: [
       {
-        label: "Status Codes",
+        label: "Count",
         data: chartData.map((point) => point.y),
-
-        backgroundColor: [
-          "rgba(255, 99, 132, 0.2)",
-          "rgba(54, 162, 235, 0.2)",
-          "rgba(255, 206, 86, 0.2)",
-          "rgba(75, 192, 192, 0.2)",
-          "rgba(153, 102, 255, 0.2)",
-          "rgba(255, 159, 64, 0.2)",
-        ],
-        borderColor: [
-          "rgba(255, 99, 132, 1)",
-          "rgba(54, 162, 235, 1)",
-          "rgba(255, 206, 86, 1)",
-          "rgba(75, 192, 192, 1)",
-          "rgba(153, 102, 255, 1)",
-          "rgba(255, 159, 64, 1)",
-        ],
+        backgroundColor: chartData
+          .map((point) => point.x)
+          .map((status_code) =>
+            colorMapper(status_code, gradientFactor, backgroundOpacity)
+          ),
+        borderColor: chartData
+          .map((point) => point.x)
+          .map((status_code) =>
+            colorMapper(status_code, gradientFactor, borderOpacity)
+          ),
         borderWidth: 1,
       },
     ],
   };
 
+  const options = {
+    plugins: {
+      legend: {
+        position: "left",
+        align: "top",
+      },
+    },
+  };
+
   return (
     <div className="donut-chart">
-      <Doughnut data={data} />
+      <Doughnut data={data} options={options} />
     </div>
   );
 };

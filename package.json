@@ -1,8 +1,8 @@
 {
-  "name": "datective",
+  "name": "DataDoc",
   "version": "1.0.0",
   "description": "",
-  "productName": "Datective",
+  "productName": "DataDoc",
   "main": "electron/electron-main.js",
   "scripts": {
     "start": "NODE_ENV=production nodemon server/server.js & NODE_ENV=production electron .",
