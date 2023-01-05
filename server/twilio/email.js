@@ -11,7 +11,7 @@ const msg = () => {
   const body =
     "This is a notifaction from the Datatective team. We have found an outage in your system, please open up the Datatective desktop application for more information.";
   return {
-    to: "jamie.abrams.schiff@gmail.com",
+    to: "example@domain.com", // ! query from database
     from: "datadocteam@gmail.com",
     subject: "IMPORTANT: outage detected from datatective",
     text: body,
