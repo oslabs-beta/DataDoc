@@ -1,12 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { Box, Slider,Typography, Button } from '@mui/material';
+import { useLocation } from "react-router-dom";
 
 
-const Development=(props)=>{
+
+const Development = (props)=> {
   const [settings, setSettings] = useState({
     RPS: 0,
     timeInterval: 0
   })
+  const location = useLocation();
+  const { method } = location.state;
+  const { path } = location.state;
+
+  console.log('THIS IS THE METHOD: ', method)
+  console.log('THIS IS THE PATH: ', path)
+
 
   function valuetext(value) {
 		return `${value}`;
@@ -30,7 +39,7 @@ const Development=(props)=>{
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(settings)
+      body: JSON.stringify({...settings, path:path})
     }).then((res) => res.json())
     .then((data)=>{
       console.log('THIS IS FROM THE RESPONSE', data)
@@ -41,7 +50,7 @@ const Development=(props)=>{
   }
 
 
-  return(
+  return (
     <div className='developmentContainer'>
       <Box display="flex" flexDirection="column" m={10}>
       <Typography id="hdr" variant="h3" gutterBottom>

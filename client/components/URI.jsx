@@ -47,7 +47,10 @@ const URI = (props) => {
           </span>
         </td>
         <td>
-          <Link to={`/development/${id}`} id={id} path={path}><button>CLICK ME</button></Link>
+          <Link to={`/development/${id}`} state={{
+              method: method,
+              path: path
+            }} id={id} method={method} path={path}><button>CLICK ME</button></Link>
         </td>
       </tr>
     </>
