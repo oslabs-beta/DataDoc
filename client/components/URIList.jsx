@@ -10,6 +10,7 @@ const URIList = (props) => {
   const [errorMessage, setErrorMessage] = useState("");
   const [searchInput, setSearch] = useState("");
   const [monitoringFreq, setMonitoringFreq] = useState("");
+  const [firstLoad, setFirstLoad] = useState(true);
 
   const minFreq = 0.5;
 
@@ -21,17 +22,35 @@ const URIList = (props) => {
 
   // * Fetch the URI List from the backend when the component mounts
   useEffect(() => {
-    fetch(`http://localhost:${process.env.PORT}/routes`)
+    // * Populate URIList from database
+    getURIListFromDatabase()
+  }, []);
+
+  const getURIListFromServer = () => {
+    fetch(`http://localhost:${process.env.PORT}/routes/server`)
       .then((response) => response.json())
       .then((data) => {
-        setURIList(() => data);
+        setURIList(data);
       })
       .catch((err) => {
         setErrorMessage("Invalid fetch request for the URI List");
         // * reset the error message
         setTimeout(() => setErrorMessage(""), 5000);
       });
-  }, []);
+  }
+
+  const getURIListFromDatabase = () => {
+    fetch(`http://localhost:${process.env.PORT}/routes`)
+      .then((response) => response.json())
+      .then((data) => {
+        setURIList(data);
+      })
+      .catch((err) => {
+        setErrorMessage("Invalid fetch request for the URI List");
+        // * reset the error message
+        setTimeout(() => setErrorMessage(""), 5000);
+      });
+  }
 
   const addToTracking = (method, path) => {
     const newURIList = [...URIList]
@@ -56,14 +75,21 @@ const URIList = (props) => {
   };
 
   // * Update the list of tracked URIs in the server whenever a checkbox changes
-
   useEffect(() => {
+    if (firstLoad) {
+      setFirstLoad(false);
+      return;
+    }
     fetch(`http://localhost:${process.env.PORT}/routes`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(URIList.filter((URI) => URI.tracking)),
+      body: JSON.stringify(URIList.map(URI => ({
+        method: URI.method,
+        path: URI.path,
+        tracking: URI.tracking || false,
+      }))),
     }).catch((err) => {
       console.log(
         `there was an error sending the URI tracking list, error: ${err}`
@@ -144,6 +170,7 @@ const URIList = (props) => {
         {errorMessage !== "" ? (
           <FlashError errorMessage={errorMessage} />
         ) : null}
+        <button onClick={getURIListFromServer}>Refresh</button>
         <table>
           <thead>
             <tr>
