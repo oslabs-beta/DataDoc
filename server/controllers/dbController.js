@@ -9,8 +9,14 @@ const bucket = process.env.DB_INFLUXDB_INIT_BUCKET;
 
 const queryApi = new InfluxDB({
   url: "http://localhost:8086",
-  token: token,
-}).getQueryApi(org);
+  token: token
+}).getQueryApi({
+  org,
+  gzip: true,
+  headers: {
+    "Content-Encoding": "gzip"
+  }
+});
 
 const dbController = {};
 
@@ -21,17 +27,19 @@ const data = {
   respTimeLineData: [],
   respTimeHistData: [],
   reqFreqLineData: [],
-  statusPieData: [],
+  statusPieData: []
 };
 
 dbController.getRespTimeLineData = (req, res, next) => {
-  const fluxQuery = `from(bucket: "dev-bucket")
+  const fluxQuery = `
+    from(bucket: "dev-bucket")
     |> range(start: -${range})
     |> filter(fn: (r) => r["_measurement"] == "metrics")
     |> filter(fn: (r) => r["_field"] == "res_time")
     |> filter(fn: (r) => r["method"] == "${req.query.method}")
     |> filter(fn: (r) => r["path"] == "${req.query.path}")
-    |> yield(name: "mean")`;
+    |> yield(name: "mean")
+  `;
 
   // declare a metrics object to collect labels and data
   const metrics = [];
@@ -50,18 +58,20 @@ dbController.getRespTimeLineData = (req, res, next) => {
       res.locals.data = data;
       //   console.log("Query Finished SUCCESS");
       return next();
-    },
+    }
   });
 };
 
 dbController.getRespTimeHistData = (req, res, next) => {
-  const fluxQuery = `from(bucket: "dev-bucket")
+  const fluxQuery = `
+    from(bucket: "dev-bucket")
     |> range(start: -${range})
     |> filter(fn: (r) => r["_measurement"] == "metrics")
     |> filter(fn: (r) => r["_field"] == "res_time")
     |> filter(fn: (r) => r["method"] == "${req.query.method}")
     |> filter(fn: (r) => r["path"] == "${req.query.path}")
-    |> histogram(bins: [0.1, 0.5, 1.0, 5.0, 10.0, 50.0, 100.0, 500.0, 1000.0, 5000.0])`;
+    |> histogram(bins: [0.1, 0.5, 1.0, 5.0, 10.0, 50.0, 100.0, 500.0, 1000.0, 5000.0])
+  `;
 
   // declare a metrics object to collect labels and data
   const metrics = [];
@@ -92,18 +102,20 @@ dbController.getRespTimeHistData = (req, res, next) => {
       res.locals.data = data;
       //   console.log("Query Finished SUCCESS");
       return next();
-    },
+    }
   });
 };
 
 dbController.getReqFreqLineData = (req, res, next) => {
-  const fluxQuery = `from(bucket: "dev-bucket")
+  const fluxQuery = `
+    from(bucket: "dev-bucket")
     |> range(start: -${range})
     |> filter(fn: (r) => r["_measurement"] == "metrics")
     |> filter(fn: (r) => r["_field"] == "res_time")
     |> filter(fn: (r) => r["method"] == "${req.query.method}")
     |> filter(fn: (r) => r["path"] == "${req.query.path}")
-    |> aggregateWindow(every: 1s, fn: count, createEmpty: false)`;
+    |> aggregateWindow(every: 1s, fn: count, createEmpty: false)
+  `;
 
   // declare a metrics object to collect labels and data
   const metrics = [];
@@ -122,12 +134,13 @@ dbController.getReqFreqLineData = (req, res, next) => {
       res.locals.data = data;
       //   console.log("Query Finished SUCCESS");
       return next();
-    },
+    }
   });
 };
 
 dbController.getStatusPieData = (req, res, next) => {
-  const influxQuery = `from(bucket: "dev-bucket") 
+  const influxQuery = `
+    from(bucket: "dev-bucket") 
     |> range(start: -${range})
     |> filter(fn: (r) => r["_measurement"] == "metrics")
     |> filter(fn: (r) => r["_field"] == "status_code")
@@ -135,7 +148,8 @@ dbController.getStatusPieData = (req, res, next) => {
     |> filter(fn: (r) => r["path"] == "${req.query.path}")
     |> group(columns: ["_value"])
     |> count(column: "_field")
-    |> group()`;
+    |> group()
+  `;
 
   // declare a metrics object to collect labels and data
   const metrics = [];
@@ -155,7 +169,7 @@ dbController.getStatusPieData = (req, res, next) => {
       res.locals.data = data;
       //   console.log("Query Finished SUCCESS");
       return next();
-    },
+    }
   });
 };
 
