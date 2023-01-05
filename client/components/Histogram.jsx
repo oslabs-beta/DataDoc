@@ -15,7 +15,7 @@ const Histogram = (props) => {
   const removeEmptyBins = (histData) => {
     const newData = [];
     for (let i = 0; i < histData.length; i++) {
-      const someInLaterBins = histData.slice(i).some((dataPoint) => dataPoint.y > 0)
+      const someInLaterBins = histData.slice((i > 0 ? i - 1 : 0)).some((dataPoint) => dataPoint.y > 0)
       if (someInLaterBins) {
         newData.push(histData[i]);
       } else {
