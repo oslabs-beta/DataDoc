@@ -6,6 +6,7 @@ const cors = require("cors");
 const db = require("./models/database.js");
 const chartRouter = require("./routes/chartdata");
 const { Point } = require("@influxdata/influxdb-client");
+const { url } = require("inspector");
 const pg = require("../database/pg.js");
 
 const MODE = process.env.NODE_ENV || "production";
@@ -120,14 +121,49 @@ app.post("/monitoring", async (req, res) => {
   res.sendStatus(204);
 });
 
-app.get("/metrics", async (req, res) => {
+
+const pingOneEndpoint = async (path) => {
+  try {
+    await fetch("http://localhost:3000" + path, {
+      method: "GET",
+      headers: {
+        'Cache-Control': 'no-cache', 
+      }
+    });
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+const performRPS= async (path, RPS) => {
+  const interval = Math.floor(1000/RPS)
+  if (intervalId) clearInterval(intervalId)
+  intervalId = setInterval(() => pingOneEndpoint(path), interval)
+}
+
+const rpswithInterval = async (path,RPS,timeInterval) => {
+    if (intervalId) clearInterval(intervalId);
+    intervalId = setInterval(() => {
+      performRPS(path,RPS)
+      console.log("PING FINISHED")
+    }, timeInterval * 1000);
+  };
+
+
+app.post("/simulation", async (req, res) => {
+  const {RPS, timeInterval, path} = req.body;
+  if (intervalId) clearInterval(intervalId)
+  rpswithInterval(path,RPS,timeInterval)
+  console.log("PING RESULT DONE")
+  return res.status(200).send("hi");
+
+});
+
+app.get ("/metrics", async (req, res) => {
   return res.status(200).json(logs);
 });
 
-app.post("/simulation", async (req, res) => {
-  const { RPS } = req.body;
-  return res.status(200).json({ RPS });
-});
+
 
 app.get("/routes/server", async (req, res) => {
   const response = await fetch("http://localhost:9991/endpoints");
