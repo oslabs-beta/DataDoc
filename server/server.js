@@ -7,6 +7,7 @@ const db = require("./models/database.js");
 const chartRouter = require("./routes/chartdata");
 const { Point } = require("@influxdata/influxdb-client");
 const { url } = require("inspector");
+const pg = require("../database/pg.js");
 
 const MODE = process.env.NODE_ENV || "production";
 const PORT = process.env.PORT || 9990;
@@ -82,6 +83,22 @@ const pingTargetEndpoints = async () => {
   }
 };
 
+// endpoint to register user email and status codes to database
+app.post("/registration", (req, res, next) => {
+  let {subscribers, status300, status400, status500 } = req.body;
+  try {
+    const point = new Point('registration')
+      .tag('email', subscribers)
+      .booleanField('300', status300)
+      .booleanField('400', status400)
+      .booleanField('500', status500)
+    db.insertRegistration(point);
+    return next();
+  } catch (e) {
+    console.error(e);
+  }},
+  (req, res) => res.sendStatus(200))
+
 app.post("/monitoring", async (req, res) => {
   // * active is a boolean, interval is in seconds
   let { active, interval, verbose } = req.body;
@@ -148,19 +165,38 @@ app.get ("/metrics", async (req, res) => {
 
 
 
-app.get("/routes", async (req, res) => {
+app.get("/routes/server", async (req, res) => {
   const response = await fetch("http://localhost:9991/endpoints");
   const routes = await response.json();
   // ! TO BE REMOVED: hard code status code 200
   routes.forEach((route) => {
     route.status = 200;
+    // route.tracking = true;
   });
   return res.status(200).json(routes);
 });
 
+app.get("/routes", async (req, res) => {
+  const workspace_id = req.cookies?.workspace_id || 1;
+  const queryText = `
+    SELECT * 
+    FROM endpoints
+    WHERE workspace_id = $1;`
+  const dbResponse = await pg.query(queryText, [workspace_id]);
+  return res.status(200).json(dbResponse.rows);
+});
 
 app.post("/routes", async (req, res) => {
-  selectedEndpoints = req.body.routes || req.body;
+  let queryText = "";
+  req.body.forEach((URI) => {
+    queryText += `
+      INSERT INTO endpoints (method, path, tracking, workspace_id) 
+      VALUES ('${URI.method}', '${URI.path}', ${URI.tracking}, 1)
+      ON CONFLICT ON CONSTRAINT endpoints_uq
+      DO UPDATE SET tracking = ${URI.tracking};`
+  })
+  pg.query(queryText);
+  selectedEndpoints = req.body.filter((URI) => URI.tracking) || req.body;
   return res.sendStatus(204);
 });
 

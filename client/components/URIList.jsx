@@ -9,8 +9,10 @@ const URIList = (props) => {
   const [URIList, setURIList] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
   const [searchInput, setSearch] = useState("");
-  const [trackingURI, setTrackingURI] = useState([]);
   const [monitoringFreq, setMonitoringFreq] = useState("");
+  const [firstLoad, setFirstLoad] = useState(true);
+
+  const minFreq = 0.5;
 
   const inputHandler = (e) => {
     // * Convert input text to lower case
@@ -18,58 +20,87 @@ const URIList = (props) => {
     setSearch(lowerCase);
   };
 
-  const addToTracking = (method, path) => {
-    const newObject = {
-      method: method,
-      path: path,
-    };
-    setTrackingURI((trackingURI) => [...trackingURI, newObject]);
-    setTrackingURI((trackingURI) => {
-      return trackingURI;
-    });
-  };
-
-  const removeFromTracking = (method, path) => {
-    const updatedTrackingURI = trackingURI.filter((element) => {
-      return element.method !== method || element.path !== path;
-    });
-    setTrackingURI(updatedTrackingURI);
-    setTrackingURI((updatedTrackingURI) => {
-      return updatedTrackingURI;
-    });
-  };
-
   // * Fetch the URI List from the backend when the component mounts
   useEffect(() => {
-    fetch(`http://localhost:${process.env.PORT}/routes`)
+    // * Populate URIList from database
+    getURIListFromDatabase()
+  }, []);
+
+  const getURIListFromServer = () => {
+    fetch(`http://localhost:${process.env.PORT}/routes/server`)
       .then((response) => response.json())
       .then((data) => {
-        setURIList(() => data);
+        setURIList(data);
       })
       .catch((err) => {
         setErrorMessage("Invalid fetch request for the URI List");
         // * reset the error message
         setTimeout(() => setErrorMessage(""), 5000);
       });
-  }, []);
+  }
 
+  const getURIListFromDatabase = () => {
+    fetch(`http://localhost:${process.env.PORT}/routes`)
+      .then((response) => response.json())
+      .then((data) => {
+        setURIList(data);
+      })
+      .catch((err) => {
+        setErrorMessage("Invalid fetch request for the URI List");
+        // * reset the error message
+        setTimeout(() => setErrorMessage(""), 5000);
+      });
+  }
+
+  const addToTracking = (method, path) => {
+    const newURIList = [...URIList]
+    for (const URI of newURIList) {
+      if (URI.method === method && URI.path === path) {
+        URI.tracking = true;
+        break;
+      }
+    }
+    setURIList(newURIList);
+  };
+  
+  const removeFromTracking = (method, path) => {
+    const newURIList = [...URIList]
+    for (const URI of newURIList) {
+      if (URI.method === method && URI.path === path) {
+        URI.tracking = false;
+        break;
+      }
+    }
+    setURIList(newURIList);
+  };
+
+  // * Update the list of tracked URIs in the server whenever a checkbox changes
   useEffect(() => {
+    if (firstLoad) {
+      setFirstLoad(false);
+      return;
+    }
     fetch(`http://localhost:${process.env.PORT}/routes`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(trackingURI),
-    })
-    .catch((err) => {
+      body: JSON.stringify(URIList.map(URI => ({
+        method: URI.method,
+        path: URI.path,
+        tracking: URI.tracking || false,
+      }))),
+    }).catch((err) => {
       console.log(
         `there was an error sending the URI tracking list, error: ${err}`
       );
       setErrorMessage("Invalid POST request from the URI List");
     });
-  }, [trackingURI]);
+  }, [URIList]);
 
-  const handleStartMonitoringClick = () => {
+  const handleStartMonitoringClick = (e) => {
+    if (monitoringFreq === undefined || monitoringFreq < minFreq) return;
+    e.preventDefault();
     fetch(`http://localhost:${process.env.PORT}/monitoring`, {
       method: "POST",
       headers: {
@@ -80,8 +111,7 @@ const URIList = (props) => {
         interval: monitoringFreq,
         verbose: true,
       }),
-    })
-    .catch((err) => {
+    }).catch((err) => {
       console.log("there was an error attempting to start monitoring: ", err);
       setErrorMessage(
         `Invalid POST request to start monitoring, error: ${err}`
@@ -89,7 +119,8 @@ const URIList = (props) => {
     });
   };
 
-  const handleStopMonitoringClick = () => {
+  const handleStopMonitoringClick = (e) => {
+    e.preventDefault();
     fetch(`http://localhost:${process.env.PORT}/monitoring`, {
       method: "POST",
       headers: {
@@ -97,13 +128,11 @@ const URIList = (props) => {
       },
       body: JSON.stringify({
         active: false,
+        verbose: true,
       }),
-    })
-    .catch((err) => {
+    }).catch((err) => {
       console.log("there was an error attempting to stop monitoring: ", err);
-      setErrorMessage(
-        `Invalid POST request to stop monitoring, error: ${err}`
-      );
+      setErrorMessage(`Invalid POST request to stop monitoring, error: ${err}`);
     });
   };
 
@@ -115,6 +144,8 @@ const URIList = (props) => {
         <label htmlFor="monitoring-time">Set monitoring frequency:</label>
         <input
           type="number"
+          min={`${minFreq}`}
+          step="0.01"
           id="monitoring-time"
           value={monitoringFreq}
           placeholder="5 seconds"
@@ -139,6 +170,7 @@ const URIList = (props) => {
         {errorMessage !== "" ? (
           <FlashError errorMessage={errorMessage} />
         ) : null}
+        <button onClick={getURIListFromServer}>Refresh</button>
         <table>
           <thead>
             <tr>
@@ -163,6 +195,7 @@ const URIList = (props) => {
                   path={element.path}
                   method={element.method}
                   status={element.status}
+                  checked={element.tracking}
                   addToTracking={addToTracking}
                   removeFromTracking={removeFromTracking}
                 />

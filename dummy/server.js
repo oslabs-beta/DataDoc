@@ -27,11 +27,14 @@ app.put("/fast", (req, res) => {
 
 app.get("/slow", module2.registerEndpoint, (req, res) => {
   const validStatusCodes = [
-    200, 200, 200, 202, 203, 204, 204, 210, 400, 401, 403, 500,
+    100, 102, 200, 200, 200, 202, 203, 204, 204, 210, 301, 302, 400, 401, 403, 404, 410, 500, 505, 510
   ];
+  // for (let i = 100; i < 600; i += 2) {
+  //   validStatusCodes.push(i)
+  // }
   const statusCode =
     validStatusCodes[Math.floor(Math.random() * validStatusCodes.length)];
-  const artificialDelay = Math.random() * 110 + 95;
+  const artificialDelay = Math.random() * 2000;
   setTimeout(() => res.status(statusCode).send("slow"), artificialDelay);
 });
 
