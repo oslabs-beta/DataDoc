@@ -8,9 +8,7 @@ const URI = (props) => {
 
   const handleClick = (method, path) => {
     setChecked(!checked);
-    console.log(props.method, props.path);
-    // if (checked) addToTracking(method, path)
-    // else removeFromTracking(method, path);
+    // setTracking(props.method, props.path)
   };
 
   return (
