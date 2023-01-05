@@ -68,12 +68,12 @@ const storeLogsToDatabase = async (logsArr) => {
 };
 
 const pingTargetEndpoints = async () => {
-  for (endpoint of selectedEndpoints) {
+  for (const endpoint of selectedEndpoints) {
     try {
       await fetch("http://localhost:3000" + endpoint.path, {
         method: endpoint.method,
         headers: {
-          'Cache-Control': 'no-cache', 
+          'Cache-Control': 'no-store', 
         }
       });
     } catch (e) {
