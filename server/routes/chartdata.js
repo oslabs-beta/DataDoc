@@ -1,6 +1,9 @@
 const express = require("express");
-const router = express.Router();
+const compression = require("compression");
 const dbController = require("../controllers/dbController");
+
+const router = express.Router();
+router.use(compression());
 
 // get line chart data
 router.get(

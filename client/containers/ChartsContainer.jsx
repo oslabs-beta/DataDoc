@@ -17,7 +17,9 @@ const ChartsContainer = (props) => {
 
   setTimeout(() => {
     const encodedPath = path.replaceAll("/", "%2F");
-    fetch(`${SERVER_URL}/chartdata/?method=${method}&path=${encodedPath}`)
+    fetch(`${SERVER_URL}/chartdata/?method=${method}&path=${encodedPath}`, {
+      headers: { 'Content-Encoding': 'gzip' },
+    })
       .then((response) => response.json())
       .then((dataObj) => {
         setChartsData(dataObj);
