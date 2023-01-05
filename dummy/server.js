@@ -34,7 +34,7 @@ app.get("/slow", module2.registerEndpoint, (req, res) => {
   // }
   const statusCode =
     validStatusCodes[Math.floor(Math.random() * validStatusCodes.length)];
-  const artificialDelay = Math.random() * 120 + 90;
+  const artificialDelay = Math.random() * 2000;
   setTimeout(() => res.status(statusCode).send("slow"), artificialDelay);
 });
 

@@ -29,7 +29,9 @@ const Histogram = (props) => {
       {
         label: "Frequency",
         data: chartData.map((point) => point.y),
-        backgroundColor: ["rgba(255, 99, 132, 0.5)"],
+        backgroundColor: chartData.map((point) => point.x).map((e, i) => {
+          return `rgba(${64 + 32 * i}, ${255 - 16 * i}, 64, 0.8)`;
+        }),
         barPercentage: 1.0,
         categoryPercentage: 1.0,
         borderWidth: 1.0,
@@ -41,6 +43,7 @@ const Histogram = (props) => {
     responsive: true,
     plugins: {
       legend: {
+        display: false,
         position: "top",
       },
       title: {
