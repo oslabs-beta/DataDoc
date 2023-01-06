@@ -8,6 +8,9 @@ const chartRouter = require("./routes/chartdata");
 const { Point } = require("@influxdata/influxdb-client");
 const { url } = require("inspector");
 const pg = require("../database/pg.js");
+const {
+  PhoneNumberContext,
+} = require("twilio/lib/rest/lookups/v1/phoneNumber.js");
 
 const MODE = process.env.NODE_ENV || "production";
 const PORT = process.env.PORT || 9990;
@@ -164,7 +167,7 @@ app.get("/metrics", async (req, res) => {
   return res.status(200).json(logs);
 });
 
-app.get("/routes/server", async (req, res) => {
+app.get("/routes/server/:id", async (req, res) => {
   const response = await fetch("http://localhost:9991/endpoints");
   const routes = await response.json();
   // ! TO BE REMOVED: hard code status code 200
@@ -175,25 +178,29 @@ app.get("/routes/server", async (req, res) => {
   return res.status(200).json(routes);
 });
 
-app.get("/routes/:id", async (req, res) => {
-  const workspace_id = req.cookies?.workspace_id || 1;
+app.get("/routes/:workspace_id", async (req, res) => {
+  const { workspace_id } = req.params;
   const queryText = `
     SELECT * 
     FROM endpoints
     WHERE workspace_id = $1;`;
+  console.log("this is the workspace id: ", workspace_id);
   const dbResponse = await pg.query(queryText, [workspace_id]);
   return res.status(200).json(dbResponse.rows);
 });
 
-app.post("/routes", async (req, res) => {
+app.post("/routes/:workspace_id", async (req, res) => {
+  const { workspace_id } = req.params;
   let queryText = "";
   req.body.forEach((URI) => {
+    console.table(URI);
     queryText += `
       INSERT INTO endpoints (method, path, tracking, workspace_id) 
-      VALUES ('${URI.method}', '${URI.path}', ${URI.tracking}, 1)
+      VALUES ('${URI.method}', '${URI.path}', ${URI.tracking}, ${workspace_id})
       ON CONFLICT ON CONSTRAINT endpoints_uq
       DO UPDATE SET tracking = ${URI.tracking};`;
   });
+  console.log("this is the workspace id", workspace_id);
   pg.query(queryText);
   selectedEndpoints = req.body.filter((URI) => URI.tracking) || req.body;
   return res.sendStatus(204);
@@ -218,6 +225,15 @@ app.post("/workspaces", async (req, res) => {
   VALUES ($1, $2, $3)`;
   pg.query(queryText, [name, domain, port]);
   return res.sendStatus(204);
+});
+
+app.delete("/workspaces", async (req, res) => {
+  const queryTextDelete = `SELECT * FROM workspaces WHERE name=$1`;
+  const queryText = `DELETE FROM workspaces WHERE name=$1`;
+  const name = [req.body.name];
+  const deletedWorkspase = await pg.query(queryTextDelete, [name]);
+  const deletedResponse = await pg.query(queryText, name);
+  return res.status(200).json(deletedResponse.rows);
 });
 
 app.listen(PORT, () => {

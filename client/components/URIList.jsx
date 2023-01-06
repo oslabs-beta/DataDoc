@@ -12,7 +12,8 @@ const URIList = (props) => {
   const [monitoringFreq, setMonitoringFreq] = useState("");
   const [firstLoad, setFirstLoad] = useState(true);
   const location = useLocation();
-  const { id, name, domain } = location.state;
+  const { id, name } = location.state;
+  console.log("THIS IS THE ID FROM URI LIST", id);
 
   const minFreq = 0.5;
 
@@ -25,30 +26,30 @@ const URIList = (props) => {
   // * Fetch the URI List from the backend when the component mounts
   useEffect(() => {
     // * Populate URIList from database
-    getURIListFromDatabase();
+    getURIListFromDatabase(id);
   }, []);
 
-  const getURIListFromServer = () => {
-    fetch(`http://localhost:${process.env.PORT}/routes/server`)
+  const getURIListFromServer = (id) => {
+    fetch(`http://localhost:${process.env.PORT}/routes/server/${id}`)
       .then((response) => response.json())
       .then((data) => {
         setURIList(data);
       })
       .catch((err) => {
-        setErrorMessage("Invalid fetch request for the URI List");
+        setErrorMessage("Invalid server fetch request for the URI List");
         // * reset the error message
         setTimeout(() => setErrorMessage(""), 5000);
       });
   };
 
-  const getURIListFromDatabase = () => {
-    fetch(`http://localhost:${process.env.PORT}/routes`)
+  const getURIListFromDatabase = (id) => {
+    fetch(`http://localhost:${process.env.PORT}/routes/${id}`)
       .then((response) => response.json())
       .then((data) => {
         setURIList(data);
       })
       .catch((err) => {
-        setErrorMessage("Invalid fetch request for the URI List");
+        setErrorMessage("Invalid db fetch request for the URI List");
         // * reset the error message
         setTimeout(() => setErrorMessage(""), 5000);
       });
