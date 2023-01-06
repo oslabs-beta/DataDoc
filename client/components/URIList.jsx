@@ -23,7 +23,7 @@ const URIList = (props) => {
   // * Fetch the URI List from the backend when the component mounts
   useEffect(() => {
     // * Populate URIList from database
-    getURIListFromDatabase()
+    getURIListFromDatabase();
   }, []);
 
   const getURIListFromServer = () => {
@@ -37,7 +37,7 @@ const URIList = (props) => {
         // * reset the error message
         setTimeout(() => setErrorMessage(""), 5000);
       });
-  }
+  };
 
   const getURIListFromDatabase = () => {
     fetch(`http://localhost:${process.env.PORT}/routes`)
@@ -50,10 +50,10 @@ const URIList = (props) => {
         // * reset the error message
         setTimeout(() => setErrorMessage(""), 5000);
       });
-  }
+  };
 
   const addToTracking = (method, path) => {
-    const newURIList = [...URIList]
+    const newURIList = [...URIList];
     for (const URI of newURIList) {
       if (URI.method === method && URI.path === path) {
         URI.tracking = true;
@@ -62,9 +62,9 @@ const URIList = (props) => {
     }
     setURIList(newURIList);
   };
-  
+
   const removeFromTracking = (method, path) => {
-    const newURIList = [...URIList]
+    const newURIList = [...URIList];
     for (const URI of newURIList) {
       if (URI.method === method && URI.path === path) {
         URI.tracking = false;
@@ -85,11 +85,13 @@ const URIList = (props) => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(URIList.map(URI => ({
-        method: URI.method,
-        path: URI.path,
-        tracking: URI.tracking || false,
-      }))),
+      body: JSON.stringify(
+        URIList.map((URI) => ({
+          method: URI.method,
+          path: URI.path,
+          tracking: URI.tracking || false,
+        }))
+      ),
     }).catch((err) => {
       console.log(
         `there was an error sending the URI tracking list, error: ${err}`

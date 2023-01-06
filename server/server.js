@@ -74,8 +74,8 @@ const pingTargetEndpoints = async () => {
       await fetch("http://localhost:3000" + endpoint.path, {
         method: endpoint.method,
         headers: {
-          'Cache-Control': 'no-cache', 
-        }
+          "Cache-Control": "no-cache",
+        },
       });
     } catch (e) {
       console.error(e);
@@ -84,20 +84,24 @@ const pingTargetEndpoints = async () => {
 };
 
 // endpoint to register user email and status codes to database
-app.post("/registration", (req, res, next) => {
-  let {subscribers, status300, status400, status500 } = req.body;
-  try {
-    const point = new Point('registration')
-      .tag('email', subscribers)
-      .booleanField('300', status300)
-      .booleanField('400', status400)
-      .booleanField('500', status500)
-    db.insertRegistration(point);
-    return next();
-  } catch (e) {
-    console.error(e);
-  }},
-  (req, res) => res.sendStatus(200))
+app.post(
+  "/registration",
+  (req, res, next) => {
+    let { subscribers, status300, status400, status500 } = req.body;
+    try {
+      const point = new Point("registration")
+        .tag("email", subscribers)
+        .booleanField("300", status300)
+        .booleanField("400", status400)
+        .booleanField("500", status500);
+      db.insertRegistration(point);
+      return next();
+    } catch (e) {
+      console.error(e);
+    }
+  },
+  (req, res) => res.sendStatus(200)
+);
 
 app.post("/monitoring", async (req, res) => {
   // * active is a boolean, interval is in seconds
@@ -121,49 +125,44 @@ app.post("/monitoring", async (req, res) => {
   res.sendStatus(204);
 });
 
-
 const pingOneEndpoint = async (path) => {
   try {
     await fetch("http://localhost:3000" + path, {
       method: "GET",
       headers: {
-        'Cache-Control': 'no-cache', 
-      }
+        "Cache-Control": "no-cache",
+      },
     });
   } catch (e) {
     console.error(e);
   }
-}
+};
 
-const performRPS= async (path, RPS) => {
-  const interval = Math.floor(1000/RPS)
-  if (intervalId) clearInterval(intervalId)
-  intervalId = setInterval(() => pingOneEndpoint(path), interval)
-}
+const performRPS = async (path, RPS) => {
+  const interval = Math.floor(1000 / RPS);
+  if (intervalId) clearInterval(intervalId);
+  intervalId = setInterval(() => pingOneEndpoint(path), interval);
+};
 
-const rpswithInterval = async (path,RPS,timeInterval) => {
-    if (intervalId) clearInterval(intervalId);
-    intervalId = setInterval(() => {
-      performRPS(path,RPS)
-      console.log("PING FINISHED")
-    }, timeInterval * 1000);
-  };
-
+const rpswithInterval = async (path, RPS, timeInterval) => {
+  if (intervalId) clearInterval(intervalId);
+  intervalId = setInterval(() => {
+    performRPS(path, RPS);
+    console.log("PING FINISHED");
+  }, timeInterval * 1000);
+};
 
 app.post("/simulation", async (req, res) => {
-  const {RPS, timeInterval, path} = req.body;
-  if (intervalId) clearInterval(intervalId)
-  rpswithInterval(path,RPS,timeInterval)
-  console.log("PING RESULT DONE")
+  const { RPS, timeInterval, path } = req.body;
+  if (intervalId) clearInterval(intervalId);
+  rpswithInterval(path, RPS, timeInterval);
+  console.log("PING RESULT DONE");
   return res.status(200).send("hi");
-
 });
 
-app.get ("/metrics", async (req, res) => {
+app.get("/metrics", async (req, res) => {
   return res.status(200).json(logs);
 });
-
-
 
 app.get("/routes/server", async (req, res) => {
   const response = await fetch("http://localhost:9991/endpoints");
@@ -181,7 +180,7 @@ app.get("/routes", async (req, res) => {
   const queryText = `
     SELECT * 
     FROM endpoints
-    WHERE workspace_id = $1;`
+    WHERE workspace_id = $1;`;
   const dbResponse = await pg.query(queryText, [workspace_id]);
   return res.status(200).json(dbResponse.rows);
 });
@@ -193,10 +192,31 @@ app.post("/routes", async (req, res) => {
       INSERT INTO endpoints (method, path, tracking, workspace_id) 
       VALUES ('${URI.method}', '${URI.path}', ${URI.tracking}, 1)
       ON CONFLICT ON CONSTRAINT endpoints_uq
-      DO UPDATE SET tracking = ${URI.tracking};`
-  })
+      DO UPDATE SET tracking = ${URI.tracking};`;
+  });
   pg.query(queryText);
   selectedEndpoints = req.body.filter((URI) => URI.tracking) || req.body;
+  return res.sendStatus(204);
+});
+
+//get existing workspaces for the user
+app.get("/workspaces", async (req, res) => {
+  const queryText = `
+  SELECT * 
+  FROM workspaces;`;
+  const dbResponse = await pg.query(queryText);
+  console.log("THIS IS THE DB RESPONSE", dbResponse.rows);
+  return res.status(200).json(dbResponse.rows);
+});
+
+//create a new workspace for the user
+app.post("/workspaces", async (req, res) => {
+  const { name, domain, port } = req.body;
+  // console.log("THIS IS THE REQ BODY", domain, port);
+  let queryText = `
+  INSERT INTO workspaces(name, domain, port)
+  VALUES ($1, $2, $3)`;
+  pg.query(queryText, [name, domain, port]);
   return res.sendStatus(204);
 });
 
