@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import Settings from "./Settings.jsx";
 import URI from "./URI.jsx";
 import FlashError from "./FlashError.jsx";
@@ -11,6 +11,8 @@ const URIList = (props) => {
   const [searchInput, setSearch] = useState("");
   const [monitoringFreq, setMonitoringFreq] = useState("");
   const [firstLoad, setFirstLoad] = useState(true);
+  const location = useLocation();
+  const { id, name, domain } = location.state;
 
   const minFreq = 0.5;
 
@@ -80,7 +82,7 @@ const URIList = (props) => {
       setFirstLoad(false);
       return;
     }
-    fetch(`http://localhost:${process.env.PORT}/routes`, {
+    fetch(`http://localhost:${process.env.PORT}/routes/${id}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -140,9 +142,9 @@ const URIList = (props) => {
 
   return (
     <div className="URIListContainer">
-      <SearchBar searchInput={searchInput} setSearch={setSearch} />
-      <br></br>
+      <h1>Workspace: {name}</h1>
       <form className="monitoring">
+        <br></br>
         <label htmlFor="monitoring-time">Set monitoring frequency:</label>
         <input
           type="number"
@@ -167,6 +169,15 @@ const URIList = (props) => {
       </form>
       <br></br>
       <Settings />
+      <br></br>
+      <span>
+        <label htmlFor="endpoint-search">Search for a specific endpoint:</label>
+        <SearchBar
+          id="endpoint-search"
+          searchInput={searchInput}
+          setSearch={setSearch}
+        />
+      </span>
       <br></br>
       <div className="URIEntries">
         {errorMessage !== "" ? (

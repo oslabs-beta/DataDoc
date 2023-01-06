@@ -175,7 +175,7 @@ app.get("/routes/server", async (req, res) => {
   return res.status(200).json(routes);
 });
 
-app.get("/routes", async (req, res) => {
+app.get("/routes/:id", async (req, res) => {
   const workspace_id = req.cookies?.workspace_id || 1;
   const queryText = `
     SELECT * 

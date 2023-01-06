@@ -18,7 +18,7 @@ const Home = (props) => {
       .then((response) => response.json())
       .then((data) => {
         setWorkspaceList(data);
-        console.log("this is the workspace data", workspaceList);
+        // console.log("this is the workspace data", workspaceList);
       })
       .catch((err) => {
         console.log(`there was an error: ${err}`);
@@ -33,6 +33,7 @@ const Home = (props) => {
           return (
             <Workspace
               key={crypto.randomUUID()}
+              // id={_id}
               name={workspace.name}
               domain={workspace.domain}
               port={workspace.port}
