@@ -141,22 +141,14 @@ const pingOneEndpoint = async (path) => {
   }
 };
 
-const performRPS= async (path, RPS) => {
-  const interval = Math.floor(1000/RPS)
-  if (intervalId) clearInterval(intervalId)
+const performRPS = async (path, RPS) => {
+  const interval = Math.floor(1000 / RPS);
+  if (intervalId) clearInterval(intervalId);
   // let counter = 0;
   intervalId = setInterval(() => {
-  pingOneEndpoint(path)
- }, interval)
-}
-
-const rpswithInterval = async (path,RPS,timeInterval) => {
-    if (intervalId) clearInterval(intervalId);
-    intervalId = setInterval(() => {
-      performRPS(path,RPS)
-      console.log("PING FINISHED")
-    }, timeInterval * 1000);
-  };
+    pingOneEndpoint(path);
+  }, interval);
+};
 
 const rpswithInterval = async (path, RPS, timeInterval) => {
   if (intervalId) clearInterval(intervalId);
@@ -167,19 +159,16 @@ const rpswithInterval = async (path, RPS, timeInterval) => {
 };
 
 app.post("/simulation", async (req, res) => {
-  console.log(req.body)
-  const {RPS, timeInterval, setTime, stop, path} = req.body;
+  console.log(req.body);
+  const { RPS, timeInterval, setTime, stop, path } = req.body;
   if (!stop) {
-    rpswithInterval(path,RPS,timeInterval)
-  }
-  else clearInterval(intervalId)
-  console.log("PING RESULT DONE")
+    rpswithInterval(path, RPS, timeInterval);
+  } else clearInterval(intervalId);
+  console.log("PING RESULT DONE");
   return res.status(200).send("hi");
 });
 
-
-
-app.get ("/metrics", async (req, res) => {
+app.get("/metrics", async (req, res) => {
   return res.status(200).json(logs);
 });
 
