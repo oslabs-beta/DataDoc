@@ -7,7 +7,8 @@ import { useLocation } from "react-router-dom";
 const Development = (props)=> {
   const [settings, setSettings] = useState({
     RPS: 0,
-    timeInterval: 0
+    timeInterval: 0,
+    setTime: 0
   })
   const location = useLocation();
   const { method } = location.state;
@@ -39,7 +40,7 @@ const Development = (props)=> {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({...settings, path:path})
+      body: JSON.stringify({...settings, path:path, stop:false})
     }).then((res) => res.json())
     .then((data)=>{
       console.log('THIS IS FROM THE RESPONSE', data)
@@ -49,6 +50,22 @@ const Development = (props)=> {
     })
   }
 
+  function handleStop(e) {
+    e.preventDefault();
+    fetch(`http://localhost:${process.env.PORT}/simulation`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({...settings, path:path, stop:true})
+    }).then((res) => res.json())
+    .then((data)=>{
+      console.log('THIS IS FROM THE RESPONSE', data)
+    })
+    .catch((err)=>{
+      console.log(`there was an error sending the simulation METRICS, error: ${err}`)
+    })
+  }
 
   return (
     <div className='developmentContainer'>
@@ -88,10 +105,26 @@ const Development = (props)=> {
         value = {settings.timeInterval}
         onChange={(e) => handleChange(e, 'timeInterval')}
         />
+        <Typography id="discrete-slider" gutterBottom>
+          Time Elapsed, Minutes: 
+        </Typography>
+        <Slider
+        aria-label="Temperature"
+        defaultValue={30}
+        getAriaValueText={valuetext}
+        // style={{ width: 500, marginLeft: 300}}
+        valueLabelDisplay="auto"
+        step={1}
+        marks
+        min={1}
+        max={60}
+        value = {settings.setTime}
+        onChange={(e) => handleChange(e, 'setTime')}
+        />
 
       <Button variant="contained" onClick={handleTesting}>START TESTING</Button>
       <br />
-      <Button variant="outlined" color ="secondary">STOP</Button>
+      <Button variant="outlined" color ="secondary" onClick={handleStop}>STOP</Button>
       </Box>
       </div>
   )
