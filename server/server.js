@@ -141,9 +141,7 @@ const performRPS= async (path, RPS) => {
   // let counter = 0;
   intervalId = setInterval(() => {
   pingOneEndpoint(path)
-  // counter++;
-  console.log(counter)}, 
-  interval)
+ }, interval)
 }
 
 const rpswithInterval = async (path,RPS,timeInterval) => {
