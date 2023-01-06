@@ -1,5 +1,5 @@
+require("dotenv").config();
 const { InfluxDB } = require("@influxdata/influxdb-client");
-const dotenv = require("dotenv");
 const path = require("path");
 const db = require("../models/database");
 
@@ -168,6 +168,38 @@ dbController.getStatusPieData = (req, res, next) => {
       data.statusPieData = metrics;
       res.locals.data = data;
       //   console.log("Query Finished SUCCESS");
+      return next();
+    }
+  });
+};
+
+dbController.getEndpointLogs = (req, res, next) => {
+  const influxQuery = `
+    from(bucket: "dev-bucket") 
+    |> range(start: -${range})
+    |> filter(fn: (r) => r["_measurement"] == "metrics")
+    |> filter(fn: (r) => r["_field"] == "res_time" or r["_field"] == "status_code")
+    |> filter(fn: (r) => r["method"] == "${req.query.method}")
+    |> filter(fn: (r) => r["path"] == "${req.query.path}")
+  `;
+
+  // declare a logs object to collect labels and data
+  const logs = {};
+
+  // declare a stats object to collect labels and data
+  queryApi.queryRows(influxQuery, {
+    next(row, tableMeta) {
+      const dataObject = tableMeta.toObject(row);
+      if (logs[dataObject._time] === undefined) logs[dataObject._time] = {};
+      logs[dataObject._time].timestamp = dataObject._time;
+      logs[dataObject._time][dataObject._field] = dataObject._value;
+    },
+    error(error) {
+      console.log("Query Finished ERROR");
+      return next(error);
+    },
+    complete() {
+      res.locals.logs = Object.values(logs);
       return next();
     }
   });

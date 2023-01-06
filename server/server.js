@@ -5,6 +5,7 @@ const fetch = require("node-fetch");
 const cors = require("cors");
 const db = require("./models/database.js");
 const chartRouter = require("./routes/chartdata");
+const logRouter = require("./routes/logRouter.js");
 const { Point } = require("@influxdata/influxdb-client");
 const pg = require("../database/pg.js");
 
@@ -22,6 +23,7 @@ if (MODE === "production") {
 
 // * Route all /chartdata requests to chartRouter
 app.use("/chartdata", chartRouter);
+app.use("/logdata", logRouter);
 
 let intervalId;
 let logs = [];
