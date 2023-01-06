@@ -138,7 +138,10 @@ const pingOneEndpoint = async (path) => {
 const performRPS= async (path, RPS) => {
   const interval = Math.floor(1000/RPS)
   if (intervalId) clearInterval(intervalId)
-  intervalId = setInterval(() => pingOneEndpoint(path), interval)
+  // let counter = 0;
+  intervalId = setInterval(() => {
+  pingOneEndpoint(path)
+ }, interval)
 }
 
 const rpswithInterval = async (path,RPS,timeInterval) => {
@@ -151,13 +154,17 @@ const rpswithInterval = async (path,RPS,timeInterval) => {
 
 
 app.post("/simulation", async (req, res) => {
-  const {RPS, timeInterval, path} = req.body;
-  if (intervalId) clearInterval(intervalId)
-  rpswithInterval(path,RPS,timeInterval)
+  console.log(req.body)
+  const {RPS, timeInterval, setTime, stop, path} = req.body;
+  if (!stop) {
+    rpswithInterval(path,RPS,timeInterval)
+  }
+  else clearInterval(intervalId)
   console.log("PING RESULT DONE")
   return res.status(200).send("hi");
-
 });
+
+
 
 app.get ("/metrics", async (req, res) => {
   return res.status(200).json(logs);
@@ -175,6 +182,7 @@ app.get("/routes/server", async (req, res) => {
   });
   return res.status(200).json(routes);
 });
+
 
 app.get("/routes", async (req, res) => {
   const workspace_id = req.cookies?.workspace_id || 1;
