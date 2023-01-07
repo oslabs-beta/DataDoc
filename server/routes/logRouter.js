@@ -8,12 +8,9 @@ router.use(compression());
 // get line chart data
 router.get(
   "/",
-  dbController.getRespTimeLineData,
-  dbController.getRespTimeHistData,
-  dbController.getReqFreqLineData,
-  dbController.getStatusPieData,
+  dbController.getEndpointLogs,
   (req, res) => {
-    return res.status(200).json(res.locals.data);
+    return res.status(200).json(res.locals.logs);
   }
 );
 

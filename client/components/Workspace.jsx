@@ -1,26 +1,19 @@
 import React, { useEffect, useState } from "react";
-import {
-  HashRouter as Router,
-  Route,
-  Routes,
-  Link,
-  useLocation,
-} from "react-router-dom";
+import { Link } from "react-router-dom";
 import "../styles/WorkspaceBox.scss";
 
 const Workspaces = (props) => {
   const { id, name, domain, port, path, deleteWorkspace } = props;
-  console.log("THIS IS THE ID: ", id);
   return (
     <>
       <div className="workspaceBox">
         <Link
-          //link to the uri list for the clicked workspace
+          // * link to the uri list for the clicked workspace
           to={`/urilist/${id}`}
           state={{
             id: id,
             name: name,
-            domain: domain,
+            domain: domain
           }}
           id={id}
           name={name}
