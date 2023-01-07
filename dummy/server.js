@@ -45,5 +45,5 @@ app.listen(3000, () => {
 
   // ourModule.exportEndpoints(app);
   ourModule.exportAllEndpoints(app);
-  ourModule.startMetricsServer(100);
+  ourModule.startMetricsServer(9991);
 });
