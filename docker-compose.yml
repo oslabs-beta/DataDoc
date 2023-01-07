@@ -23,7 +23,7 @@ services:
       - POSTGRES_PASSWORD=postgres
     volumes: 
       - db:/var/lib/postgresql/data
-      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./server/models/init.sql:/docker-entrypoint-initdb.d/init.sql
 volumes:
   db:
     driver: local

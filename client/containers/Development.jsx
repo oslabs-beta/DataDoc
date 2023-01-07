@@ -10,14 +10,11 @@ const Development = (props)=> {
     timeInterval: 0,
     setTime: 0
   })
+
   const location = useLocation();
   const { method } = location.state;
   const { path } = location.state;
-
-  console.log('THIS IS THE METHOD: ', method)
-  console.log('THIS IS THE PATH: ', path)
-
-
+  
   function valuetext(value) {
 		return `${value}`;
 	}

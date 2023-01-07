@@ -3,12 +3,12 @@ require("dotenv").config({ path: path.resolve(__dirname, "../.env") });
 const express = require("express");
 const fetch = require("node-fetch");
 const cors = require("cors");
-const db = require("./models/database.js");
+const influxClient = require("./models/influx-client.js");
+const { Point } = require("@influxdata/influxdb-client");
 const chartRouter = require("./routes/chartdata");
 const logRouter = require("./routes/logRouter.js");
-const { Point } = require("@influxdata/influxdb-client");
 const { url } = require("inspector");
-const pg = require("../database/pg.js");
+const postgresClient = require("./models/postgres-client.js");
 const { response } = require("express");
 const { resolve } = require("path");
 const {
@@ -30,6 +30,7 @@ if (MODE === "production") {
 // * Route all /chartdata requests to chartRouter
 app.use("/chartdata", chartRouter);
 app.use("/logdata", logRouter);
+app.use("/logdata", logRouter);
 
 let intervalId;
 let logs = [];
@@ -44,8 +45,6 @@ const updateTimeElapsed = function () {
 };
 
 const scrapeDataFromMetricsServer = async (metricsPort, tableName) => {
-  // console.log("METRICS_PORT:", metricsPort);
-  // console.log(`http://localhost:${metricsPort}/metrics`)
   try {
     const metricsServerResponse = await fetch(`http://localhost:${metricsPort}/metrics`, {
       method: "DELETE",
@@ -70,7 +69,7 @@ const storeLogsToDatabase = async (logsArr, tableName) => {
         .intField("status_code", log.status_code)
         .timestamp(new Date(log.date_created).getTime());
     });
-    return db.insertMultiple(pointsArr);
+    return influxClient.insertMultiple(pointsArr);
   } catch (e) {
     console.error(e);
     return false;
@@ -103,7 +102,7 @@ app.post(
         .booleanField("300", status300)
         .booleanField("400", status400)
         .booleanField("500", status500);
-      db.insertRegistration(point);
+      influxClient.insertRegistration(point);
       return next();
     } catch (e) {
       console.error(e);
@@ -128,6 +127,7 @@ app.post("/monitoring", async (req, res) => {
         console.log(`Monitoring for ${timeElapsedString}`);
       }
       pingTargetEndpoints();
+      scrapeDataFromMetricsServer(metricsPort ,'monitoring');
       scrapeDataFromMetricsServer(metricsPort ,'monitoring');
     }, interval * 1000);
   } else clearInterval(intervalId);
@@ -157,7 +157,6 @@ const performRPS = async (path, RPS) => {
   counter ++
   console.log(counter)
  }, interval)
-
 }
 
 const rpswithInterval = async (path, RPS, timeInterval) => {
@@ -180,11 +179,9 @@ app.post("/simulation", async (req, res) => {
   return res.status(200).send("hi");
 });
 
-
 app.get ("/metrics", async (req, res) => {
   return res.status(200).json(logs);
 });
-
 
 app.get("/routes/server", async (req, res) => {
   const { metrics_port } = req.query
@@ -205,7 +202,7 @@ app.get("/routes/:workspace_id", async (req, res) => {
     SELECT * 
     FROM endpoints
     WHERE workspace_id = $1;`;
-  const dbResponse = await pg.query(queryText, [workspace_id]);
+  const dbResponse = await postgresClient.query(queryText, [workspace_id]);
   return res.status(200).json(dbResponse.rows);
 });
 
@@ -219,7 +216,7 @@ app.post("/routes/:workspace_id", async (req, res) => {
       ON CONFLICT ON CONSTRAINT endpoints_uq
       DO UPDATE SET tracking = ${URI.tracking};`;
   });
-  pg.query(queryText);
+  postgresClient.query(queryText);
   selectedEndpoints = req.body.filter((URI) => URI.tracking) || req.body;
   return res.sendStatus(204);
 });
@@ -229,8 +226,8 @@ app.get("/workspaces", async (req, res) => {
   const queryText = `
   SELECT * 
   FROM workspaces;`;
-  const dbResponse = await pg.query(queryText);
-  console.log("THIS IS THE DB RESPONSE", dbResponse.rows);
+  const dbResponse = await postgresClient.query(queryText);
+  // console.log("THIS IS THE DB RESPONSE", dbResponse.rows);
   return res.status(200).json(dbResponse.rows);
 });
 
@@ -241,7 +238,7 @@ app.post("/workspaces", async (req, res) => {
   let queryText = `
   INSERT INTO workspaces(name, domain, port)
   VALUES ($1, $2, $3)`;
-  pg.query(queryText, [name, domain, port]);
+  postgresClient.query(queryText, [name, domain, port]);
   return res.sendStatus(204);
 });
 
@@ -249,8 +246,8 @@ app.delete("/workspaces", async (req, res) => {
   const queryTextDelete = `SELECT * FROM workspaces WHERE name=$1`;
   const queryText = `DELETE FROM workspaces WHERE name=$1`;
   const name = [req.body.name];
-  const deletedWorkspase = await pg.query(queryTextDelete, [name]);
-  const deletedResponse = await pg.query(queryText, name);
+  const deletedWorkspase = await postgresClient.query(queryTextDelete, [name]);
+  const deletedResponse = await postgresClient.query(queryText, name);
   return res.status(200).json(deletedResponse.rows);
 });
 
