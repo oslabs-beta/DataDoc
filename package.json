@@ -1,5 +1,5 @@
 {
-  "name": "DataDoc",
+  "name": "datadoc",
   "version": "1.0.0",
   "description": "",
   "productName": "DataDoc",
@@ -14,15 +14,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/oslabs-beta/Datective.git"
+    "url": "git+https://github.com/oslabs-beta/DataDoc.git"
   },
   "keywords": [],
   "author": "Jo Huang https://github.com/jochuang, Jonathan Huang https://github.com/JH51, Jamie Schiff https://github.com/jamieschiff, Mariam Zakariadze https://github.com/mariamzakariadze",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/oslabs-beta/Datective/issues"
+    "url": "https://github.com/oslabs-beta/DataDoc/issues"
   },
-  "homepage": "https://github.com/oslabs-beta/Datective#readme",
+  "homepage": "https://github.com/oslabs-beta/DataDoc#readme",
   "devDependencies": {
     "@babel/core": "^7.20.5",
     "@babel/preset-env": "^7.20.2",
