@@ -8,6 +8,8 @@ const chartRouter = require("./routes/chartdata");
 const { Point } = require("@influxdata/influxdb-client");
 const { url } = require("inspector");
 const pg = require("../database/pg.js");
+const { response } = require("express");
+const { resolve } = require("path");
 const {
   PhoneNumberContext,
 } = require("twilio/lib/rest/lookups/v1/phoneNumber.js");
@@ -32,6 +34,7 @@ let logs = [];
 let selectedEndpoints = [];
 let monitoringStartTime, monitoringEndTime, timeElapsed;
 
+
 const updateTimeElapsed = function () {
   monitoringEndTime = new Date();
   timeElapsed = new Date(monitoringEndTime - monitoringStartTime);
@@ -39,13 +42,13 @@ const updateTimeElapsed = function () {
   return timeElapsed.getMinutes() + "m" + (timeElapsed.getSeconds() % 60) + "s";
 };
 
-const scrapeDataFromMetricsServer = async () => {
+const scrapeDataFromMetricsServer = async (tableName) => {
   try {
     const metricsServerResponse = await fetch("http://localhost:9991/metrics", {
       method: "DELETE",
     });
     logs = await metricsServerResponse.json();
-    storeLogsToDatabase(logs);
+    storeLogsToDatabase(logs, tableName);
     return logs;
   } catch (e) {
     console.error(e);
@@ -53,10 +56,11 @@ const scrapeDataFromMetricsServer = async () => {
   }
 };
 
-const storeLogsToDatabase = async (logsArr) => {
+
+const storeLogsToDatabase = async (logsArr, tableName) => {
   try {
     const pointsArr = logsArr.map((log) => {
-      return new Point("metrics")
+      return new Point(tableName)
         .tag("path", log.path)
         .tag("url", log.url)
         .tag("method", log.method)
@@ -70,6 +74,7 @@ const storeLogsToDatabase = async (logsArr) => {
     return false;
   }
 };
+
 
 const pingTargetEndpoints = async () => {
   for (endpoint of selectedEndpoints) {
@@ -85,6 +90,7 @@ const pingTargetEndpoints = async () => {
     }
   }
 };
+
 
 // endpoint to register user email and status codes to database
 app.post(
@@ -106,6 +112,7 @@ app.post(
   (req, res) => res.sendStatus(200)
 );
 
+
 app.post("/monitoring", async (req, res) => {
   // * active is a boolean, interval is in seconds
   let { active, interval, verbose } = req.body;
@@ -121,7 +128,7 @@ app.post("/monitoring", async (req, res) => {
         console.log(`Monitoring for ${timeElapsedString}`);
       }
       pingTargetEndpoints();
-      scrapeDataFromMetricsServer();
+      scrapeDataFromMetricsServer('monitoring');
     }, interval * 1000);
   } else clearInterval(intervalId);
   if (verbose) console.log("ACTIVE:", active);
@@ -141,14 +148,17 @@ const pingOneEndpoint = async (path) => {
   }
 };
 
-const performRPS = async (path, RPS) => {
-  const interval = Math.floor(1000 / RPS);
-  if (intervalId) clearInterval(intervalId);
-  // let counter = 0;
+const performRPS= async (path, RPS) => {
+  const interval = Math.floor(1000/RPS)
+  if (intervalId) clearInterval(intervalId)
+  let counter = 0;
   intervalId = setInterval(() => {
-    pingOneEndpoint(path);
-  }, interval);
-};
+  pingOneEndpoint(path)
+  counter ++
+  console.log(counter)
+ }, interval)
+
+}
 
 const rpswithInterval = async (path, RPS, timeInterval) => {
   if (intervalId) clearInterval(intervalId);
@@ -159,20 +169,24 @@ const rpswithInterval = async (path, RPS, timeInterval) => {
 };
 
 app.post("/simulation", async (req, res) => {
-  console.log(req.body);
-  const { RPS, timeInterval, setTime, stop, path } = req.body;
+  console.log(req.body)
+  const {RPS, timeInterval, setTime, stop, path} = req.body;
   if (!stop) {
-    rpswithInterval(path, RPS, timeInterval);
-  } else clearInterval(intervalId);
-  console.log("PING RESULT DONE");
+    rpswithInterval(path,RPS,timeInterval)
+    scrapeDataFromMetricsServer('simulation')
+  }
+  else clearInterval(intervalId)
+  console.log("PING RESULT DONE")
   return res.status(200).send("hi");
 });
 
-app.get("/metrics", async (req, res) => {
+
+app.get ("/metrics", async (req, res) => {
   return res.status(200).json(logs);
 });
 
-app.get("/routes/server/:id", async (req, res) => {
+
+app.get("/routes/server", async (req, res) => {
   const response = await fetch("http://localhost:9991/endpoints");
   const routes = await response.json();
   // ! TO BE REMOVED: hard code status code 200

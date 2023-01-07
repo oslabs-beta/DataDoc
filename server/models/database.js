@@ -22,12 +22,11 @@ const insertToDB = () => {
         .floatField('res_time', 60)
         .intField('status_code', 200)
         // .timestamp()
-        
     writeApi.writePoint(point)
-
     writeApi.close().then(() => {
         console.log('WRITE FINISHED')
     })
+
 }
 
 const insertMultiple = (pointsArr) => {
