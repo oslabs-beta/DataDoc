@@ -27,10 +27,12 @@ const URIList = (props) => {
   useEffect(() => {
     // * Populate URIList from database
     getURIListFromDatabase(id);
-  }, []);
+  }, [id]);
 
   const getURIListFromServer = () => {
-    fetch(`http://localhost:${process.env.PORT}/routes/server?metrics_port=${metricsPort}`)
+    fetch(
+      `http://localhost:${process.env.PORT}/routes/server?metrics_port=${metricsPort}`
+    )
       .then((response) => response.json())
       .then((data) => {
         setURIList(data);
@@ -186,13 +188,20 @@ const URIList = (props) => {
           <FlashError errorMessage={errorMessage} />
         ) : null}
         <form>
-          <input placeholder="Metrics server port" onChange={(e) => {
-            setMetricsPort(e.target.value);
-          }}></input>
-          <button onClick={(e) => {
-            e.preventDefault();
-            getURIListFromServer();
-          }}>Refresh</button>
+          <input
+            placeholder="Metrics server port"
+            onChange={(e) => {
+              setMetricsPort(e.target.value);
+            }}
+          ></input>
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              getURIListFromServer();
+            }}
+          >
+            Refresh
+          </button>
         </form>
         <table>
           <thead>
