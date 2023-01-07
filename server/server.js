@@ -7,7 +7,13 @@ const db = require("./models/database.js");
 const chartRouter = require("./routes/chartdata");
 const logRouter = require("./routes/logRouter.js");
 const { Point } = require("@influxdata/influxdb-client");
+const { url } = require("inspector");
 const pg = require("../database/pg.js");
+const { response } = require("express");
+const { resolve } = require("path");
+const {
+  PhoneNumberContext,
+} = require("twilio/lib/rest/lookups/v1/phoneNumber.js");
 
 const MODE = process.env.NODE_ENV || "production";
 const PORT = process.env.PORT || 9990;
@@ -37,13 +43,15 @@ const updateTimeElapsed = function () {
   return timeElapsed.getMinutes() + "m" + (timeElapsed.getSeconds() % 60) + "s";
 };
 
-const scrapeDataFromMetricsServer = async () => {
+const scrapeDataFromMetricsServer = async (metricsPort, tableName) => {
+  // console.log("METRICS_PORT:", metricsPort);
+  // console.log(`http://localhost:${metricsPort}/metrics`)
   try {
-    const metricsServerResponse = await fetch("http://localhost:9991/metrics", {
+    const metricsServerResponse = await fetch(`http://localhost:${metricsPort}/metrics`, {
       method: "DELETE",
     });
     logs = await metricsServerResponse.json();
-    storeLogsToDatabase(logs);
+    storeLogsToDatabase(logs, tableName);
     return logs;
   } catch (e) {
     console.error(e);
@@ -51,10 +59,10 @@ const scrapeDataFromMetricsServer = async () => {
   }
 };
 
-const storeLogsToDatabase = async (logsArr) => {
+const storeLogsToDatabase = async (logsArr, tableName) => {
   try {
     const pointsArr = logsArr.map((log) => {
-      return new Point("metrics")
+      return new Point(tableName)
         .tag("path", log.path)
         .tag("url", log.url)
         .tag("method", log.method)
@@ -85,24 +93,29 @@ const pingTargetEndpoints = async () => {
 };
 
 // endpoint to register user email and status codes to database
-app.post("/registration", (req, res, next) => {
-  let {subscribers, status300, status400, status500 } = req.body;
-  try {
-    const point = new Point('registration')
-      .tag('email', subscribers)
-      .booleanField('300', status300)
-      .booleanField('400', status400)
-      .booleanField('500', status500)
-    db.insertRegistration(point);
-    return next();
-  } catch (e) {
-    console.error(e);
-  }},
-  (req, res) => res.sendStatus(200))
+app.post(
+  "/registration",
+  (req, res, next) => {
+    let { subscribers, status300, status400, status500 } = req.body;
+    try {
+      const point = new Point("registration")
+        .tag("email", subscribers)
+        .booleanField("300", status300)
+        .booleanField("400", status400)
+        .booleanField("500", status500);
+      db.insertRegistration(point);
+      return next();
+    } catch (e) {
+      console.error(e);
+    }
+  },
+  (req, res) => res.sendStatus(200)
+);
+
 
 app.post("/monitoring", async (req, res) => {
   // * active is a boolean, interval is in seconds
-  let { active, interval, verbose } = req.body;
+  let { active, interval, verbose, metricsPort } = req.body;
   if (active) {
     // * Enforce a minimum interval
     interval = interval < 0.5 ? 0.5 : interval;
@@ -115,55 +128,130 @@ app.post("/monitoring", async (req, res) => {
         console.log(`Monitoring for ${timeElapsedString}`);
       }
       pingTargetEndpoints();
-      scrapeDataFromMetricsServer();
+      scrapeDataFromMetricsServer(metricsPort ,'monitoring');
     }, interval * 1000);
   } else clearInterval(intervalId);
   if (verbose) console.log("ACTIVE:", active);
   res.sendStatus(204);
 });
 
-app.get("/metrics", async (req, res) => {
+const pingOneEndpoint = async (path) => {
+  try {
+    await fetch("http://localhost:3000" + path, {
+      method: "GET",
+      headers: {
+        "Cache-Control": "no-cache",
+      },
+    });
+  } catch (e) {
+    console.error(e);
+  }
+};
+
+const performRPS = async (path, RPS) => {
+  const interval = Math.floor(1000/RPS)
+  if (intervalId) clearInterval(intervalId)
+  let counter = 0;
+  intervalId = setInterval(() => {
+  pingOneEndpoint(path)
+  counter ++
+  console.log(counter)
+ }, interval)
+
+}
+
+const rpswithInterval = async (path, RPS, timeInterval) => {
+  if (intervalId) clearInterval(intervalId);
+  intervalId = setInterval(() => {
+    performRPS(path, RPS);
+    console.log("PING FINISHED");
+  }, timeInterval * 1000);
+};
+
+app.post("/simulation", async (req, res) => {
+  console.log(req.body)
+  const {RPS, timeInterval, setTime, stop, path} = req.body;
+  if (!stop) {
+    rpswithInterval(path,RPS,timeInterval)
+    scrapeDataFromMetricsServer('simulation')
+  }
+  else clearInterval(intervalId)
+  console.log("PING RESULT DONE")
+  return res.status(200).send("hi");
+});
+
+
+app.get ("/metrics", async (req, res) => {
   return res.status(200).json(logs);
 });
 
-app.post("/simulation", async (req, res) => {
-  const { RPS } = req.body;
-  return res.status(200).json({ RPS });
-});
 
 app.get("/routes/server", async (req, res) => {
-  const response = await fetch("http://localhost:9991/endpoints");
+  const { metrics_port } = req.query
+  console.log(metrics_port);
+  const response = await fetch(`http://localhost:${metrics_port}/endpoints`);
   const routes = await response.json();
   // ! TO BE REMOVED: hard code status code 200
   routes.forEach((route) => {
     route.status = 200;
-    // route.tracking = true;
+    route.tracking = false;
   });
   return res.status(200).json(routes);
 });
 
-app.get("/routes", async (req, res) => {
-  const workspace_id = req.cookies?.workspace_id || 1;
+app.get("/routes/:workspace_id", async (req, res) => {
+  const { workspace_id } = req.params;
   const queryText = `
     SELECT * 
     FROM endpoints
-    WHERE workspace_id = $1;`
+    WHERE workspace_id = $1;`;
   const dbResponse = await pg.query(queryText, [workspace_id]);
   return res.status(200).json(dbResponse.rows);
 });
 
-app.post("/routes", async (req, res) => {
+app.post("/routes/:workspace_id", async (req, res) => {
+  const { workspace_id } = req.params;
   let queryText = "";
   req.body.forEach((URI) => {
     queryText += `
       INSERT INTO endpoints (method, path, tracking, workspace_id) 
-      VALUES ('${URI.method}', '${URI.path}', ${URI.tracking}, 1)
+      VALUES ('${URI.method}', '${URI.path}', ${URI.tracking}, ${workspace_id})
       ON CONFLICT ON CONSTRAINT endpoints_uq
-      DO UPDATE SET tracking = ${URI.tracking};`
-  })
+      DO UPDATE SET tracking = ${URI.tracking};`;
+  });
   pg.query(queryText);
   selectedEndpoints = req.body.filter((URI) => URI.tracking) || req.body;
   return res.sendStatus(204);
+});
+
+//get existing workspaces for the user
+app.get("/workspaces", async (req, res) => {
+  const queryText = `
+  SELECT * 
+  FROM workspaces;`;
+  const dbResponse = await pg.query(queryText);
+  console.log("THIS IS THE DB RESPONSE", dbResponse.rows);
+  return res.status(200).json(dbResponse.rows);
+});
+
+//create a new workspace for the user
+app.post("/workspaces", async (req, res) => {
+  const { name, domain, port } = req.body;
+  // console.log("THIS IS THE REQ BODY", domain, port);
+  let queryText = `
+  INSERT INTO workspaces(name, domain, port)
+  VALUES ($1, $2, $3)`;
+  pg.query(queryText, [name, domain, port]);
+  return res.sendStatus(204);
+});
+
+app.delete("/workspaces", async (req, res) => {
+  const queryTextDelete = `SELECT * FROM workspaces WHERE name=$1`;
+  const queryText = `DELETE FROM workspaces WHERE name=$1`;
+  const name = [req.body.name];
+  const deletedWorkspase = await pg.query(queryTextDelete, [name]);
+  const deletedResponse = await pg.query(queryText, name);
+  return res.status(200).json(deletedResponse.rows);
 });
 
 app.listen(PORT, () => {

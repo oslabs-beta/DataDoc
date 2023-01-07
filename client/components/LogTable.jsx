@@ -14,7 +14,7 @@ const LogTable = (props) => {
     setLogEntries(
       (await (await fetch(`${SERVER_URL}/logdata/?method=${method}&path=${encodedPath}`)).json())
       .map((log) => {
-        console.table(log);
+        // console.table(log);
         return (
           <LogEntry
             key={crypto.randomUUID()}

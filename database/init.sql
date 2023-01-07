@@ -1,9 +1,16 @@
+CREATE TABLE workspaces (
+  _id SERIAL, 
+  name TEXT NOT NULL,
+  domain TEXT NOT NULL,
+  port INTEGER
+);
+
 CREATE TABLE endpoints (
   _id SERIAL,
   method TEXT NOT NULL,
   path TEXT NOT NULL,
   tracking BOOLEAN DEFAULT false,
-  workspace_id integer NOT NULL
+  workspace_id INTEGER NOT NULL
 );
 
 ALTER TABLE endpoints
