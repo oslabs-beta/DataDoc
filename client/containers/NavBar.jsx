@@ -5,6 +5,8 @@ import { Link } from "react-router-dom";
 import Draggable from "react-draggable";
 
 const NavBar = () => {
+  const [workspaceList, setWorkspaceList] = useState([]);
+
   const width = 300;
   const height = "100vh";
   const [xPosition, setX] = useState(-width);
@@ -20,6 +22,22 @@ const NavBar = () => {
   useEffect(() => {
     setX(-width);
   }, []);
+
+  useEffect(() => {
+    getWorkSpaceList();
+  }, []);
+
+  const getWorkSpaceList = () => {
+    fetch(`http://localhost:${process.env.PORT}/workspaces`)
+      .then((response) => response.json())
+      .then((data) => {
+        // console.log("this is in home getting the data", data);
+        setWorkspaceList(data);
+      })
+      .catch((err) => {
+        console.log(`there was an error: ${err}`);
+      });
+  };
 
   return (
     <React.Fragment>
@@ -48,6 +66,26 @@ const NavBar = () => {
         <Link to="/urilist" onClick={toggleMenu}>
           URI List
         </Link>
+        <div>
+          {workspaceList.map((workspace) => {
+            // console.log("this is the workspace data: ", workspace._id);
+            const id = workspace._id;
+            const name = workspace.name;
+            const domain = workspace.domain;
+            // console.log("THIS IS THE ID: ", id);
+            return (
+              <div>
+                <Link
+                  to={`/urilist/${id}`}
+                  state={{ id: id, name: name, domain: domain }}
+                  onClick={toggleMenu}
+                >
+                  {name}
+                </Link>
+              </div>
+            );
+          })}
+        </div>
       </div>
     </React.Fragment>
   );
