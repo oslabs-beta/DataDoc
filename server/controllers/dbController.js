@@ -1,7 +1,7 @@
 require("dotenv").config();
 const { InfluxDB } = require("@influxdata/influxdb-client");
 const path = require("path");
-const db = require("../models/database");
+const influxClient = require("../models/influx-client.js");
 
 const token = process.env.DB_INFLUXDB_INIT_ADMIN_TOKEN;
 const org = process.env.DB_INFLUXDB_INIT_ORG;

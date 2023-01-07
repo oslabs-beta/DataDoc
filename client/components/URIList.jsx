@@ -13,7 +13,7 @@ const URIList = (props) => {
   const [firstLoad, setFirstLoad] = useState(true);
   const [metricsPort, setMetricsPort] = useState(9991);
   const location = useLocation();
-  const { id, name } = location.state;
+  const { workspaceId, name } = location.state;
 
   const minFreq = 0.5;
 
@@ -26,7 +26,7 @@ const URIList = (props) => {
   // * Fetch the URI List from the backend when the component mounts
   useEffect(() => {
     // * Populate URIList from database
-    getURIListFromDatabase(id);
+    getURIListFromDatabase(workspaceId);
   }, []);
 
   const getURIListFromServer = () => {
@@ -43,7 +43,7 @@ const URIList = (props) => {
   };
 
   const getURIListFromDatabase = (id) => {
-    fetch(`http://localhost:${process.env.PORT}/routes/${id}`)
+    fetch(`http://localhost:${process.env.PORT}/routes/${workspaceId}`)
       .then((response) => response.json())
       .then((data) => {
         setURIList(data);
@@ -83,7 +83,7 @@ const URIList = (props) => {
       setFirstLoad(false);
       return;
     }
-    fetch(`http://localhost:${process.env.PORT}/routes/${id}`, {
+    fetch(`http://localhost:${process.env.PORT}/routes/${workspaceId}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

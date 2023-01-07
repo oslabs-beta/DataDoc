@@ -2,12 +2,12 @@ const path = require("path");
 const express = require("express");
 const app = express();
 const apiRouter = require("./api.js");
-const module2 = require("express-endpoints-monitor");
+const ourModule = require("express-endpoints-monitor");
 
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
-app.use(module2.gatherMetrics);
+app.use(ourModule.gatherMetrics);
 
 app.use(express.static(path.join(__dirname, "assets")));
 
@@ -17,18 +17,21 @@ app.get("/", (req, res) =>
 
 app.use("/api", apiRouter);
 
-app.get("/fast", (req, res) => {
+app.get("/fast", 
+ourModule.registerEndpoint,
+(req, res) => {
   res.status(201).send("fast");
 });
 
-app.put("/fast", (req, res) => {
+app.put("/fast", 
+ourModule.registerEndpoint,
+(req, res) => {
   res.status(204).send("fast");
 });
 
-// app.get("/nonexistent", module2.registerEndpoint,
-// (req, res) => res.sendStatus(210))
-
-app.get("/slow", module2.registerEndpoint, (req, res) => {
+app.get("/slow", 
+ourModule.registerEndpoint,
+ (req, res) => {
   const validStatusCodes = [
     100, 102, 200, 200, 200, 202, 203, 204, 204, 210, 301, 302, 400, 401, 403, 404, 500, 505
   ];
@@ -42,7 +45,7 @@ app.get("/slow", module2.registerEndpoint, (req, res) => {
 app.listen(3000, () => {
   console.log(`Target server started on port ${PORT}`);
 
-  // module2.exportEndpoints(app);
-  module2.exportAllEndpoints(app);
-  module2.startMetricsServer(100);
+  ourModule.exportEndpoints(app);
+  // ourModule.exportAllEndpoints(app);
+  ourModule.startMetricsServer(100);
 });
