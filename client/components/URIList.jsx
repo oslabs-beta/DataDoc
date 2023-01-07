@@ -13,7 +13,7 @@ const URIList = (props) => {
   const [firstLoad, setFirstLoad] = useState(true);
   const [metricsPort, setMetricsPort] = useState(9991);
   const location = useLocation();
-  const { id, name } = location.state;
+  const { workspaceId, name } = location.state;
 
   const minFreq = 0.5;
 
@@ -26,13 +26,11 @@ const URIList = (props) => {
   // * Fetch the URI List from the backend when the component mounts
   useEffect(() => {
     // * Populate URIList from database
-    getURIListFromDatabase(id);
-  }, [id]);
+    getURIListFromDatabase(workspaceId);
+  }, []);
 
   const getURIListFromServer = () => {
-    fetch(
-      `http://localhost:${process.env.PORT}/routes/server?metrics_port=${metricsPort}`
-    )
+    fetch(`http://localhost:${process.env.PORT}/routes/server?metrics_port=${metricsPort}`)
       .then((response) => response.json())
       .then((data) => {
         setURIList(data);
@@ -45,7 +43,7 @@ const URIList = (props) => {
   };
 
   const getURIListFromDatabase = (id) => {
-    fetch(`http://localhost:${process.env.PORT}/routes/${id}`)
+    fetch(`http://localhost:${process.env.PORT}/routes/${workspaceId}`)
       .then((response) => response.json())
       .then((data) => {
         setURIList(data);
@@ -85,7 +83,7 @@ const URIList = (props) => {
       setFirstLoad(false);
       return;
     }
-    fetch(`http://localhost:${process.env.PORT}/routes/${id}`, {
+    fetch(`http://localhost:${process.env.PORT}/routes/${workspaceId}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -117,6 +115,7 @@ const URIList = (props) => {
         active: true,
         interval: monitoringFreq,
         verbose: true,
+        metricsPort: metricsPort,
         metricsPort: metricsPort,
       }),
     }).catch((err) => {
@@ -188,20 +187,13 @@ const URIList = (props) => {
           <FlashError errorMessage={errorMessage} />
         ) : null}
         <form>
-          <input
-            placeholder="Metrics server port"
-            onChange={(e) => {
-              setMetricsPort(e.target.value);
-            }}
-          ></input>
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              getURIListFromServer();
-            }}
-          >
-            Refresh
-          </button>
+          <input placeholder="Metrics server port" onChange={(e) => {
+            setMetricsPort(e.target.value);
+          }}></input>
+          <button onClick={(e) => {
+            e.preventDefault();
+            getURIListFromServer();
+          }}>Refresh</button>
         </form>
         <table>
           <thead>

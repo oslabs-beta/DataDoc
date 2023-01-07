@@ -2,33 +2,33 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "../styles/WorkspaceBox.scss";
 
-const Workspaces = (props) => {
-  const { id, name, domain, port, path, deleteWorkspace } = props;
+const Workspace = (props) => {
+  const { workspaceId, name, domain, port, path, deleteWorkspace } = props;
   return (
     <>
       <div className="workspaceBox">
         <Link
           // * link to the uri list for the clicked workspace
-          to={`/urilist/${id}`}
+          to={`/urilist/${workspaceId}`}
           state={{
-            id: id,
+            workspaceId: workspaceId,
             name: name,
             domain: domain
           }}
-          id={id}
+          // workspaceId={workspaceId}
           name={name}
           domain={domain}
         >
           <div>
             <label htmlFor="workspaceName">Workspace Name: </label>
-            <span id="workspaceName">{name}</span>
+            <span className="workspaceName">{name}</span>
             <p>
               <label htmlFor="workspaceDomain">Domain: </label>
-              <span id="workspaceDomain">{domain}</span>
+              <span className="workspaceDomain">{domain}</span>
             </p>
             <p>
               <label htmlFor="workspacePort">Port: </label>
-              <span id="workspacePort">{port}</span>
+              <span className="workspacePort">{port}</span>
             </p>
           </div>
         </Link>
@@ -45,4 +45,4 @@ const Workspaces = (props) => {
   );
 };
 
-export default Workspaces;
+export default Workspace;

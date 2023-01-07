@@ -144,14 +144,14 @@ const Home = (props) => {
   };
   return (
     <>
-      <h1>Welcome to Datatective</h1>
+      <h1>Welcome to DataDoc</h1>
       <h2>Workspaces:</h2>
       <div>
         {workspaceList.map((workspace) => {
           return (
             <Workspace
               key={crypto.randomUUID()}
-              id={workspace._id}
+              workspaceId={workspace._id}
               name={workspace.name}
               domain={workspace.domain}
               port={workspace.port}
@@ -170,7 +170,7 @@ const Home = (props) => {
               width="16"
               height="16"
               fill="currentColor"
-              class="bi bi-plus-square"
+              className="bi bi-plus-square"
               viewBox="0 0 16 16"
             >
               <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
