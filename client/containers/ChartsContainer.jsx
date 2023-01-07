@@ -12,12 +12,13 @@ const ChartsContainer = (props) => {
   const [chartsData, setChartsData] = useState({});
   
   const location = useLocation();
-  const { method } = location.state;
-  const { path } = location.state;
+  const { method, path } = location.state;
 
   setTimeout(() => {
     const encodedPath = path.replaceAll("/", "%2F");
-    fetch(`${SERVER_URL}/chartdata/?method=${method}&path=${encodedPath}`)
+    fetch(`${SERVER_URL}/chartdata/?method=${method}&path=${encodedPath}`, {
+      headers: { 'Content-Encoding': 'gzip' },
+    })
       .then((response) => response.json())
       .then((dataObj) => {
         setChartsData(dataObj);
@@ -31,7 +32,6 @@ const ChartsContainer = (props) => {
 
   return (
     <>
-      <h1>Dashboard</h1>
       <h3>Path: {path}</h3>
       <h3>Method: {method}</h3>
       <div className="charts-container">

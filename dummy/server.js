@@ -25,15 +25,17 @@ app.put("/fast", (req, res) => {
   res.status(204).send("fast");
 });
 
+// app.get("/nonexistent", module2.registerEndpoint,
+// (req, res) => res.sendStatus(210))
+
 app.get("/slow", module2.registerEndpoint, (req, res) => {
   const validStatusCodes = [
-    100, 102, 200, 200, 200, 202, 203, 204, 204, 210, 301, 302, 400, 401, 403,
-    404, 410, 500, 505, 510,
+    100, 102, 200, 200, 200, 202, 203, 204, 204, 210, 301, 302, 400, 401, 403, 404, 500, 505
   ];
 
   const statusCode =
     validStatusCodes[Math.floor(Math.random() * validStatusCodes.length)];
-  const artificialDelay = Math.random() * 2000;
+  const artificialDelay = Math.random() * 900;
   setTimeout(() => res.status(statusCode).send("slow"), artificialDelay);
 });
 
@@ -42,5 +44,5 @@ app.listen(3000, () => {
 
   // module2.exportEndpoints(app);
   module2.exportAllEndpoints(app);
-  module2.startMetricsServer(9000);
+  module2.startMetricsServer(100);
 });

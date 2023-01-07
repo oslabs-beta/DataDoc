@@ -11,9 +11,9 @@ const URIList = (props) => {
   const [searchInput, setSearch] = useState("");
   const [monitoringFreq, setMonitoringFreq] = useState("");
   const [firstLoad, setFirstLoad] = useState(true);
+  const [metricsPort, setMetricsPort] = useState(9991);
   const location = useLocation();
   const { id, name } = location.state;
-  console.log("THIS IS THE ID FROM URI LIST", id);
 
   const minFreq = 0.5;
 
@@ -29,8 +29,8 @@ const URIList = (props) => {
     getURIListFromDatabase(id);
   }, []);
 
-  const getURIListFromServer = (id) => {
-    fetch(`http://localhost:${process.env.PORT}/routes/server/${id}`)
+  const getURIListFromServer = () => {
+    fetch(`http://localhost:${process.env.PORT}/routes/server?metrics_port=${metricsPort}`)
       .then((response) => response.json())
       .then((data) => {
         setURIList(data);
@@ -115,6 +115,7 @@ const URIList = (props) => {
         active: true,
         interval: monitoringFreq,
         verbose: true,
+        metricsPort: metricsPort,
       }),
     }).catch((err) => {
       console.log("there was an error attempting to start monitoring: ", err);
@@ -184,7 +185,15 @@ const URIList = (props) => {
         {errorMessage !== "" ? (
           <FlashError errorMessage={errorMessage} />
         ) : null}
-        <button onClick={getURIListFromServer}>Refresh</button>
+        <form>
+          <input placeholder="Metrics server port" onChange={(e) => {
+            setMetricsPort(e.target.value);
+          }}></input>
+          <button onClick={(e) => {
+            e.preventDefault();
+            getURIListFromServer();
+          }}>Refresh</button>
+        </form>
         <table>
           <thead>
             <tr>
