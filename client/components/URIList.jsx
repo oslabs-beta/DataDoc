@@ -116,6 +116,7 @@ const URIList = (props) => {
         interval: monitoringFreq,
         verbose: true,
         metricsPort: metricsPort,
+        metricsPort: metricsPort,
       }),
     }).catch((err) => {
       console.log("there was an error attempting to start monitoring: ", err);

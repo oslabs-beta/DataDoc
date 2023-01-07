@@ -29,9 +29,7 @@ ourModule.registerEndpoint,
   res.status(204).send("fast");
 });
 
-app.get("/slow", 
-ourModule.registerEndpoint,
- (req, res) => {
+app.get("/slow", ourModule.registerEndpoint, (req, res) => {
   const validStatusCodes = [
     100, 102, 200, 200, 200, 202, 203, 204, 204, 210, 301, 302, 400, 401, 403, 404, 500, 505
   ];
@@ -45,7 +43,7 @@ ourModule.registerEndpoint,
 app.listen(3000, () => {
   console.log(`Target server started on port ${PORT}`);
 
-  ourModule.exportEndpoints(app);
-  // ourModule.exportAllEndpoints(app);
+  // ourModule.exportEndpoints(app);
+  ourModule.exportAllEndpoints(app);
   ourModule.startMetricsServer(100);
 });

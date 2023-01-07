@@ -30,6 +30,7 @@ if (MODE === "production") {
 // * Route all /chartdata requests to chartRouter
 app.use("/chartdata", chartRouter);
 app.use("/logdata", logRouter);
+app.use("/logdata", logRouter);
 
 let intervalId;
 let logs = [];
@@ -127,6 +128,7 @@ app.post("/monitoring", async (req, res) => {
       }
       pingTargetEndpoints();
       scrapeDataFromMetricsServer(metricsPort ,'monitoring');
+      scrapeDataFromMetricsServer(metricsPort ,'monitoring');
     }, interval * 1000);
   } else clearInterval(intervalId);
   if (verbose) console.log("ACTIVE:", active);
@@ -155,7 +157,6 @@ const performRPS = async (path, RPS) => {
   counter ++
   console.log(counter)
  }, interval)
-
 }
 
 const rpswithInterval = async (path, RPS, timeInterval) => {
@@ -178,11 +179,9 @@ app.post("/simulation", async (req, res) => {
   return res.status(200).send("hi");
 });
 
-
 app.get ("/metrics", async (req, res) => {
   return res.status(200).json(logs);
 });
-
 
 app.get("/routes/server", async (req, res) => {
   const { metrics_port } = req.query
