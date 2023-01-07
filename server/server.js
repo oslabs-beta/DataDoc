@@ -10,6 +10,9 @@ const { url } = require("inspector");
 const pg = require("../database/pg.js");
 const { response } = require("express");
 const { resolve } = require("path");
+const {
+  PhoneNumberContext,
+} = require("twilio/lib/rest/lookups/v1/phoneNumber.js");
 
 const MODE = process.env.NODE_ENV || "production";
 const PORT = process.env.PORT || 9990;
@@ -79,8 +82,8 @@ const pingTargetEndpoints = async () => {
       await fetch("http://localhost:3000" + endpoint.path, {
         method: endpoint.method,
         headers: {
-          'Cache-Control': 'no-cache', 
-        }
+          "Cache-Control": "no-cache",
+        },
       });
     } catch (e) {
       console.error(e);
@@ -90,20 +93,24 @@ const pingTargetEndpoints = async () => {
 
 
 // endpoint to register user email and status codes to database
-app.post("/registration", (req, res, next) => {
-  let {subscribers, status300, status400, status500 } = req.body;
-  try {
-    const point = new Point('registration')
-      .tag('email', subscribers)
-      .booleanField('300', status300)
-      .booleanField('400', status400)
-      .booleanField('500', status500)
-    db.insertRegistration(point);
-    return next();
-  } catch (e) {
-    console.error(e);
-  }},
-  (req, res) => res.sendStatus(200))
+app.post(
+  "/registration",
+  (req, res, next) => {
+    let { subscribers, status300, status400, status500 } = req.body;
+    try {
+      const point = new Point("registration")
+        .tag("email", subscribers)
+        .booleanField("300", status300)
+        .booleanField("400", status400)
+        .booleanField("500", status500);
+      db.insertRegistration(point);
+      return next();
+    } catch (e) {
+      console.error(e);
+    }
+  },
+  (req, res) => res.sendStatus(200)
+);
 
 
 app.post("/monitoring", async (req, res) => {
@@ -128,19 +135,18 @@ app.post("/monitoring", async (req, res) => {
   res.sendStatus(204);
 });
 
-
 const pingOneEndpoint = async (path) => {
   try {
     await fetch("http://localhost:3000" + path, {
       method: "GET",
       headers: {
-        'Cache-Control': 'no-cache', 
-      }
+        "Cache-Control": "no-cache",
+      },
     });
   } catch (e) {
     console.error(e);
   }
-}
+};
 
 const performRPS= async (path, RPS) => {
   const interval = Math.floor(1000/RPS)
@@ -154,14 +160,13 @@ const performRPS= async (path, RPS) => {
 
 }
 
-const rpswithInterval = async (path,RPS,timeInterval) => {
-    if (intervalId) clearInterval(intervalId);
-    intervalId = setInterval(() => {
-      performRPS(path,RPS)
-      console.log("PING FINISHED")
-    }, timeInterval * 1000);
-  };
-
+const rpswithInterval = async (path, RPS, timeInterval) => {
+  if (intervalId) clearInterval(intervalId);
+  intervalId = setInterval(() => {
+    performRPS(path, RPS);
+    console.log("PING FINISHED");
+  }, timeInterval * 1000);
+};
 
 app.post("/simulation", async (req, res) => {
   console.log(req.body)
@@ -192,30 +197,62 @@ app.get("/routes/server", async (req, res) => {
   return res.status(200).json(routes);
 });
 
-
-app.get("/routes", async (req, res) => {
-  const workspace_id = req.cookies?.workspace_id || 1;
+app.get("/routes/:workspace_id", async (req, res) => {
+  const { workspace_id } = req.params;
   const queryText = `
     SELECT * 
     FROM endpoints
-    WHERE workspace_id = $1;`
+    WHERE workspace_id = $1;`;
+  console.log("this is the workspace id: ", workspace_id);
   const dbResponse = await pg.query(queryText, [workspace_id]);
   return res.status(200).json(dbResponse.rows);
 });
 
-app.post("/routes", async (req, res) => {
+app.post("/routes/:workspace_id", async (req, res) => {
+  const { workspace_id } = req.params;
   let queryText = "";
   req.body.forEach((URI) => {
+    console.table(URI);
     queryText += `
       INSERT INTO endpoints (method, path, tracking, workspace_id) 
-      VALUES ('${URI.method}', '${URI.path}', ${URI.tracking}, 1)
+      VALUES ('${URI.method}', '${URI.path}', ${URI.tracking}, ${workspace_id})
       ON CONFLICT ON CONSTRAINT endpoints_uq
-      DO UPDATE SET tracking = ${URI.tracking};`
-  })
-
+      DO UPDATE SET tracking = ${URI.tracking};`;
+  });
+  console.log("this is the workspace id", workspace_id);
   pg.query(queryText);
   selectedEndpoints = req.body.filter((URI) => URI.tracking) || req.body;
   return res.sendStatus(204);
+});
+
+//get existing workspaces for the user
+app.get("/workspaces", async (req, res) => {
+  const queryText = `
+  SELECT * 
+  FROM workspaces;`;
+  const dbResponse = await pg.query(queryText);
+  console.log("THIS IS THE DB RESPONSE", dbResponse.rows);
+  return res.status(200).json(dbResponse.rows);
+});
+
+//create a new workspace for the user
+app.post("/workspaces", async (req, res) => {
+  const { name, domain, port } = req.body;
+  // console.log("THIS IS THE REQ BODY", domain, port);
+  let queryText = `
+  INSERT INTO workspaces(name, domain, port)
+  VALUES ($1, $2, $3)`;
+  pg.query(queryText, [name, domain, port]);
+  return res.sendStatus(204);
+});
+
+app.delete("/workspaces", async (req, res) => {
+  const queryTextDelete = `SELECT * FROM workspaces WHERE name=$1`;
+  const queryText = `DELETE FROM workspaces WHERE name=$1`;
+  const name = [req.body.name];
+  const deletedWorkspase = await pg.query(queryTextDelete, [name]);
+  const deletedResponse = await pg.query(queryText, name);
+  return res.status(200).json(deletedResponse.rows);
 });
 
 app.listen(PORT, () => {

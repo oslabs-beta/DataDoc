@@ -1,14 +1,17 @@
 import React from "react";
-import { MemoryRouter as Router } from 'react-router-dom';
+import { MemoryRouter as Router } from "react-router-dom";
 
 // import Production from '../containers/Production'
 
-const HomeButton=(props)=>{
-  return(
+const HomeButton = (props) => {
+  const { onClick } = props;
+  return (
     <button>
-      <Link to='/'>Home</Link>
+      <Link to="/" onClick={onClick}>
+        Home
+      </Link>
     </button>
-  )
-}
+  );
+};
 
-export default HomeButton
+export default HomeButton;
