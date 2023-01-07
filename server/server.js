@@ -180,7 +180,7 @@ app.post("/simulation", async (req, res) => {
   }
   else clearInterval(intervalId)
   console.log("PING RESULT DONE")
-  return res.status(200).send("hi");
+  return res.status(200);
 });
 
 
