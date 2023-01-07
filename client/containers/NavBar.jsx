@@ -42,7 +42,7 @@ const NavBar = () => {
             ></button>
           </div>
         </Draggable>
-        <Link to="/" onClick={toggleMenu}>
+        <Link to="/" onClick={toggleMenu} state={{ toggleMenu: toggleMenu }}>
           <button>Home</button>
         </Link>
         <Link to="/urilist" onClick={toggleMenu}>

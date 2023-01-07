@@ -31,13 +31,20 @@
   color: black;
 }
 
-.workspaceDomain {
+.workspaceName {
   height: 8%;
   border-radius: 10px;
 }
 
-.workspacePort {
-  height: 8%;
+.alert-status-codes {
+  height: 100%;
+  resize: none;
+  border-radius: 10px;
+}
+
+.monitoring-frequency{
+  height: 40%;
+  resize: none;
   border-radius: 10px;
 }
 

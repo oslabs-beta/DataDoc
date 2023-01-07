@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import Settings from "./Settings.jsx";
 import URI from "./URI.jsx";
 import FlashError from "./FlashError.jsx";
@@ -11,6 +11,9 @@ const URIList = (props) => {
   const [searchInput, setSearch] = useState("");
   const [monitoringFreq, setMonitoringFreq] = useState("");
   const [firstLoad, setFirstLoad] = useState(true);
+  const location = useLocation();
+  const { id, name } = location.state;
+  console.log("THIS IS THE ID FROM URI LIST", id);
 
   const minFreq = 0.5;
 
@@ -23,37 +26,37 @@ const URIList = (props) => {
   // * Fetch the URI List from the backend when the component mounts
   useEffect(() => {
     // * Populate URIList from database
-    getURIListFromDatabase()
+    getURIListFromDatabase(id);
   }, []);
 
-  const getURIListFromServer = () => {
-    fetch(`http://localhost:${process.env.PORT}/routes/server`)
+  const getURIListFromServer = (id) => {
+    fetch(`http://localhost:${process.env.PORT}/routes/server/${id}`)
       .then((response) => response.json())
       .then((data) => {
         setURIList(data);
       })
       .catch((err) => {
-        setErrorMessage("Invalid fetch request for the URI List");
+        setErrorMessage("Invalid server fetch request for the URI List");
         // * reset the error message
         setTimeout(() => setErrorMessage(""), 5000);
       });
-  }
+  };
 
-  const getURIListFromDatabase = () => {
-    fetch(`http://localhost:${process.env.PORT}/routes`)
+  const getURIListFromDatabase = (id) => {
+    fetch(`http://localhost:${process.env.PORT}/routes/${id}`)
       .then((response) => response.json())
       .then((data) => {
         setURIList(data);
       })
       .catch((err) => {
-        setErrorMessage("Invalid fetch request for the URI List");
+        setErrorMessage("Invalid db fetch request for the URI List");
         // * reset the error message
         setTimeout(() => setErrorMessage(""), 5000);
       });
-  }
+  };
 
   const addToTracking = (method, path) => {
-    const newURIList = [...URIList]
+    const newURIList = [...URIList];
     for (const URI of newURIList) {
       if (URI.method === method && URI.path === path) {
         URI.tracking = true;
@@ -62,9 +65,9 @@ const URIList = (props) => {
     }
     setURIList(newURIList);
   };
-  
+
   const removeFromTracking = (method, path) => {
-    const newURIList = [...URIList]
+    const newURIList = [...URIList];
     for (const URI of newURIList) {
       if (URI.method === method && URI.path === path) {
         URI.tracking = false;
@@ -80,16 +83,18 @@ const URIList = (props) => {
       setFirstLoad(false);
       return;
     }
-    fetch(`http://localhost:${process.env.PORT}/routes`, {
+    fetch(`http://localhost:${process.env.PORT}/routes/${id}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(URIList.map(URI => ({
-        method: URI.method,
-        path: URI.path,
-        tracking: URI.tracking || false,
-      }))),
+      body: JSON.stringify(
+        URIList.map((URI) => ({
+          method: URI.method,
+          path: URI.path,
+          tracking: URI.tracking || false,
+        }))
+      ),
     }).catch((err) => {
       console.log(
         `there was an error sending the URI tracking list, error: ${err}`
@@ -138,9 +143,9 @@ const URIList = (props) => {
 
   return (
     <div className="URIListContainer">
-      <SearchBar searchInput={searchInput} setSearch={setSearch} />
-      <br></br>
+      <h1>Workspace: {name}</h1>
       <form className="monitoring">
+        <br></br>
         <label htmlFor="monitoring-time">Set monitoring frequency:</label>
         <input
           type="number"
@@ -165,6 +170,15 @@ const URIList = (props) => {
       </form>
       <br></br>
       <Settings />
+      <br></br>
+      <span>
+        <label htmlFor="endpoint-search">Search for a specific endpoint:</label>
+        <SearchBar
+          id="endpoint-search"
+          searchInput={searchInput}
+          setSearch={setSearch}
+        />
+      </span>
       <br></br>
       <div className="URIEntries">
         {errorMessage !== "" ? (
