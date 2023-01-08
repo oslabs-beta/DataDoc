@@ -6,6 +6,7 @@ import FlashError from "./FlashError.jsx";
 import SearchBar from "./SearchBar.jsx";
 
 const URIList = (props) => {
+  console.log('Uri props', props)
   const [URIList, setURIList] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
   const [searchInput, setSearch] = useState("");
@@ -13,7 +14,7 @@ const URIList = (props) => {
   const [firstLoad, setFirstLoad] = useState(true);
   const [metricsPort, setMetricsPort] = useState(9991);
   const location = useLocation();
-  const { workspaceId, name } = location.state;
+  const { workspace_id, name } = location.state;
 
   const minFreq = 0.5;
 
@@ -26,8 +27,8 @@ const URIList = (props) => {
   // * Fetch the URI List from the backend when the component mounts
   useEffect(() => {
     // * Populate URIList from database
-    getURIListFromDatabase(workspaceId);
-  }, []);
+    getURIListFromDatabase(workspace_id);
+  }, [workspace_id]);
 
   const getURIListFromServer = () => {
     fetch(`http://localhost:${process.env.PORT}/routes/server?metrics_port=${metricsPort}`)
@@ -42,8 +43,9 @@ const URIList = (props) => {
       });
   };
 
-  const getURIListFromDatabase = (id) => {
-    fetch(`http://localhost:${process.env.PORT}/routes/${workspaceId}`)
+  const getURIListFromDatabase = (workspace_id) => {
+    console.log('in URI list, workspace_id', workspace_id)
+    fetch(`http://localhost:${process.env.PORT}/routes/${workspace_id}`)
       .then((response) => response.json())
       .then((data) => {
         setURIList(data);
@@ -83,7 +85,7 @@ const URIList = (props) => {
       setFirstLoad(false);
       return;
     }
-    fetch(`http://localhost:${process.env.PORT}/routes/${workspaceId}`, {
+    fetch(`http://localhost:${process.env.PORT}/routes/${workspace_id}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

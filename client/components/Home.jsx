@@ -107,9 +107,11 @@ const Home = (props) => {
 
   const getWorkSpaceList = () => {
     fetch(`http://localhost:${process.env.PORT}/workspaces`)
-      .then((response) => response.json())
+      .then((response) => {
+        console.log('in home, get workspace list')
+        return response.json()})
       .then((data) => {
-        // console.log("this is in home getting the data", data);
+        console.log("this is in home getting the data", data);
         setWorkspaceList(data);
       })
       .catch((err) => {
@@ -151,7 +153,7 @@ const Home = (props) => {
           return (
             <Workspace
               key={crypto.randomUUID()}
-              workspaceId={workspace._id}
+              workspace_id={workspace._id}
               name={workspace.name}
               domain={workspace.domain}
               port={workspace.port}

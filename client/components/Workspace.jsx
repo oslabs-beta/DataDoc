@@ -3,19 +3,20 @@ import { Link } from "react-router-dom";
 import "../styles/WorkspaceBox.scss";
 
 const Workspace = (props) => {
-  const { workspaceId, name, domain, port, path, deleteWorkspace } = props;
+  console.log(props)
+  const { workspace_id, name, domain, port, path, deleteWorkspace } = props;
   return (
     <>
       <div className="workspaceBox">
         <Link
           // * link to the uri list for the clicked workspace
-          to={`/urilist/${workspaceId}`}
+          to={`/urilist/${workspace_id}`}
           state={{
-            workspaceId: workspaceId,
+            workspace_id: workspace_id,
             name: name,
             domain: domain
           }}
-          // workspaceId={workspaceId}
+          workspace_id={workspace_id}
           name={name}
           domain={domain}
         >

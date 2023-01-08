@@ -28,10 +28,11 @@ const NavBar = () => {
   }, []);
 
   const getWorkSpaceList = () => {
+    console.log('NavBar, getWorkSpaceList')
     fetch(`http://localhost:${process.env.PORT}/workspaces`)
       .then((response) => response.json())
       .then((data) => {
-        // console.log("this is in home getting the data", data);
+        console.log("this is in navbar getting the data", data);
         setWorkspaceList(data);
       })
       .catch((err) => {
@@ -68,7 +69,7 @@ const NavBar = () => {
         </Link>
         <div>
           {workspaceList.map((workspace) => {
-            // console.log("this is the workspace data: ", workspace._id);
+            console.log("this is the workspace data: ", workspace._id);
             const id = workspace._id;
             const name = workspace.name;
             const domain = workspace.domain;

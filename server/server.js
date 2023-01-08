@@ -223,6 +223,7 @@ app.post("/routes/:workspace_id", async (req, res) => {
 
 //get existing workspaces for the user
 app.get("/workspaces", async (req, res) => {
+  console.log('in /workspaces')
   const queryText = `
   SELECT * 
   FROM workspaces;`;
