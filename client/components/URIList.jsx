@@ -6,15 +6,16 @@ import FlashError from "./FlashError.jsx";
 import SearchBar from "./SearchBar.jsx";
 
 const URIList = (props) => {
+  
   const [URIList, setURIList] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
   const [searchInput, setSearch] = useState("");
   const [monitoringFreq, setMonitoringFreq] = useState("");
-  const [firstLoad, setFirstLoad] = useState(true);
   const [metricsPort, setMetricsPort] = useState(9991);
-  const location = useLocation();
-  const { workspaceId, name } = location.state;
 
+  const location = useLocation();
+  const { workspace_id, name } = location.state;
+  
   const minFreq = 0.5;
 
   const inputHandler = (e) => {
@@ -23,11 +24,10 @@ const URIList = (props) => {
     setSearch(lowerCase);
   };
 
-  // * Fetch the URI List from the backend when the component mounts
+  // * Fetch the URI List from the database when the component mounts
   useEffect(() => {
-    // * Populate URIList from database
-    getURIListFromDatabase(workspaceId);
-  }, []);
+    getURIListFromDatabase(workspace_id);
+  }, [workspace_id]);
 
   const getURIListFromServer = () => {
     fetch(`http://localhost:${process.env.PORT}/routes/server?metrics_port=${metricsPort}`)
@@ -42,8 +42,8 @@ const URIList = (props) => {
       });
   };
 
-  const getURIListFromDatabase = (id) => {
-    fetch(`http://localhost:${process.env.PORT}/routes/${workspaceId}`)
+  const getURIListFromDatabase = (workspace_id) => {
+    fetch(`http://localhost:${process.env.PORT}/routes/${workspace_id}`)
       .then((response) => response.json())
       .then((data) => {
         setURIList(data);
@@ -79,11 +79,13 @@ const URIList = (props) => {
 
   // * Update the list of tracked URIs in the server whenever a checkbox changes
   useEffect(() => {
-    if (firstLoad) {
-      setFirstLoad(false);
-      return;
-    }
-    fetch(`http://localhost:${process.env.PORT}/routes/${workspaceId}`, {
+    // if (firstRender) {
+    //   firstRender = false;
+    //   console.log(firstRender);
+    //   // setFirstLoad(false);
+    //   return;
+    // }
+    fetch(`http://localhost:${process.env.PORT}/routes/${workspace_id}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -152,7 +154,7 @@ const URIList = (props) => {
         <input
           type="number"
           min={`${minFreq}`}
-          step="0.01"
+          step="0.1"
           id="monitoring-time"
           value={monitoringFreq}
           placeholder="5 seconds"
@@ -187,7 +189,7 @@ const URIList = (props) => {
           <FlashError errorMessage={errorMessage} />
         ) : null}
         <form>
-          <input placeholder="Metrics server port" onChange={(e) => {
+          <input placeholder="Metrics server port" type="number" defaultValue={9991} onChange={(e) => {
             setMetricsPort(e.target.value);
           }}></input>
           <button onClick={(e) => {

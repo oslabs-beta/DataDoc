@@ -13,6 +13,7 @@ const NavBar = () => {
 
   const toggleMenu = () => {
     if (xPosition < 0) {
+      getWorkSpaceList();
       setX(0);
     } else {
       setX(-width);
@@ -31,7 +32,6 @@ const NavBar = () => {
     fetch(`http://localhost:${process.env.PORT}/workspaces`)
       .then((response) => response.json())
       .then((data) => {
-        // console.log("this is in home getting the data", data);
         setWorkspaceList(data);
       })
       .catch((err) => {
@@ -46,7 +46,7 @@ const NavBar = () => {
         style={{
           transform: `translatex(${xPosition}px)`,
           width: width,
-          minHeight: height,
+          minHeight: height
         }}
       >
         <Draggable axis="y">
@@ -55,29 +55,33 @@ const NavBar = () => {
               className="navbar-button"
               onClick={() => toggleMenu()}
               style={{
-                transform: `translate(${width}px, 20vh)`,
+                transform: `translate(${width}px, 20vh)`
               }}
             ></button>
           </div>
         </Draggable>
-        <Link to="/" onClick={toggleMenu} state={{ toggleMenu: toggleMenu }}>
+        <Link
+          to="/"
+          onClick={toggleMenu}
+          // state={{ toggleMenu: toggleMenu }}
+        >
           <button>Home</button>
         </Link>
-        <Link to="/urilist" onClick={toggleMenu}>
-          URI List
-        </Link>
+        {/* <Link to="/urilist" onClick={toggleMenu}>
+        URI List
+      </Link> */}
         <div>
           {workspaceList.map((workspace) => {
-            // console.log("this is the workspace data: ", workspace._id);
-            const id = workspace._id;
+            const workspace_id = workspace._id;
             const name = workspace.name;
             const domain = workspace.domain;
-            // console.log("THIS IS THE ID: ", id);
             return (
-              <div>
+              <div
+                key={crypto.randomUUID()}
+              >
                 <Link
-                  to={`/urilist/${id}`}
-                  state={{ id: id, name: name, domain: domain }}
+                  to={`/urilist/${workspace_id}`}
+                  state={{ workspace_id: workspace_id, name: name, domain: domain }}
                   onClick={toggleMenu}
                 >
                   {name}

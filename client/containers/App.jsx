@@ -24,8 +24,8 @@ import { HashRouter as Router, Route, Routes, Link } from "react-router-dom";
 import "../styles/globals.scss";
 
 const App = () => {
-  const [simulation, setSimulation] = useState(false);
-  const [monitoring, setMonitoring] = useState(false);
+  // const [simulation, setSimulation] = useState(false);
+  // const [monitoring, setMonitoring] = useState(false);
   const [theme, colorMode] = useMode();
   return (
     <ColorModeContext.Provider value={colorMode}>
@@ -39,13 +39,13 @@ const App = () => {
               <Topbar />
               <Back />
               <Forward />
-              <Link to="/">
+              {/* <Link to="/">
                 <button>Home</button>
-              </Link>
-              <Header
+              </Link> */}
+              {/* <Header
                 setSimulation={setSimulation}
                 setMonitoring={setMonitoring}
-              />
+              /> */}
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/urilist/:id" element={<URIList />} />

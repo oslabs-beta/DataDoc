@@ -5,13 +5,14 @@ import "../styles/AddWorkspace.scss";
 const { SERVER_URL } = process.env;
 
 const Home = (props) => {
+
   const [workspaceList, setWorkspaceList] = useState([]);
   const [showNewWorkspacePopUp, setShowNewWorkspacePopUp] = useState(false);
   const [workspaceValues, setWorkspaceValues] = useState({
     name: "",
     domain: "",
     port: 0,
-    // workspaceID: null,
+    // workspace_id: null,
   });
 
   const handleChange = (e, updateValue) => {
@@ -25,7 +26,6 @@ const Home = (props) => {
     setWorkspaceValues(updatedState);
   };
 
-  // console.log("these are the workspace values: ", workspaceValues);
   const handleSubmit = (e) => {
     e.preventDefault();
     fetch(`${SERVER_URL}/workspaces`, {
@@ -33,24 +33,24 @@ const Home = (props) => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(workspaceValues),
     })
-      .then(() => {
-        getWorkSpaceList();
-      })
-      .then(() => {
-        setWorkspaceValues({
-          name: "",
-          domain: "",
-          port: 0,
-        });
-      })
-      .then(() => {
-        setShowNewWorkspacePopUp(false);
-      })
-      .catch((err) => {
-        console.log(
-          `there wan an error submitting a new workspace, err: ${err}`
-        );
+    .then(() => {
+      getAllWorkspaces();
+    })
+    .then(() => {
+      setWorkspaceValues({
+        name: "",
+        domain: "",
+        port: 0,
       });
+    })
+    .then(() => {
+      setShowNewWorkspacePopUp(false);
+    })
+    .catch((err) => {
+      console.log(
+        `there wan an error submitting a new workspace, err: ${err}`
+      );
+    });
   };
 
   //set the values for the new workspace
@@ -102,14 +102,14 @@ const Home = (props) => {
 
   //fetch the workspace list from the backend when the component mounts
   useEffect(() => {
-    getWorkSpaceList();
+    getAllWorkspaces();
   }, []);
 
-  const getWorkSpaceList = () => {
+  const getAllWorkspaces = () => {
     fetch(`http://localhost:${process.env.PORT}/workspaces`)
-      .then((response) => response.json())
+      .then((response) => {
+        return response.json()})
       .then((data) => {
-        // console.log("this is in home getting the data", data);
         setWorkspaceList(data);
       })
       .catch((err) => {
@@ -117,31 +117,30 @@ const Home = (props) => {
       });
   };
 
-  const deleteWorkspace = (name) => {
+  const deleteWorkspaceById = (workspace_id) => {
     fetch(`${SERVER_URL}/workspaces`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ name: name }),
+      body: JSON.stringify({ workspace_id }),
     })
-      .then((response) => {
-        response.json();
-      })
-      .then((workspace) => {
-        deleteSpecificWorkspace(name);
-      })
-      .catch((err) => {
-        console.log(`there was an error deleting a workspace, error: ${err}`);
-      });
+    .then((workspace) => {
+      getAllWorkspaces()
+    })
+    .catch((err) => {
+      console.log(`there was an error deleting a workspace, error: ${err}`);
+    });
   };
-  const deleteSpecificWorkspace = (name) => {
-    console.log("in the process of deleting a workspace");
-    const updatedWorkspaceList = workspaceList.filter(
-      (item) => item.name !== name
-    );
-    getWorkSpaceList();
-  };
+
+  // const deleteSpecificWorkspace = (name) => {
+  //   // console.log("in the process of deleting a workspace");
+  //   const updatedWorkspaceList = workspaceList.filter(
+  //     (item) => item.name !== name
+  //   );
+  //   getWorkSpaceList();
+  // };
+
   return (
     <>
       <h1>Welcome to DataDoc</h1>
@@ -151,12 +150,11 @@ const Home = (props) => {
           return (
             <Workspace
               key={crypto.randomUUID()}
-              workspaceId={workspace._id}
+              workspace_id={workspace._id}
               name={workspace.name}
               domain={workspace.domain}
               port={workspace.port}
-              path={workspace.path}
-              deleteWorkspace={deleteWorkspace}
+              deleteWorkspace={deleteWorkspaceById}
             />
           );
         })}
