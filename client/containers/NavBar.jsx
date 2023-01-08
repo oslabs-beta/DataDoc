@@ -13,6 +13,7 @@ const NavBar = () => {
 
   const toggleMenu = () => {
     if (xPosition < 0) {
+      getWorkSpaceList();
       setX(0);
     } else {
       setX(-width);
