@@ -31,10 +31,12 @@ const App = () => {
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <Router>
-          <div className="fullApp">
-            {/* <NavBar /> */}
-            <Sidebar />
+        <div className="fullApp">
+          <Router>
+            <NavBar />
+            <div className="sidebar">
+            {/* <Sidebar /> */}
+            </div>
             <div className="content">
               <Topbar />
               <Back />
@@ -56,8 +58,8 @@ const App = () => {
                 <Route path="/workspaces" element={<Workspaces />} />
               </Routes>
             </div>
-          </div>
-        </Router>
+          </Router>
+        </div>
       </ThemeProvider>
     </ColorModeContext.Provider>
   );
