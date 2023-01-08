@@ -33,8 +33,8 @@ const App = () => {
         <CssBaseline />
         <Router>
           <div className="fullApp">
-            <NavBar />
-            {/* <Sidebar /> */}
+            {/* <NavBar /> */}
+            <Sidebar />
             <div className="content">
               <Topbar />
               <Back />
