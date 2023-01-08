@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import "../styles/WorkspaceBox.scss";
 
 const Workspace = (props) => {
-  const { workspace_id, name, domain, port, path, deleteWorkspace } = props;
+  const { workspace_id, name, domain, port, deleteWorkspace } = props;
   return (
     <>
       <div className="workspaceBox">
@@ -25,7 +25,7 @@ const Workspace = (props) => {
             </p>
             <p>
               <label htmlFor="workspacePort">Port: </label>
-              <span className="workspacePort">{port}</span>
+              <span className="workspacePort">{port || "N/A"}</span>
             </p>
           </div>
         </Link>
