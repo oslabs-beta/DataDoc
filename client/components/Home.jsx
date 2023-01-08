@@ -5,13 +5,14 @@ import "../styles/AddWorkspace.scss";
 const { SERVER_URL } = process.env;
 
 const Home = (props) => {
+
   const [workspaceList, setWorkspaceList] = useState([]);
   const [showNewWorkspacePopUp, setShowNewWorkspacePopUp] = useState(false);
   const [workspaceValues, setWorkspaceValues] = useState({
     name: "",
     domain: "",
     port: 0,
-    // workspaceID: null,
+    // workspace_id: null,
   });
 
   const handleChange = (e, updateValue) => {
@@ -108,10 +109,9 @@ const Home = (props) => {
   const getWorkSpaceList = () => {
     fetch(`http://localhost:${process.env.PORT}/workspaces`)
       .then((response) => {
-        console.log('in home, get workspace list')
         return response.json()})
       .then((data) => {
-        console.log("this is in home getting the data", data);
+        // console.log("this is in home getting the data", data);
         setWorkspaceList(data);
       })
       .catch((err) => {
@@ -157,7 +157,7 @@ const Home = (props) => {
               name={workspace.name}
               domain={workspace.domain}
               port={workspace.port}
-              path={workspace.path}
+              // path={workspace.path}
               deleteWorkspace={deleteWorkspace}
             />
           );

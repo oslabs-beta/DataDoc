@@ -30,7 +30,6 @@ if (MODE === "production") {
 // * Route all /chartdata requests to chartRouter
 app.use("/chartdata", chartRouter);
 app.use("/logdata", logRouter);
-app.use("/logdata", logRouter);
 
 let intervalId;
 let logs = [];
@@ -46,10 +45,7 @@ const updateTimeElapsed = function () {
 
 const scrapeDataFromMetricsServer = async (metricsPort, tableName) => {
   try {
-    const metricsServerResponse = await fetch(`http://localhost:${metricsPort}/metrics`, {
-      method: "DELETE",
-    });
-    logs = await metricsServerResponse.json();
+    logs = await (await fetch(`http://localhost:${metricsPort}/metrics`, { method: "DELETE" })).json()
     storeLogsToDatabase(logs, tableName);
     return logs;
   } catch (e) {
@@ -81,9 +77,7 @@ const pingTargetEndpoints = async () => {
     try {
       await fetch("http://localhost:3000" + endpoint.path, {
         method: endpoint.method,
-        headers: {
-          'Cache-Control': 'no-store', 
-        }
+        headers: { 'Cache-Control': 'no-store' }
       });
     } catch (e) {
       console.error(e);
@@ -111,7 +105,6 @@ app.post(
   (req, res) => res.sendStatus(200)
 );
 
-
 app.post("/monitoring", async (req, res) => {
   // * active is a boolean, interval is in seconds
   let { active, interval, verbose, metricsPort } = req.body;
@@ -127,7 +120,6 @@ app.post("/monitoring", async (req, res) => {
         console.log(`Monitoring for ${timeElapsedString}`);
       }
       pingTargetEndpoints();
-      scrapeDataFromMetricsServer(metricsPort ,'monitoring');
       scrapeDataFromMetricsServer(metricsPort ,'monitoring');
     }, interval * 1000);
   } else clearInterval(intervalId);
@@ -223,12 +215,12 @@ app.post("/routes/:workspace_id", async (req, res) => {
 
 //get existing workspaces for the user
 app.get("/workspaces", async (req, res) => {
-  console.log('in /workspaces')
+  // console.log('in /workspaces')
   const queryText = `
-  SELECT * 
-  FROM workspaces;`;
+    SELECT * 
+    FROM workspaces
+    ;`;
   const dbResponse = await postgresClient.query(queryText);
-  // console.log("THIS IS THE DB RESPONSE", dbResponse.rows);
   return res.status(200).json(dbResponse.rows);
 });
 

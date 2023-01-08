@@ -40,7 +40,7 @@ const Development = (props)=> {
       body: JSON.stringify({...settings, path:path, stop:false})
     }).then((res) => res.json())
     .then((data)=>{
-      console.log('THIS IS FROM THE RESPONSE', data)
+      // console.log('THIS IS FROM THE RESPONSE', data)
     })
     .catch((err)=>{
       console.log(`there was an error sending the simulation METRICS, error: ${err}`)

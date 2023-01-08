@@ -3,7 +3,8 @@ import { Link } from "react-router-dom";
 import "../styles/WorkspaceBox.scss";
 
 const Workspace = (props) => {
-  console.log(props)
+  // console.log(`Workspace ${props.workspace_id}`)
+  // console.table(props)
   const { workspace_id, name, domain, port, path, deleteWorkspace } = props;
   return (
     <>
@@ -16,9 +17,9 @@ const Workspace = (props) => {
             name: name,
             domain: domain
           }}
-          workspace_id={workspace_id}
-          name={name}
-          domain={domain}
+          // workspace_id={workspace_id}
+          // name={name}
+          // domain={domain}
         >
           <div>
             <label htmlFor="workspaceName">Workspace Name: </label>
