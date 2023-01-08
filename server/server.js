@@ -12,7 +12,7 @@ const postgresClient = require("./models/postgres-client.js");
 const { response } = require("express");
 const { resolve } = require("path");
 const {
-  PhoneNumberContext,
+  PhoneNumberContext
 } = require("twilio/lib/rest/lookups/v1/phoneNumber.js");
 
 const MODE = process.env.NODE_ENV || "production";
@@ -45,7 +45,11 @@ const updateTimeElapsed = function () {
 
 const scrapeDataFromMetricsServer = async (metricsPort, tableName) => {
   try {
-    logs = await (await fetch(`http://localhost:${metricsPort}/metrics`, { method: "DELETE" })).json()
+    logs = await (
+      await fetch(`http://localhost:${metricsPort}/metrics`, {
+        method: "DELETE"
+      })
+    ).json();
     storeLogsToDatabase(logs, tableName);
     return logs;
   } catch (e) {
@@ -77,7 +81,7 @@ const pingTargetEndpoints = async () => {
     try {
       await fetch("http://localhost:3000" + endpoint.path, {
         method: endpoint.method,
-        headers: { 'Cache-Control': 'no-store' }
+        headers: { "Cache-Control": "no-store" }
       });
     } catch (e) {
       console.error(e);
@@ -120,7 +124,7 @@ app.post("/monitoring", async (req, res) => {
         console.log(`Monitoring for ${timeElapsedString}`);
       }
       pingTargetEndpoints();
-      scrapeDataFromMetricsServer(metricsPort ,'monitoring');
+      scrapeDataFromMetricsServer(metricsPort, "monitoring");
     }, interval * 1000);
   } else clearInterval(intervalId);
   if (verbose) console.log("ACTIVE:", active);
@@ -132,8 +136,8 @@ const pingOneEndpoint = async (path) => {
     await fetch("http://localhost:3000" + path, {
       method: "GET",
       headers: {
-        "Cache-Control": "no-cache",
-      },
+        "Cache-Control": "no-cache"
+      }
     });
   } catch (e) {
     console.error(e);
@@ -141,15 +145,15 @@ const pingOneEndpoint = async (path) => {
 };
 
 const performRPS = async (path, RPS) => {
-  const interval = Math.floor(1000/RPS)
-  if (intervalId) clearInterval(intervalId)
+  const interval = Math.floor(1000 / RPS);
+  if (intervalId) clearInterval(intervalId);
   let counter = 0;
   intervalId = setInterval(() => {
-  pingOneEndpoint(path)
-  counter ++
-  console.log(counter)
- }, interval)
-}
+    pingOneEndpoint(path);
+    counter++;
+    console.log(counter);
+  }, interval);
+};
 
 const rpswithInterval = async (path, RPS, timeInterval) => {
   if (intervalId) clearInterval(intervalId);
@@ -160,23 +164,22 @@ const rpswithInterval = async (path, RPS, timeInterval) => {
 };
 
 app.post("/simulation", async (req, res) => {
-  console.log(req.body)
-  const {RPS, timeInterval, setTime, stop, path} = req.body;
+  // console.log(req.body);
+  const { RPS, timeInterval, setTime, stop, path } = req.body;
   if (!stop) {
-    rpswithInterval(path,RPS,timeInterval)
-    scrapeDataFromMetricsServer('simulation')
-  }
-  else clearInterval(intervalId)
-  console.log("PING RESULT DONE")
+    rpswithInterval(path, RPS, timeInterval);
+    scrapeDataFromMetricsServer("simulation");
+  } else clearInterval(intervalId);
+  console.log("PING RESULT DONE");
   return res.status(200).send("hi");
 });
 
-app.get ("/metrics", async (req, res) => {
+app.get("/metrics", async (req, res) => {
   return res.status(200).json(logs);
 });
 
 app.get("/routes/server", async (req, res) => {
-  const { metrics_port } = req.query
+  const { metrics_port } = req.query;
   console.log(metrics_port);
   const response = await fetch(`http://localhost:${metrics_port}/endpoints`);
   const routes = await response.json();
@@ -215,7 +218,6 @@ app.post("/routes/:workspace_id", async (req, res) => {
 
 //get existing workspaces for the user
 app.get("/workspaces", async (req, res) => {
-  // console.log('in /workspaces')
   const queryText = `
     SELECT * 
     FROM workspaces
@@ -229,19 +231,21 @@ app.post("/workspaces", async (req, res) => {
   const { name, domain, port } = req.body;
   // console.log("THIS IS THE REQ BODY", domain, port);
   let queryText = `
-  INSERT INTO workspaces(name, domain, port)
-  VALUES ($1, $2, $3)`;
+    INSERT INTO workspaces (name, domain, port)
+    VALUES ($1, $2, $3)
+    ;`;
   postgresClient.query(queryText, [name, domain, port]);
   return res.sendStatus(204);
 });
 
 app.delete("/workspaces", async (req, res) => {
-  const queryTextDelete = `SELECT * FROM workspaces WHERE name=$1`;
-  const queryText = `DELETE FROM workspaces WHERE name=$1`;
-  const name = [req.body.name];
-  const deletedWorkspase = await postgresClient.query(queryTextDelete, [name]);
-  const deletedResponse = await postgresClient.query(queryText, name);
-  return res.status(200).json(deletedResponse.rows);
+  const { workspace_id } = req.body;
+  const queryText = `
+    DELETE FROM workspaces 
+    WHERE _id=${workspace_id}
+    ;`;
+  await postgresClient.query(queryText);
+  return res.sendStatus(204);
 });
 
 app.listen(PORT, () => {

@@ -17,9 +17,6 @@ const Workspace = (props) => {
             name: name,
             domain: domain
           }}
-          // workspace_id={workspace_id}
-          // name={name}
-          // domain={domain}
         >
           <div>
             <label htmlFor="workspaceName">Workspace Name: </label>
@@ -37,7 +34,7 @@ const Workspace = (props) => {
         <div>
           <button
             // className="workspaceBox"
-            onClick={() => deleteWorkspace(name)}
+            onClick={() => deleteWorkspace(workspace_id)}
           >
             Delete
           </button>
