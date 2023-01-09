@@ -10,7 +10,11 @@ const Topbar = () => {
   const colors = tokens(theme.palette.mode);
   const colorMode = useContext(ColorModeContext);
   return (
-    <Box display="flex" width="100vw">
+    <Box 
+        display="flex" 
+        width="100vw"
+        padding="0px 10px" 
+    >
       <Back />
       <Forward />
       <IconButton 

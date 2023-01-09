@@ -32,22 +32,21 @@ const App = () => {
             {/* <Sidebar /> */}
             <div className="content">
               <Topbar />
-              {/* <Link to="/">
-                <button>Home</button>
-              </Link> */}
-              {/* <Header
+              <main style={{ padding: "10px" }}>
+                {/* <Header
                 setSimulation={setSimulation}
                 setMonitoring={setMonitoring}
               /> */}
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/urilist/:id" element={<URIList />} />
-                <Route path="/uri" element={<URI />} />
-                <Route path="/uri/:id" element={<Dashboard />} />
-                <Route path="/settings" element={<Settings />} />
-                <Route path="/development/:id" element={<Development />} />
-                <Route path="/workspaces" element={<Workspace />} />
-              </Routes>
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/urilist/:id" element={<URIList />} />
+                  <Route path="/uri" element={<URI />} />
+                  <Route path="/uri/:id" element={<Dashboard />} />
+                  <Route path="/settings" element={<Settings />} />
+                  <Route path="/development/:id" element={<Development />} />
+                  <Route path="/workspaces" element={<Workspace />} />
+                </Routes>
+              </main>
             </div>
           </div>
         </Router>

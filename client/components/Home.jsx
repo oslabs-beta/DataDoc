@@ -158,17 +158,17 @@ const Home = (props) => {
       <Typography 
         variant="h1"
         fontWeight={600}
-        mt="20px"
       >
         Welcome to DataDoc
       </Typography>
       <Typography
         variant="h3"
         fontWeight={600}
+        mb="20px"
       >
         Workspaces:
       </Typography>
-      <Grid container spacing={2} style={{ margin: "10px" }}>
+      <Grid container spacing={2}>
         {workspaceList.map((workspace) => {
           return (
             <Grid 
