@@ -2,7 +2,6 @@
 
 Monitor your API performance
 
-
 <img src="./assets/electron-logo-color.png" alt="Electron" title="Electron" align="center" height="30" />
 
 <img src="./assets/react-logo-color.png" alt="React" title="React" align="center" height="30" />
@@ -10,7 +9,6 @@ Monitor your API performance
 <img src="./assets/material-ui-logo-color.png" alt="MaterialUI" title="MaterialUI" align="center" height="30" />
 
 <img src="./assets/chartjs-logo-color.png" alt="MaterialUI" title="MaterialUI" align="center" height="30" />
-
 
 <img src="./assets/express-logo-color.png" alt="Express" title="Express" align="center" height="30" />
 
@@ -39,10 +37,113 @@ Monitor your API performance
 
 This tool requires the npm package `express-endpoints-monitor` to detect and gather metrics for endpoints in your Express application. To understand how to use this plugin, see the <a href="https://www.npmjs.com/package/express-endpoints-monitor">full documentation</a>.
 
-Run the following terminal command in your project directory that you would like to begin monitoring:
+1. Run the following terminal command in your project directory that you would like to begin monitoring:
+
+    ```
+    npm install express-endpoints-monitor
+    ```
+
+    This should have created a `express-endpoints-monitor/` folder in your `node_modules/` directory
+
+2. WIP: <a href="https://github.com/oslabs-beta/DataDoc/archive/refs/heads/dev.zip">Clone this repository</a>. Unzip the file in a separate folder and open a terminal in this directory. Run the following commands:
+
+    ```
+    npm install
+    npm run build
+    ```
+
+    This will build the desktop application
+
+### Exposing endpoints to the monitoring tool
+
+1. Open your Express application file in a text editor. At the top of the file, import the plugin by including:
+
+    ```
+    const expMonitor = require("express-endpoints-monitor");
+    ```
+
+    This module comes with several functions to register endpoints with the monitoring application and begin monitoring requests sent to those endpoints.
+
+2. In your file, include the following line:
+
+    ```
+    app.use(expMonitor.gatherMetrics());
+    ```
+
+    This will record metrics for incoming requests and make them available to the metrics API which will be set up later.
+
+3. Under an endpoint that you would like to begin monitoring, include the `expMonitor.registerEndpoint` middleware. For example, this may look like:
+
+    ```
+    app.get(...,
+      expMonitor.registerEndpoint,
+      ...
+    );
+    ```
+
+    The order of this function in the middleware chain is not important. This middleware will stage this particular endpoint for exporting, and can be used in multiple endpoints.
+
+4. Once all desired endpoints have been registered, they must be exported on the metrics server. In your `app.listen` declaration, add these lines to the passed-in callback function:
+
+    ```
+    app.listen(..., function callback() {
+      ...
+      expMonitor.exportEndpoints();
+      startMetricsServer(<METRICS_SERVER_PORT>)
+    )
+    ```
+
+    This will start up a metrics server on `METRICS_SERVER_PORT`. If this argument is not specified, it will resolve to `9991`. The server includes several endpoints, one of which is `GET /endpoints` which responds with the list of registered endpoints in JSON format.
+
+    Alternatively, if you would like to export all endpoints, you may replace the above snippet with the `exportAllEndpoints` function: 
+    
+      ```
+      app.listen(..., function callback() {
+        ...
+        expMonitor.exportAllEndpoints();
+        startMetricsServer(<METRICS_SERVER_PORT>)
+      )
+      ```
+
+    This will expose all endpoints regardless of whether they include the `registerEndpoint` middleware.
+
+5. Your application is ready to start monitoring! To verify your setup, use a browser or API testing tool to interact with the metrics API started at `http://localhost:<METRICS_SERVER_PORT>`. The list of available endpoints is:
+
+    - `GET /endpoints`
+    - `GET /metrics`
+    - `DELETE /metrics`
+
+6. To see the full use of the library, see the <a href="https://www.npmjs.com/package/express-endpoints-monitor">npm page</a>.
+
+### Initializing the databases
 
 ```
-npm install express-endpoints-monitor
+docker compose up
 ```
 
-### 
+The `-d` flag may be supplied to detach the instance from the terminal.
+
+### Starting the Desktop Application
+
+1. In your local `DataDoc` folder, run the following command if you haven't during the installation steps:
+
+    ```
+    npm build
+    ```
+
+    This command only needs to be run once.
+
+2. WIP: In the same folder, run the following command to start the desktop application:
+
+    ```
+    npm start
+    ```
+
+
+### Adding Workspaces
+ 
+### Using the Monitoring Tool
+
+### Using the Simulation Tool
+
+### Configuring Alerts
