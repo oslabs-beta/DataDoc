@@ -4,7 +4,8 @@ import HomeButton from "../components/HomeButton.jsx";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import Draggable from "react-draggable";
 
-const NavBar = () => {
+const NavBar = (props) => {
+  const { setMainWidth, setMainOffset } = props;
   const [workspaceList, setWorkspaceList] = useState([]);
 
   const navigate = useNavigate();
@@ -17,8 +18,12 @@ const NavBar = () => {
     if (xPosition < 0) {
       getWorkSpaceList();
       setX(0);
+      setMainWidth(`calc(100vw - ${width}px)`)
+      setMainOffset(`${width}px`)
     } else {
       setX(-width);
+      setMainWidth("100vw")
+      setMainOffset(`0px`)
     }
   };
 
@@ -64,15 +69,12 @@ const NavBar = () => {
         </Draggable>
         <button
           onClick={() => {
-            navigate('/');
+            navigate("/");
             toggleMenu();
           }}
         >
           Home
         </button>
-        {/* <Link to="/urilist" onClick={toggleMenu}>
-        URI List
-      </Link> */}
         <div>
           {workspaceList.map((workspace) => {
             const workspace_id = workspace._id;
@@ -82,11 +84,11 @@ const NavBar = () => {
               <div key={crypto.randomUUID()}>
                 <div
                   style={{
-                    cursor: 'pointer',
+                    cursor: "pointer"
                   }}
                   onClick={() => {
                     navigate(`/urilist/${workspace_id}`, {
-                      state: { workspace_id, name, domain}
+                      state: { workspace_id, name, domain }
                     });
                     toggleMenu();
                   }}

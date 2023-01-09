@@ -11,9 +11,14 @@ const Topbar = () => {
   const colorMode = useContext(ColorModeContext);
   return (
     <Box 
-        display="flex" 
+        display="flex"
         width="100vw"
         padding="0px 10px 0px 2px" 
+        style={{
+            boxSizing: "border-box",
+            MozBoxSizing: "border-box",
+            WebkitBoxSizing: "border-box",
+        }}
     >
       <Back />
       <Forward />

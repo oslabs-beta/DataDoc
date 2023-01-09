@@ -1,5 +1,5 @@
 import { CssBaseline, ThemeProvider } from "@mui/material";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { ColorModeContext, useMode } from "./theme.js";
 
 // import Back from "../components/NavButtons.jsx";
@@ -22,17 +22,31 @@ const App = () => {
   // const [simulation, setSimulation] = useState(false);
   // const [monitoring, setMonitoring] = useState(false);
   const [theme, colorMode] = useMode();
+  const [mainWidth, setMainWidth] = useState("100vw");
+  const [mainOffset, setMainOffset] = useState("0px");
+
   return (
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <Router>
           <div className="fullApp">
-            <NavBar />
+            <NavBar setMainWidth={setMainWidth} setMainOffset={setMainOffset} />
             {/* <Sidebar /> */}
             <div className="content">
-              <Topbar />
-              <main style={{ padding: "10px" }}>
+              <main
+                style={{
+                  boxSizing: "border-box",
+                  MozBoxSizing: "border-box",
+                  WebkitBoxSizing: "border-box",
+                  padding: "10px",
+                  // width: "100%",
+                  width: mainWidth,
+                  marginLeft: mainOffset,
+                  transition: "width 0.5s, margin-left 0.5s"
+                }}
+              >
+                <Topbar />
                 {/* <Header
                 setSimulation={setSimulation}
                 setMonitoring={setMonitoring}
