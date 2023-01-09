@@ -6,19 +6,11 @@ body {
   margin: 0;
 }
 
-.fullapp {
-  display: flex;
-  flex-direction: row;
-  height: 100%;
-  width: 100%;
-}
-
-// .sidebar {
+// .pro-sidebar-layout {
 //   float: left;
 //   height: 100vh;
 // }
 
-// .content {
-//   float: right;
-//   height: 100%;
-// }
+.content {
+  margin-left: 10px;
+}

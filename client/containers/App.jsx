@@ -31,7 +31,7 @@ const App = () => {
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <div className="fullApp">
+        <div className="fullApp" style={{ display: 'flex', height: '100%' }}>
           <Router>
             <NavBar />
             <div className="sidebar">

@@ -31,7 +31,7 @@ const Sidebar = () => {
         },
       }}
     >
-      <ProSidebar>
+      <ProSidebar style={{height: '100vh'}}>
         <Menu>
           <MenuItem>
             WorkSapce1

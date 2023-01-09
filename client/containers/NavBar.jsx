@@ -14,8 +14,10 @@ const NavBar = () => {
   const toggleMenu = () => {
     if (xPosition < 0) {
       setX(0);
+      document.querySelector('.content').style.marginLeft = `${width+10}px`;
     } else {
       setX(-width);
+      document.querySelector('.content').style.marginLeft = '10px';
     }
   };
 
