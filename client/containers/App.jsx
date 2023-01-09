@@ -34,6 +34,7 @@ const App = () => {
             <NavBar setMainWidth={setMainWidth} setMainOffset={setMainOffset} />
             {/* <Sidebar /> */}
             <div className="content">
+              <Topbar />
               <main
                 style={{
                   boxSizing: "border-box",
@@ -46,7 +47,6 @@ const App = () => {
                   transition: "width 0.5s, margin-left 0.5s"
                 }}
               >
-                <Topbar />
                 {/* <Header
                 setSimulation={setSimulation}
                 setMonitoring={setMonitoring}
