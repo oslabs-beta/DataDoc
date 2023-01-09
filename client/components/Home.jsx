@@ -172,10 +172,11 @@ const Home = (props) => {
         {workspaceList.map((workspace) => {
           return (
             <Grid 
-              xs={12} 
-              sm={6} 
-              md={4} 
-              lg={3}
+              xs={12/1} 
+              sm={12/2} 
+              md={12/3} 
+              lg={12/4}
+              xl={12/5}
               key={crypto.randomUUID()}
             >
               <Card variant="outlined" sx={cardStyle}>
