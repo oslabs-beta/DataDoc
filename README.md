@@ -28,4 +28,21 @@ Monitor your API performance
 
 <img src="./assets/webpack-logo-color.png" alt="Webpack" title="Webpack" align="center" height="30" />
 
+## Requirements
+
+- Node.js v18^
+- Docker
+
 ## Getting Started
+
+### Installation
+
+This tool requires the npm package `express-endpoints-monitor` to detect and gather metrics for endpoints in your Express application. To understand how to use this plugin, see the <a href="https://www.npmjs.com/package/express-endpoints-monitor">full documentation</a>.
+
+Run the following terminal command in your project directory that you would like to begin monitoring:
+
+```
+npm install express-endpoints-monitor
+```
+
+### 
