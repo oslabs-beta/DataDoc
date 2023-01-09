@@ -164,14 +164,14 @@ const rpswithInterval = async (path, RPS, timeInterval) => {
 };
 
 app.post("/simulation", async (req, res) => {
-  // console.log(req.body);
+  const {port} = req.body
   const { RPS, timeInterval, setTime, stop, path } = req.body;
   if (!stop) {
     rpswithInterval(path, RPS, timeInterval);
-    scrapeDataFromMetricsServer("simulation");
+    scrapeDataFromMetricsServer(port,"simulation");
   } else clearInterval(intervalId);
   console.log("PING RESULT DONE");
-  return res.status(200).send("hi");
+  return res.status(200).json(req.body);
 });
 
 app.get("/metrics", async (req, res) => {
@@ -190,6 +190,7 @@ app.get("/routes/server", async (req, res) => {
   });
   return res.status(200).json(routes);
 });
+
 
 app.get("/routes/:workspace_id", async (req, res) => {
   const { workspace_id } = req.params;

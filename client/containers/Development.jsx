@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Box, Slider,Typography, Button } from '@mui/material';
+import { Box, Slider,Typography, Button,TextField } from '@mui/material';
 import { useLocation } from "react-router-dom";
 
 
@@ -8,7 +8,8 @@ const Development = (props)=> {
   const [settings, setSettings] = useState({
     RPS: 0,
     timeInterval: 0,
-    setTime: 0
+    setTime: 0,
+    port: 0
   })
 
   const location = useLocation();
@@ -40,7 +41,7 @@ const Development = (props)=> {
       body: JSON.stringify({...settings, path:path, stop:false})
     }).then((res) => res.json())
     .then((data)=>{
-      // console.log('THIS IS FROM THE RESPONSE', data)
+      console.log('THIS IS FROM THE RESPONSE', data)
     })
     .catch((err)=>{
       console.log(`there was an error sending the simulation METRICS, error: ${err}`)
@@ -67,6 +68,11 @@ const Development = (props)=> {
   return (
     <div className='developmentContainer'>
       <Box display="flex" flexDirection="column" m={10}>
+      <TextField id="outlined-basic" label="Port" 
+      variant="outlined" required 
+      value = {settings.port} 
+      onChange={(e) => handleChange(e, 'port')}/>
+      
       <Typography id="hdr" variant="h3" gutterBottom>
        Simulate User Activity
       </Typography>
@@ -118,7 +124,6 @@ const Development = (props)=> {
         value = {settings.setTime}
         onChange={(e) => handleChange(e, 'setTime')}
         />
-
       <Button variant="contained" onClick={handleTesting}>START TESTING</Button>
       <br />
       <Button variant="outlined" color ="secondary" onClick={handleStop}>STOP</Button>
