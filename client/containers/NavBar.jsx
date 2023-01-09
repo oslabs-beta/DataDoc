@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import "../styles/NavBar.scss";
 import HomeButton from "../components/HomeButton.jsx";
-import { Link } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import Draggable from "react-draggable";
 
 const NavBar = () => {
   const [workspaceList, setWorkspaceList] = useState([]);
+
+  const navigate = useNavigate();
 
   const width = 300;
   const height = "100vh";
@@ -60,13 +62,14 @@ const NavBar = () => {
             ></button>
           </div>
         </Draggable>
-        <Link
-          to="/"
-          onClick={toggleMenu}
-          // state={{ toggleMenu: toggleMenu }}
+        <button
+          onClick={() => {
+            navigate('/');
+            toggleMenu();
+          }}
         >
-          <button>Home</button>
-        </Link>
+          Home
+        </button>
         {/* <Link to="/urilist" onClick={toggleMenu}>
         URI List
       </Link> */}
@@ -76,16 +79,20 @@ const NavBar = () => {
             const name = workspace.name;
             const domain = workspace.domain;
             return (
-              <div
-                key={crypto.randomUUID()}
-              >
-                <Link
-                  to={`/urilist/${workspace_id}`}
-                  state={{ workspace_id: workspace_id, name: name, domain: domain }}
-                  onClick={toggleMenu}
+              <div key={crypto.randomUUID()}>
+                <div
+                  style={{
+                    cursor: 'pointer',
+                  }}
+                  onClick={() => {
+                    navigate(`/urilist/${workspace_id}`, {
+                      state: { workspace_id, name, domain}
+                    });
+                    toggleMenu();
+                  }}
                 >
                   {name}
-                </Link>
+                </div>
               </div>
             );
           })}
