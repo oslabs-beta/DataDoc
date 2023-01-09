@@ -1,28 +1,32 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Box, IconButton, useTheme } from "@mui/material"
+import { Box, IconButton, useTheme } from "@mui/material";
+import { LightModeOutlined, DarkModeOutlined, SettingsOutlined, NotificationsOutlined } from "@mui/icons-material";
 import { ColorModeContext, tokens } from "./theme";
-import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
-import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
-import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined";
-import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
+import { Back, Forward } from "../components/NavButtons.jsx";
+
 
 const Topbar = () => {
-    const theme = useTheme();
-    const colors = tokens(theme.palette.mode);
-    const colorMode = useContext(ColorModeContext);
-    return (
-        
-        <Box display="flex">
-            <IconButton onClick={colorMode.toggleColorMode}>
-                {theme.palette.mode === 'light' ? (
-                    <DarkModeOutlinedIcon />
-                ) : (
-                    <LightModeOutlinedIcon />
-                )}
-            </IconButton>
-        </Box>
-    )
-
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
+  const colorMode = useContext(ColorModeContext);
+  return (
+    <Box display="flex" width="100vw">
+      <Back />
+      <Forward />
+      <IconButton 
+        onClick={colorMode.toggleColorMode}
+        sx={{
+            marginLeft: "auto"
+        }}
+      >
+        {theme.palette.mode === "light" ? (
+          <DarkModeOutlined />
+        ) : (
+          <LightModeOutlined />
+        )}
+      </IconButton>
+    </Box>
+  );
 };
 
 export default Topbar;

@@ -2,7 +2,7 @@ import { CssBaseline, ThemeProvider } from "@mui/material";
 import React from "react";
 import { ColorModeContext, useMode } from "./theme.js";
 
-import Back from "../components/Back.jsx";
+// import Back from "../components/NavButtons.jsx";
 import Forward from "../components/Forward.jsx";
 import Home from "../components/Home.jsx";
 import Settings from "../components/Settings.jsx";
@@ -32,8 +32,6 @@ const App = () => {
             {/* <Sidebar /> */}
             <div className="content">
               <Topbar />
-              <Back />
-              <Forward />
               {/* <Link to="/">
                 <button>Home</button>
               </Link> */}

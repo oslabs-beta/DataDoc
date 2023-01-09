@@ -142,8 +142,8 @@ export const themeSettings = (mode) => {
             background: {
               default: colors.primary[500],
             },
-            red: {
-              main: "#FF0000"
+            customRed: {
+              main: "rgb(255, 64, 64)"
             },
           }
         : {
