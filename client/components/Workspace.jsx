@@ -1,4 +1,4 @@
-import { Button } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import React from "react";
 import { useNavigate } from "react-router-dom";
@@ -21,21 +21,27 @@ const Workspace = (props) => {
             }
           })}}
         >
-          <label htmlFor="workspaceName">Workspace Name: </label>
-          <span className="workspaceName">{name}</span>
-          <p>
-            <label htmlFor="workspaceDomain">Domain: </label>
-            <span className="workspaceDomain">{domain}</span>
-          </p>
-          <p>
-            <label htmlFor="workspacePort">Port: </label>
-            <span className="workspacePort">{port || "N/A"}</span>
-          </p>
+          <Typography 
+            variant="h4"
+            fontWeight="600"
+          >
+            {name}
+          </Typography>
+          <Typography
+            variant="subtitle1"
+          >
+            Domain: {domain}
+          </Typography>
+          <Typography
+            variant="subtitle1"
+            mb="10px"
+          >
+            Port: {port || "N/A"}
+          </Typography>
         </div>
         <div>
           <Button 
             variant="outlined"
-            // color="error"
             color="customRed"
             onClick={() => deleteWorkspace(workspace_id)}
           >
