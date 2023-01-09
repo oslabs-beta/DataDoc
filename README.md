@@ -54,15 +54,15 @@ This tool requires the npm package `express-endpoints-monitor` to detect and gat
 
     This will install the needed dependences and build the desktop application.
 
-### Exposing endpoints to the monitoring tool
+### Exposing Endpoints to the Monitoring Tool
 
-1. Open your Express application file in a text editor. At the top of the file, import the plugin by including:
+1. Open your Express application file in a text editor. At the top of the file, import the plugin by adding:
 
     ```
     const expMonitor = require("express-endpoints-monitor");
     ```
 
-    This module comes with several functions to register endpoints with the monitoring application and begin monitoring requests sent to those endpoints.
+    This module comes with several functions to register endpoints with the monitoring application and begin log requests made to those endpoints.
 
 2. In your file, include the following line:
 
@@ -115,7 +115,7 @@ This tool requires the npm package `express-endpoints-monitor` to detect and gat
 
 6. To see the full use of the library, see the <a href="https://www.npmjs.com/package/express-endpoints-monitor">npm page</a>.
 
-### Initializing the databases
+### Initializing Databases
 
   In your local `DataDoc` folder, run the following command:
 
