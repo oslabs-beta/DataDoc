@@ -16,19 +16,19 @@ const Topbar = () => {
   return (
     <nav
       style={{
-        width: "100vw",
         boxSizing: "border-box",
         MozBoxSizing: "border-box",
-        WebkitBoxSizing: "border-box"
+        WebkitBoxSizing: "border-box",
+        width: "100%",
       }}
     >
-      <Box display="flex" width="100%" padding="0px 10px 0px 4px">
+      <Box display="flex" width="100%" ml="-8px">
         <Back />
         <Forward />
         <IconButton
           onClick={colorMode.toggleColorMode}
           sx={{
-            marginLeft: "auto"
+            marginLeft: "auto",
           }}
         >
           {theme.palette.mode === "light" ? (
