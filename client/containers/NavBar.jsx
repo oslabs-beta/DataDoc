@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
 import "../styles/NavBar.scss";
 import HomeButton from "../components/HomeButton.jsx";
-import { Link } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import Draggable from "react-draggable";
 
-const NavBar = () => {
+const NavBar = (props) => {
+  const { setMainWidth, setMainOffset } = props;
   const [workspaceList, setWorkspaceList] = useState([]);
+
+  const navigate = useNavigate();
 
   const width = 300;
   const height = "100vh";
@@ -15,8 +18,12 @@ const NavBar = () => {
     if (xPosition < 0) {
       getWorkSpaceList();
       setX(0);
+      setMainWidth(`calc(100vw - ${width}px)`)
+      setMainOffset(`${width}px`)
     } else {
       setX(-width);
+      setMainWidth("100vw")
+      setMainOffset(`0px`)
     }
   };
 
@@ -60,32 +67,34 @@ const NavBar = () => {
             ></button>
           </div>
         </Draggable>
-        <Link
-          to="/"
-          onClick={toggleMenu}
-          // state={{ toggleMenu: toggleMenu }}
+        <button
+          onClick={() => {
+            navigate("/");
+            toggleMenu();
+          }}
         >
-          <button>Home</button>
-        </Link>
-        {/* <Link to="/urilist" onClick={toggleMenu}>
-        URI List
-      </Link> */}
+          Home
+        </button>
         <div>
           {workspaceList.map((workspace) => {
             const workspace_id = workspace._id;
             const name = workspace.name;
             const domain = workspace.domain;
             return (
-              <div
-                key={crypto.randomUUID()}
-              >
-                <Link
-                  to={`/urilist/${workspace_id}`}
-                  state={{ workspace_id: workspace_id, name: name, domain: domain }}
-                  onClick={toggleMenu}
+              <div key={crypto.randomUUID()}>
+                <div
+                  style={{
+                    cursor: "pointer"
+                  }}
+                  onClick={() => {
+                    navigate(`/urilist/${workspace_id}`, {
+                      state: { workspace_id, name, domain }
+                    });
+                    toggleMenu();
+                  }}
                 >
                   {name}
-                </Link>
+                </div>
               </div>
             );
           })}

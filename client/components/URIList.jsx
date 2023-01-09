@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { Typography } from "@mui/material";
 import Settings from "./Settings.jsx";
 import URI from "./URI.jsx";
 import FlashError from "./FlashError.jsx";
@@ -147,7 +148,12 @@ const URIList = (props) => {
 
   return (
     <div className="URIListContainer">
-      <h1>Workspace: {name}</h1>
+      <Typography
+        variant="h2"
+        fontWeight={600}
+      >
+        Workspace: {name}
+      </Typography>
       <form className="monitoring">
         <br></br>
         <label htmlFor="monitoring-time">Set monitoring frequency:</label>
