@@ -13,7 +13,7 @@ const Topbar = () => {
     <Box 
         display="flex" 
         width="100vw"
-        padding="0px 10px" 
+        padding="0px 10px 0px 2px" 
     >
       <Back />
       <Forward />
