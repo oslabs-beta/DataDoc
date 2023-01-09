@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+import { Chart as ChartJS, ArcElement, Title, Tooltip, Legend } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
+import { Card } from "@mui/material";
+
 
 const DonutChart = (props) => {
   const { id, chartData } = props;
 
-  ChartJS.register(ArcElement, Tooltip, Legend);
+  ChartJS.register(ArcElement, Tooltip, Title, Legend);
 
   const backgroundOpacity = 0.75;
   const borderOpacity = 1;
@@ -59,17 +61,23 @@ const DonutChart = (props) => {
 
   const options = {
     plugins: {
+      title: {
+        display: true,
+        text: 'Status Code Distribution',
+      },
       legend: {
-        position: "left",
-        align: "top",
+        display: true,
+        position: "bottom",
       },
     },
   };
 
   return (
-    <div className="donut-chart">
-      <Doughnut data={data} options={options} />
-    </div>
+    <Card>
+      <div className="donut-chart">
+        <Doughnut data={data} options={options} />
+      </div>
+    </Card>
   );
 };
 

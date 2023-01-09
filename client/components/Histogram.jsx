@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import { Card } from "@mui/material";
+
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -69,9 +71,11 @@ const Histogram = (props) => {
   };
 
   return (
-    <div className="histogram">
-      <Bar data={data} options={options} />
-    </div>
+    <Card>
+      <div className="histogram">
+        <Bar data={data} options={options} />
+      </div>
+    </Card>
   );
 };
 

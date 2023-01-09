@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import Grid from "@mui/material/Unstable_Grid2";
 import LineChart from "../components/LineChart.jsx";
 import DonutChart from "../components/DonutChart.jsx";
 import Histogram from "../components/Histogram.jsx";
@@ -35,10 +36,12 @@ const ChartsContainer = (props) => {
       <h3>Path: {path}</h3>
       <h3>Method: {method}</h3>
       <div className="charts-container">
-        <LineChart id={id} chartData={chartsData.respTimeLineData || [] } />
+        <Grid container spacing={4}>
+        <LineChart id={id} chartData={chartsData.respTimeLineData || [] } chartTitle="Response Time over Time" chartLabel="Time (in ms)" />
         <Histogram id={id} chartData={chartsData.respTimeHistData || [] } />
-        <LineChart id={id} chartData={chartsData.reqFreqLineData || [] } />
+        <LineChart id={id} chartData={chartsData.reqFreqLineData || [] } chartTitle="Request Frequency over Time" chartLabel="Count" />
         <DonutChart id={id} chartData={chartsData.statusPieData || [{ x: "N/A", y: 1 }] } />
+        </Grid>
       </div>
     </>
   );
