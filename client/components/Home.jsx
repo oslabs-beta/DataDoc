@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Card, Container } from "@mui/material";
+import { Card, Container, Typography } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
 import Workspace from "./Workspace.jsx";
 import "../styles/AddWorkspace.scss";
@@ -155,21 +155,19 @@ const Home = (props) => {
 
   return (
     <>
-      <h1>Welcome to DataDoc</h1>
-      <h2>Workspaces:</h2>
-      {/* <div>
-        {workspaceList.map((workspace) => {
-          return (
-            <Workspace
-              key={crypto.randomUUID()}
-              workspace_id={workspace._id}
-              name={workspace.name}
-              domain={workspace.domain}
-              port={workspace.port}
-              deleteWorkspace={deleteWorkspaceById}
-            />
-          );
-        })} */}
+      <Typography 
+        variant="h1"
+        fontWeight={600}
+        mt="20px"
+      >
+        Welcome to DataDoc
+      </Typography>
+      <Typography
+        variant="h3"
+        fontWeight={600}
+      >
+        Workspaces:
+      </Typography>
       <Grid container spacing={2} style={{ margin: "10px" }}>
         {workspaceList.map((workspace) => {
           return (
