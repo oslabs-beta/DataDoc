@@ -173,10 +173,15 @@ const Home = (props) => {
       <Grid container spacing={2} style={{ margin: "10px" }}>
         {workspaceList.map((workspace) => {
           return (
-            <Grid xs={12} sm={6} md={4} lg={3}>
+            <Grid 
+              xs={12} 
+              sm={6} 
+              md={4} 
+              lg={3}
+              key={crypto.randomUUID()}
+            >
               <Card variant="outlined" sx={cardStyle}>
                 <Workspace
-                  key={crypto.randomUUID()}
                   workspace_id={workspace._id}
                   name={workspace.name}
                   domain={workspace.domain}

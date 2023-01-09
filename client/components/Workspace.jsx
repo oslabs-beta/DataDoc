@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from "react";
+import { Button } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
+import React from "react";
 import { useNavigate } from "react-router-dom";
-import { Button } from "@mui/material"
-import { useTheme } from '@mui/material/styles';
 import "../styles/WorkspaceBox.scss";
 
 const Workspace = (props) => {
   const { workspace_id, name, domain, port, deleteWorkspace } = props;
+  const theme = useTheme();
   const navigate = useNavigate();
   return (
     <>
@@ -34,7 +35,8 @@ const Workspace = (props) => {
         <div>
           <Button 
             variant="outlined"
-            // color="primary"
+            // color="error"
+            color="customRed"
             onClick={() => deleteWorkspace(workspace_id)}
           >
             Delete
