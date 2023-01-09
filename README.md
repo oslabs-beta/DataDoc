@@ -52,7 +52,7 @@ This tool requires the npm package `express-endpoints-monitor` to detect and gat
     npm run build
     ```
 
-    This will build the desktop application
+    This will install the needed dependences and build the desktop application.
 
 ### Exposing endpoints to the monitoring tool
 
@@ -117,11 +117,13 @@ This tool requires the npm package `express-endpoints-monitor` to detect and gat
 
 ### Initializing the databases
 
-```
-docker compose up
-```
+  In your local `DataDoc` folder, run the following command:
 
-The `-d` flag may be supplied to detach the instance from the terminal.
+  ```
+  docker compose up
+  ```
+
+  The `-d` flag may be supplied to detach the instance from the terminal.
 
 ### Starting the Desktop Application
 
@@ -141,9 +143,18 @@ The `-d` flag may be supplied to detach the instance from the terminal.
 
 
 ### Adding Workspaces
+
+
  
 ### Using the Monitoring Tool
 
 ### Using the Simulation Tool
 
 ### Configuring Alerts
+
+## Contributors
+
+- Jo Huang <a href="https://www.linkedin.com/in/jh5/">LinkedIn</a> | <a href="https://github.com/JH51">GitHub</a>
+- Jonathan Huang <a href="https://www.linkedin.com/in/johuangx/">LinkedIn</a> | <a href="https://github.com/jochuang">GitHub</a>
+- Jamie Schiff <a href="https://www.linkedin.com/in/jamie-schiff/">LinkedIn</a> | <a href="https://github.com/jamieschiff">GitHub</a>
+- Mariam Zakariadze <a href="https://www.linkedin.com/in/mariam-zakariadze-701573120/">LinkedIn | <a href="https://github.com/mariamzakariadze">GitHub</a>
