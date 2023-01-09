@@ -7,6 +7,7 @@ import "../styles/AddWorkspace.scss";
 const { SERVER_URL } = process.env;
 
 const Home = (props) => {
+
   const [workspaceList, setWorkspaceList] = useState([]);
   const [showNewWorkspacePopUp, setShowNewWorkspacePopUp] = useState(false);
   const [workspaceValues, setWorkspaceValues] = useState({
