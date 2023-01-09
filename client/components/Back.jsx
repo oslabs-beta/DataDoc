@@ -1,12 +1,14 @@
 import React from 'react';
 import { useNavigate } from "react-router-dom";
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { IconButton } from "@mui/material"
 
 const Back = () => {
   let navigate = useNavigate();
   return (
-    <>
-      <button onClick={() => navigate(-1)}>Back</button>
-    </>
+    <IconButton onClick={() => navigate(-1)} >
+      <ArrowBackIcon />
+    </IconButton>
   );
 };
 

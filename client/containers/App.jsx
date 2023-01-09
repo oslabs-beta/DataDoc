@@ -32,13 +32,11 @@ const App = () => {
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <Router>
-          <div className="fullApp">
+          <div className="fullApp" style={{display: 'flex'}}>
             <NavBar />
             {/* <Sidebar /> */}
             <div className="content">
               <Topbar />
-              <Back />
-              <Forward />
               {/* <Link to="/">
                 <button>Home</button>
               </Link> */}

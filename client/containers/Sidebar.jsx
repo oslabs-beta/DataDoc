@@ -61,29 +61,21 @@ const Sidebar = () => {
       }}
     >
       <ProSidebar collapsed={isCollapsed}>
-        <Menu iconShape="square">
+        <div style={{height: '100vh'}}>
+        <Menu iconShape="circle">
           <MenuItem
             onClick={() => setIsCollapsed(!isCollapsed)}
             icon={isCollapsed ? <MenuOutlinedIcon /> : undefined}
             style={{
-              margin: "10px 0 20px 0",
+              margin: "10 0 20px 0",
               color: colors.grey[100],
             }}
           >
             {!isCollapsed && (
-              <Box
-                display="flex"
-                justifyContent="space-between"
-                alignItems="center"
-                ml="15px"
-              >
-                <Typography variant="h3" color={colors.grey[100]}>
-                  ADMINIS
-                </Typography>
+  
                 <IconButton onClick={() => setIsCollapsed(!isCollapsed)}>
                   <MenuOutlinedIcon />
                 </IconButton>
-              </Box>
             )}
           </MenuItem>
 
@@ -115,6 +107,7 @@ const Sidebar = () => {
           )}
           <Box paddingLeft={isCollapsed ? undefined : "10%"}></Box>
         </Menu>
+        </div>
       </ProSidebar>
     </Box>
   );

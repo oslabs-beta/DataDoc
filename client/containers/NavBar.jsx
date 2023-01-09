@@ -12,11 +12,15 @@ const NavBar = () => {
   const [xPosition, setX] = useState(-width);
 
   const toggleMenu = () => {
+    // open sidebar menu
     if (xPosition < 0) {
       getWorkSpaceList();
       setX(0);
+      document.querySelector('.content').style.marginLeft = `${width+10}px`
+    // close sidebar menu
     } else {
       setX(-width);
+      document.querySelector('.content').style.marginLeft = `${10}px`
     }
   };
 

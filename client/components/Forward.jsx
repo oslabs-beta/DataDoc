@@ -1,12 +1,14 @@
 import React from 'react';
 import { useNavigate } from "react-router-dom";
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import { IconButton } from "@mui/material"
 
 const Forward = () => {
   let navigate = useNavigate();
   return (
-    <>
-      <button onClick={() => navigate(+1)}>Forward</button>
-    </>
+    <IconButton onClick={() => navigate(+1)}>
+      <ArrowForwardIcon  />
+    </IconButton>
   );
 };
 

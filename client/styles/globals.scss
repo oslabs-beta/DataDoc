@@ -1,20 +1,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;700&display=swap');
 
-body {
-  top: 0;
-  left: 0;
-  margin: 0;
-  // margin-top: -20px;
-}
-
+body,
+#root,
 .fullapp,
 .content {
+  margin: 0;
   height: 100%;
   width: 100%;
-  font-family: 'Source Sans Pro', sans-serif;
+  font-family: "Source Sans Pro", sans-serif;
 }
 
-.fullapp {
-  display: flex;
-  position: relative;
+.content {
+  margin-left: 10px;
 }
