@@ -3,8 +3,12 @@ import "../styles/NavBar.scss";
 import HomeButton from "../components/HomeButton.jsx";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import Draggable from "react-draggable";
+import { useTheme } from "@mui/material";
+import { tokens } from "./theme";
 
 const NavBar = (props) => {
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
   const { setMainWidth, setMainOffset } = props;
   const [workspaceList, setWorkspaceList] = useState([]);
 
@@ -53,7 +57,8 @@ const NavBar = (props) => {
         style={{
           transform: `translatex(${xPosition}px)`,
           width: width,
-          minHeight: height
+          minHeight: height,
+          backgroundColor: `${colors.primary[400]}`,
         }}
       >
         <Draggable axis="y">
