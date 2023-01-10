@@ -1,22 +1,20 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Home, Settings as SettingsIcon } from "@mui/icons-material";
 import {
   Avatar,
-  Divider,
-  Icon,
-  IconButton,
-  List,
+  Divider, List,
   ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  Typography
+  ListItemButton, ListItemText
 } from "@mui/material";
-import { Menu, Home, Settings as SettingsIcon } from "@mui/icons-material";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Settings from "../components/Settings.jsx";
 
 const DrawerContents = (props) => {
-  const { open, showsettingspopup: showSettingsPopup, setshowsettingspopup: setShowSettingsPopup } = props;
+  const {
+    open,
+    showsettingspopup: showSettingsPopup,
+    setshowsettingspopup: setShowSettingsPopup
+  } = props;
   const [workspaceList, setWorkspaceList] = useState([]);
   const navigate = useNavigate();
 
@@ -100,18 +98,17 @@ const DrawerContents = (props) => {
                 secondary={workspace.domain}
                 sx={{ opacity: open ? 1 : 0, fontWeight: "600" }}
               />
-              {/* <Typography variant="h4" sx={{ opacity: open ? 1 : 0, display: open ? "block" : "none", fontWeight: "600" }}>
-                {workspace.name}
-              </Typography> */}
             </ListItemButton>
           </ListItem>
         );
       })}
       <ListItem disablePadding sx={{ display: "block" }}>
-        <ListItemButton onClick={() => {
-          if (showSettingsPopup) setShowSettingsPopup(false);
-          else setShowSettingsPopup(true);
-        }}>
+        <ListItemButton
+          onClick={() => {
+            if (showSettingsPopup) setShowSettingsPopup(false);
+            else setShowSettingsPopup(true);
+          }}
+        >
           <Avatar
             sx={{
               minWidth: 0,
@@ -123,13 +120,11 @@ const DrawerContents = (props) => {
             <SettingsIcon />
             <Settings />
           </Avatar>
-          <Settings>
-            <ListItemText
-              edge="end"
-              primary="Settings"
-              sx={{ opacity: open ? 1 : 0, fontWeight: "600" }}
-            />
-          </Settings>
+          <ListItemText
+            edge="end"
+            primary="Settings"
+            sx={{ opacity: open ? 1 : 0, fontWeight: "600" }}
+          />
         </ListItemButton>
       </ListItem>
     </List>
