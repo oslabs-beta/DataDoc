@@ -173,7 +173,7 @@ const URIList = (props) => {
         </div>
       </form>
       <br></br>
-      <Settings />
+      <Settings workspace_id={workspace_id}/>
       <br></br>
       <span>
         <label htmlFor="endpoint-search">Search for a specific endpoint:</label>

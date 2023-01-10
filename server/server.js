@@ -7,13 +7,15 @@ const influxClient = require("./models/influx-client.js");
 const { Point } = require("@influxdata/influxdb-client");
 const chartRouter = require("./routes/chartdata");
 const logRouter = require("./routes/logRouter.js");
+const emailContoller = require("./controllers/emailController");
 const { url } = require("inspector");
 const postgresClient = require("./models/postgres-client.js");
 const { response } = require("express");
 const { resolve } = require("path");
 const {
-  PhoneNumberContext
+  PhoneNumberContext,
 } = require("twilio/lib/rest/lookups/v1/phoneNumber.js");
+const settingsController = require("./controllers/settingsController.js");
 
 const MODE = process.env.NODE_ENV || "production";
 const PORT = process.env.PORT || 9990;
@@ -30,6 +32,7 @@ if (MODE === "production") {
 // * Route all /chartdata requests to chartRouter
 app.use("/chartdata", chartRouter);
 app.use("/logdata", logRouter);
+// app.use("/registration", emailRouter);
 
 let intervalId;
 let logs = [];
@@ -47,15 +50,29 @@ const scrapeDataFromMetricsServer = async (metricsPort, tableName) => {
   try {
     logs = await (
       await fetch(`http://localhost:${metricsPort}/metrics`, {
-        method: "DELETE"
+        method: "DELETE",
       })
     ).json();
     storeLogsToDatabase(logs, tableName);
+    scrapeForError(logs);
     return logs;
   } catch (e) {
     console.error(e);
     return [];
   }
+};
+
+const scrapeForError = (logsArr) => {
+  logsArr.forEach((log) => {
+    if (log.status_code >= 300 && log.status_code <= 510) {
+      res.locals.status_code = log.status_code;
+      res.locals.workspace = log.workspace_id;
+      res.locals.url = log.url;
+      return settingsController.getSettings();
+    } else {
+      return;
+    }
+  });
 };
 
 const storeLogsToDatabase = async (logsArr, tableName) => {
@@ -81,7 +98,7 @@ const pingTargetEndpoints = async () => {
     try {
       await fetch("http://localhost:3000" + endpoint.path, {
         method: endpoint.method,
-        headers: { "Cache-Control": "no-store" }
+        headers: { "Cache-Control": "no-store" },
       });
     } catch (e) {
       console.error(e);
@@ -136,8 +153,8 @@ const pingOneEndpoint = async (path) => {
     await fetch("http://localhost:3000" + path, {
       method: "GET",
       headers: {
-        "Cache-Control": "no-cache"
-      }
+        "Cache-Control": "no-cache",
+      },
     });
   } catch (e) {
     console.error(e);
@@ -247,6 +264,17 @@ app.delete("/workspaces", async (req, res) => {
   await postgresClient.query(queryText);
   return res.sendStatus(204);
 });
+
+app.post(
+  "/registration/:workspace_id",
+  settingsController.addSettings,
+  emailContoller.sendInitialAlert,
+  (req, res) => {
+    return res
+      .status(200)
+      .json("successfully added new user settings to the database");
+  }
+);
 
 app.listen(PORT, () => {
   console.log(

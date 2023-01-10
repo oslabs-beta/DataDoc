@@ -4,9 +4,12 @@ import "../styles/Settings.scss";
 const { SERVER_URL } = process.env;
 
 const Settings = (props) => {
+  const { workspace_id } = props;
   const [showSettingsPopUp, setShowSettingsPopUp] = useState(false);
   const [settingValues, setSettingValues] = useState({
-    subscribers: [],
+    emailOne: "",
+    emailTwo: "",
+    emailThree: "",
     status300: false,
     status400: false,
     status500: false,
@@ -15,12 +18,16 @@ const Settings = (props) => {
   function handleChange(e, updateValue) {
     let settingsUpdate;
     let updatedState;
-    if(updateValue === 'status300' || updateValue === 'status400' || updateValue === 'status500'){
+    if (
+      updateValue === "status300" ||
+      updateValue === "status400" ||
+      updateValue === "status500"
+    ) {
       settingsUpdate = { [updateValue]: e.target.checked };
       updatedState = {
         ...settingValues,
         ...settingsUpdate,
-      } 
+      };
     } else {
       settingsUpdate = { [updateValue]: e.target.value };
       updatedState = {
@@ -33,44 +40,110 @@ const Settings = (props) => {
   //send a post request to update the settings
   function handleSubmit(e) {
     e.preventDefault();
-    fetch(`${SERVER_URL}/registration`, {
+    fetch(`http://localhost:${process.env.PORT}/registration/${workspace_id}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(settingValues),
-    }).then(() => {
-      setSettingValues({
-        subscribers: [],
-        status300: false,
-        status400: false,
-        status500: false
+    })
+      .then((response) => {
+        response.json();
+      })
+      .then((data) => {
+        console.log(
+          `New user settings have been created, response: ${response}`
+        );
+      })
+      .then(() => {
+        setSettingValues({
+          emailOne: "",
+          emailTwo: "",
+          emailThree: "",
+          status300: false,
+          status400: false,
+          status500: false,
+        });
+      })
+      .catch((err) => {
+        console.log(`There was an error creating a new user, error: ${err}`);
       });
-    });
   }
   //settings form
   const settingsForm = (
     <form className="modal">
       <div className="modal-content">
-        <button className="close-button" onClick={() => setShowSettingsPopUp(false)}>X</button>
-        <p className="modal-header">Settings</p>
-        <label for="subscribers">Enter all subscribers:</label>
+        <button
+          className="close-button"
+          onClick={() => setShowSettingsPopUp(false)}
+        >
+          X
+        </button>
+        <h3 className="modal-header">Settings</h3>
+        <label for="subscribers">Subscriber One:</label>
         <input
           name="subscribers"
           className="subscribers"
           placeholder="codesmith@codesmith.io"
           type="email"
-          multiple
+          onChange={(e) => handleChange(e, "subscribers")}
+        ></input>
+        <label for="subscribers">Subscriber Two:</label>
+        <input
+          name="subscribers"
+          className="subscribers"
+          placeholder="codesmith@codesmith.io"
+          type="email"
+          onChange={(e) => handleChange(e, "subscribers")}
+        ></input>
+        <label for="subscribers">Subscriber Three:</label>
+        <input
+          name="subscribers"
+          className="subscribers"
+          placeholder="codesmith@codesmith.io"
+          type="email"
           onChange={(e) => handleChange(e, "subscribers")}
         ></input>
         <table>
-          <label for="alert">Select the status code when you would like us to notify subscribers:</label>
-          <tr><input type="checkbox" id='checkbox300' value="300" onChange={(e) => handleChange(e, "status300")}></input>
-          <label htmlFor='checkbox300'>300</label></tr>
-          <tr><input type="checkbox" id='checkbox400' value="400" onChange={(e) => handleChange(e, "status400")}></input>
-          <label htmlFor='checkbox400'>400</label></tr>
-          <tr><input type="checkbox" id='checkbox500' value="500" onChange={(e) => handleChange(e, "status500")}></input>
-          <label htmlFor='checkbox500'>500</label></tr>
+          <label for="alert">
+            Select the status code when you would like us to notify subscribers:
+          </label>
+          <tr>
+            <input
+              type="checkbox"
+              id="checkbox300"
+              value="300"
+              onChange={(e) => handleChange(e, "status300")}
+            ></input>
+            <label htmlFor="checkbox300">300</label>
+          </tr>
+          <tr>
+            <input
+              type="checkbox"
+              id="checkbox400"
+              value="400"
+              onChange={(e) => handleChange(e, "status400")}
+            ></input>
+            <label htmlFor="checkbox400">400</label>
+          </tr>
+          <tr>
+            <input
+              type="checkbox"
+              id="checkbox500"
+              value="500"
+              onChange={(e) => handleChange(e, "status500")}
+            ></input>
+            <label htmlFor="checkbox500">500</label>
+          </tr>
         </table>
-        <button className="submit-button" type="submit" onClick={(e) => handleSubmit(e)}>Update Settings</button>
+        <button
+          className="submit-button"
+          type="submit"
+          onClick={(e) => {
+            handleSubmit(e);
+            setShowSettingsPopUp(false);
+          }}
+        >
+          Update Settings
+        </button>
       </div>
     </form>
   );

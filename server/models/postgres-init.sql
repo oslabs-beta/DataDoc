@@ -2,7 +2,25 @@ CREATE TABLE workspaces (
   _id SERIAL, 
   name TEXT NOT NULL,
   domain TEXT NOT NULL,
-  port INTEGER
+  port INTEGER,
+  metrics_port INTEGER
+);
+
+CREATE TABLE temp (
+  _id SERIAL,
+  email TEXT NOT NULL,
+  firstname TEXT
+);
+
+CREATE TABLE usersettings (
+  _id SERIAL,
+  emailone TEXT NOT NULL,
+  emailtwo TEXT,
+  emailthree TEXT,
+  trackingthree BOOLEAN,
+  trackingfour BOOLEAN,
+  trackingfive BOOLEAN,
+  workspace_id INT references workspaces(_id)
 );
 
 CREATE TABLE endpoints (
