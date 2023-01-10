@@ -9,6 +9,7 @@ import URIList from "../components/URIList.jsx";
 import Workspace from "../components/Workspace.jsx";
 import Dashboard from "./Dashboard.jsx";
 import Development from "./Development.jsx";
+import DrawerContents from "./DrawerContents.jsx";
 // import NavBar from "./NavBar.jsx";
 import SideBar from "./NavBar.jsx";
 import TopBar from "./TopBar.jsx";
@@ -136,39 +137,7 @@ const App = () => {
                 </IconButton>
               </DrawerSection>
               <Divider />
-              <List>
-                {["Inbox", "Starred", "Send email", "Drafts"].map(
-                  (text, index) => (
-                    <ListItem
-                      key={text}
-                      disablePadding
-                      sx={{ display: "block" }}
-                    >
-                      <ListItemButton
-                        sx={{
-                          minHeight: 48,
-                          justifyContent: open ? "initial" : "center",
-                          px: 2.5
-                        }}
-                      >
-                        <ListItemIcon
-                          sx={{
-                            minWidth: 0,
-                            mr: open ? 3 : "auto",
-                            justifyContent: "center"
-                          }}
-                        >
-                          <Menu />
-                        </ListItemIcon>
-                        <ListItemText
-                          primary={text}
-                          sx={{ opacity: open ? 1 : 0 }}
-                        />
-                      </ListItemButton>
-                    </ListItem>
-                  )
-                )}
-              </List>
+              <DrawerContents open={open} />
             </Drawer>
             {/* <SideBar open={open} theme={theme} handledrawerclose={handleDrawerClose} /> */}
 
@@ -196,6 +165,7 @@ const App = () => {
             </Box>
 
           </Router>
+          
         </Box>
       </ThemeProvider>
     </ColorModeContext.Provider>
