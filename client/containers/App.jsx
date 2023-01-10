@@ -138,6 +138,7 @@ const App = () => {
               </DrawerSection>
               <Divider />
               <DrawerContents open={open} />
+              <Divider />
             </Drawer>
             {/* <SideBar open={open} theme={theme} handledrawerclose={handleDrawerClose} /> */}
 

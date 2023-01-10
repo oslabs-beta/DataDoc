@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Avatar,
+  Divider,
   Icon,
   IconButton,
   List,
@@ -11,7 +12,7 @@ import {
   ListItemText,
   Typography
 } from "@mui/material";
-import { Menu } from "@mui/icons-material";
+import { Menu, Home } from "@mui/icons-material";
 
 const DrawerContents = (props) => {
   const { open } = props;
@@ -21,7 +22,7 @@ const DrawerContents = (props) => {
   useEffect(() => {
     getWorkSpaceList();
     return;
-  }, []);
+  }, [open]);
 
   const getWorkSpaceList = async () => {
     const newWorkspaceList = await (
@@ -33,6 +34,26 @@ const DrawerContents = (props) => {
 
   return (
     <List>
+      <ListItem disablePadding sx={{ display: "block" }}>
+        <ListItemButton onClick={() => navigate("/")}>
+          <Avatar
+            sx={{
+              minWidth: 0,
+              mr: open ? 3 : "auto",
+              my: 0.5,
+              justifyContent: "center"
+            }}
+          >
+            <Home />
+          </Avatar>
+          <ListItemText
+            edge="end"
+            primary="Home"
+            sx={{ opacity: open ? 1 : 0, fontWeight: "600" }}
+          />
+        </ListItemButton>
+      </ListItem>
+      <Divider />
       {workspaceList.map((workspace) => {
         return (
           <ListItem
@@ -57,13 +78,11 @@ const DrawerContents = (props) => {
               }}
             >
               <Avatar
-                size="small"
+                edge="end"
                 sx={{
                   minWidth: 0,
-                  width: "40px",
-                  height: "40px",
                   mr: open ? 3 : "auto",
-                  mb: 1,
+                  my: 0.5,
                   justifyContent: "center"
                 }}
               >
@@ -75,10 +94,10 @@ const DrawerContents = (props) => {
                   .toUpperCase()}
               </Avatar>
               <ListItemText
-                edge="start"
+                edge="end"
                 primary={workspace.name}
                 secondary={workspace.domain}
-                sx={{ opacity: open ? 1 : 0, fontWeight: '600' }}
+                sx={{ opacity: open ? 1 : 0, fontWeight: "600" }}
               />
               {/* <Typography variant="h4" sx={{ opacity: open ? 1 : 0, display: open ? "block" : "none", fontWeight: "600" }}>
                 {workspace.name}
