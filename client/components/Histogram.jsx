@@ -1,4 +1,8 @@
 import React, { useEffect, useState } from "react";
+import { Card } from "@mui/material";
+import { useTheme } from "@mui/material";
+import { tokens } from "../containers/theme";
+
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -11,6 +15,9 @@ import {
 import { Bar } from "react-chartjs-2";
 
 const Histogram = (props) => {
+
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
 
   const removeEmptyBins = (histData) => {
     const newData = [];
@@ -69,9 +76,11 @@ const Histogram = (props) => {
   };
 
   return (
-    <div className="histogram">
-      <Bar data={data} options={options} />
-    </div>
+    <Card sx={{height: "350px", padding:"30px", backgroundColor:`${colors.secondary[100]}`}}>
+      <div className="histogram" style={{position: "relative"}}>
+        <Bar data={data} options={options} />
+      </div>
+    </Card>
   );
 };
 

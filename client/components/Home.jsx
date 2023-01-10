@@ -3,11 +3,15 @@ import { Card, Container, Typography } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
 import Workspace from "./Workspace.jsx";
 import "../styles/AddWorkspace.scss";
+import { useTheme } from "@mui/material";
+import { tokens } from "../containers/theme";
 
 const { SERVER_URL } = process.env;
 
 const Home = (props) => {
 
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
   const [workspaceList, setWorkspaceList] = useState([]);
   const [showNewWorkspacePopUp, setShowNewWorkspacePopUp] = useState(false);
   const [workspaceValues, setWorkspaceValues] = useState({
@@ -147,11 +151,12 @@ const Home = (props) => {
   const cardStyle = {
     // boxSizing: 'border-box',
     borderRadius: "10px",
-    minHeight: "120px",
+    height: "150px",
     minWidth: "60px",
     padding: "20px",
     boxShadow: "0px 0px 8px 4px rgba(0, 0, 0, 0.04)",
-    cursor: "pointer"
+    cursor: "pointer",
+    backgroundColor:`${colors.secondary[100]}`,
   };
 
   return (
@@ -172,7 +177,7 @@ const Home = (props) => {
       <Grid container spacing={2}>
         {workspaceList.map((workspace) => {
           return (
-            <Grid 
+            <Grid item
               xs={12/1} 
               sm={12/2} 
               md={12/3} 
@@ -180,7 +185,7 @@ const Home = (props) => {
               xl={12/5}
               key={crypto.randomUUID()}
             >
-              <Card variant="outlined" sx={cardStyle}>
+              <Card variant="outlined" sx={cardStyle} >
                 <Workspace
                   workspace_id={workspace._id}
                   name={workspace.name}
@@ -192,7 +197,12 @@ const Home = (props) => {
             </Grid>
           );
         })}
-        <Grid>
+        <Grid item
+          xs={12/1} 
+          sm={12/2} 
+          md={12/3} 
+          lg={12/4}
+          xl={12/5}>
           <Card
             variant="outlined"
             sx={cardStyle}
@@ -206,18 +216,6 @@ const Home = (props) => {
             >
               +
             </span>
-            {/* <svg
-              // className="workspaceBox"
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              fill="currentColor"
-              className="bi bi-plus-square"
-              viewBox="0 0 16 16"
-            >
-              <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
-              <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
-            </svg> */}
             {showNewWorkspacePopUp && newWorkspaceForm}
           </Card>
         </Grid>

@@ -2,8 +2,9 @@
   display: grid;
   width: 100vw;
   grid-template-areas:
-    "2fr 1fr"
-    "2fr 1fr";
+    "3fr 2fr"
+    "3fr 2fr";
+  gap: 2px;
   // box-sizing: border-box;
 }
 
