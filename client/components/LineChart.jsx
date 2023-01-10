@@ -68,10 +68,10 @@ const LineChart = (props) => {
   };
 
   return (
-    <Card>
+    <Card sx={{height: "350px", padding:"10px"}}>
       <div className="chartWrapper">
         <div className="chartAreaWrapper">
-          <div className="line-chart">
+          <div className="line-chart" style={{position: "relative"}}>
             <Line data={data} options={options} />
           </div>
         </div>

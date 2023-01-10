@@ -71,8 +71,8 @@ const Histogram = (props) => {
   };
 
   return (
-    <Card>
-      <div className="histogram">
+    <Card sx={{height: "350px", padding:"30px"}}>
+      <div className="histogram" style={{position: "relative"}}>
         <Bar data={data} options={options} />
       </div>
     </Card>

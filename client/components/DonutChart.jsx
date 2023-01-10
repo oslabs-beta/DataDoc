@@ -60,6 +60,7 @@ const DonutChart = (props) => {
   };
 
   const options = {
+    responsive: true,
     plugins: {
       title: {
         display: true,
@@ -73,8 +74,8 @@ const DonutChart = (props) => {
   };
 
   return (
-    <Card>
-      <div className="donut-chart">
+    <Card sx={{height: "350px", padding:"50px"}}>
+      <div className="donut-chart" style={{position: "relative"}}>
         <Doughnut data={data} options={options} />
       </div>
     </Card>
