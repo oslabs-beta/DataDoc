@@ -2,10 +2,13 @@ import React, { useState, useEffect } from "react";
 import { Chart as ChartJS, ArcElement, Title, Tooltip, Legend } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
 import { Card } from "@mui/material";
-
+import { useTheme } from "@mui/material";
+import { tokens } from "../containers/theme";
 
 const DonutChart = (props) => {
   const { id, chartData } = props;
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
 
   ChartJS.register(ArcElement, Tooltip, Title, Legend);
 
@@ -74,7 +77,7 @@ const DonutChart = (props) => {
   };
 
   return (
-    <Card sx={{height: "350px", padding:"50px"}}>
+    <Card sx={{height: "350px", padding:"50px", backgroundColor:`${colors.secondary[100]}`}}>
       <div className="donut-chart" style={{position: "relative"}}>
         <Doughnut data={data} options={options} />
       </div>

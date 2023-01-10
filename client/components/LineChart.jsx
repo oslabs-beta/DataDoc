@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Card } from "@mui/material";
+import { useTheme } from "@mui/material";
+import { tokens } from "../containers/theme";
 import "chartjs-adapter-moment";
 
 import {
@@ -18,6 +20,8 @@ import { Line } from "react-chartjs-2";
 
 const LineChart = (props) => {
   const { chartData, chartTitle, chartLabel } = props;
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
 
   ChartJS.register(
     TimeScale,
@@ -68,7 +72,7 @@ const LineChart = (props) => {
   };
 
   return (
-    <Card sx={{height: "350px", padding:"10px"}}>
+    <Card sx={{height: "350px", padding:"10px", backgroundColor:`${colors.secondary[100]}`}}>
       <div className="chartWrapper">
         <div className="chartAreaWrapper">
           <div className="line-chart" style={{position: "relative"}}>

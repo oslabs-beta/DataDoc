@@ -3,11 +3,15 @@ import { Card, Container, Typography } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
 import Workspace from "./Workspace.jsx";
 import "../styles/AddWorkspace.scss";
+import { useTheme } from "@mui/material";
+import { tokens } from "../containers/theme";
 
 const { SERVER_URL } = process.env;
 
 const Home = (props) => {
 
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
   const [workspaceList, setWorkspaceList] = useState([]);
   const [showNewWorkspacePopUp, setShowNewWorkspacePopUp] = useState(false);
   const [workspaceValues, setWorkspaceValues] = useState({
@@ -151,7 +155,8 @@ const Home = (props) => {
     minWidth: "60px",
     padding: "20px",
     boxShadow: "0px 0px 8px 4px rgba(0, 0, 0, 0.04)",
-    cursor: "pointer"
+    cursor: "pointer",
+    backgroundColor:`${colors.secondary[100]}`,
   };
 
   return (
