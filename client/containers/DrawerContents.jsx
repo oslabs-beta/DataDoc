@@ -12,10 +12,11 @@ import {
   ListItemText,
   Typography
 } from "@mui/material";
-import { Menu, Home } from "@mui/icons-material";
+import { Menu, Home, Settings as SettingsIcon } from "@mui/icons-material";
+import Settings from "../components/Settings.jsx";
 
 const DrawerContents = (props) => {
-  const { open } = props;
+  const { open, showsettingspopup: showSettingsPopup, setshowsettingspopup: setShowSettingsPopup } = props;
   const [workspaceList, setWorkspaceList] = useState([]);
   const navigate = useNavigate();
 
@@ -106,6 +107,31 @@ const DrawerContents = (props) => {
           </ListItem>
         );
       })}
+      <ListItem disablePadding sx={{ display: "block" }}>
+        <ListItemButton onClick={() => {
+          if (showSettingsPopup) setShowSettingsPopup(false);
+          else setShowSettingsPopup(true);
+        }}>
+          <Avatar
+            sx={{
+              minWidth: 0,
+              mr: open ? 3 : "auto",
+              my: 0.5,
+              justifyContent: "center"
+            }}
+          >
+            <SettingsIcon />
+            <Settings />
+          </Avatar>
+          <Settings>
+            <ListItemText
+              edge="end"
+              primary="Settings"
+              sx={{ opacity: open ? 1 : 0, fontWeight: "600" }}
+            />
+          </Settings>
+        </ListItemButton>
+      </ListItem>
     </List>
   );
 };

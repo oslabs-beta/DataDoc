@@ -99,6 +99,7 @@ const Drawer = styled(MuiDrawer, {
 const App = () => {
   const [theme, colorMode] = useMode();
   const [open, setOpen] = useState(false);
+  const [showSettingsPopup, setShowSettingsPopup] = useState(false);
   const handleDrawerOpen = () => setOpen(true);
   const handleDrawerClose = () => setOpen(false);
 
@@ -137,8 +138,7 @@ const App = () => {
                 </IconButton>
               </DrawerSection>
               <Divider />
-              <DrawerContents open={open} />
-              <Divider />
+              <DrawerContents open={open} showsettingspopup={showSettingsPopup} setshowsettingspopup={setShowSettingsPopup} />
             </Drawer>
             {/* <SideBar open={open} theme={theme} handledrawerclose={handleDrawerClose} /> */}
 
@@ -160,6 +160,7 @@ const App = () => {
                       />
                       <Route path="/workspaces" element={<Workspace />} />
                     </Routes>
+                    <Settings showsettingspopup={showSettingsPopup} setshowsettingspopup={setShowSettingsPopup} />
                   </main>
                 </div>
               </div>
