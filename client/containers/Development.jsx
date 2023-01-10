@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Box, Slider,Typography, Button,TextField } from '@mui/material';
 import { useLocation } from "react-router-dom";
-
+import LogTable from "../components/LogTable.jsx";
 
 
 const Development = (props)=> {
@@ -128,6 +128,7 @@ const Development = (props)=> {
       <br />
       <Button variant="outlined" color ="secondary" onClick={handleStop}>STOP</Button>
       </Box>
+      <LogTable simulation={'simulation'}/>
       </div>
   )
 }

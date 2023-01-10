@@ -27,6 +27,7 @@ const URI = (props) => {
             state={{
               method: method,
               path: path,
+              monitoring: 'monitoring'
             }}
             id={id}
             method={method}

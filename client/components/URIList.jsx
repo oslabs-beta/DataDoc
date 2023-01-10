@@ -17,6 +17,7 @@ const URIList = (props) => {
   const location = useLocation();
   const { workspace_id, name } = location.state;
   
+  
   const minFreq = 0.5;
 
   const inputHandler = (e) => {

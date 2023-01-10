@@ -30,6 +30,7 @@ const data = {
   statusPieData: []
 };
 
+
 dbController.getRespTimeLineData = (req, res, next) => {
   const fluxQuery = `
     from(bucket: "dev-bucket")
@@ -174,14 +175,18 @@ dbController.getStatusPieData = (req, res, next) => {
 };
 
 dbController.getEndpointLogs = (req, res, next) => {
+  const {mode} = req.query
+  console.log("THOS OS MODEEE ", mode)
   const influxQuery = `
     from(bucket: "dev-bucket") 
-    |> range(start: -${range})
-    |> filter(fn: (r) => r["_measurement"] == "monitoring")
+    |> range(start: -(10d))
+    |> filter(fn: (r) => r["_measurement"] == "${req.query.mode}")
     |> filter(fn: (r) => r["_field"] == "res_time" or r["_field"] == "status_code")
     |> filter(fn: (r) => r["method"] == "${req.query.method}")
     |> filter(fn: (r) => r["path"] == "${req.query.path}")
   `;
+
+  console.log("INF;UX QUERY", influxQuery)
 
   // declare a logs object to collect labels and data
   const logs = {};
@@ -199,10 +204,37 @@ dbController.getEndpointLogs = (req, res, next) => {
       return next(error);
     },
     complete() {
+      console.table(logs)
       res.locals.logs = Object.values(logs);
+
       return next();
     }
   });
 };
+
+dbController.testFunc = (req, res, next) => {
+  const influxqr = `
+  from(bucket: "dev-bucket") 
+  |> range(start:-(50m))
+  |> filter(fn: (r) => r["_measurement"] == "simulation")
+`
+const logs = []
+queryApi.queryRows(influxqr, {
+  next(row, tableMeta) {
+    const dataObject = tableMeta.toObject(row);
+    logs.push(dataObject)
+  },
+  error(error) {
+    console.log("Query Finished ERROR");
+    return next(error);
+  },
+  complete() {
+    res.locals.logs = logs;
+    return next();
+  }
+});
+}
+
+
 
 module.exports = dbController;

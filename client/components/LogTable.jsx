@@ -1,3 +1,4 @@
+import { Mode } from "@mui/icons-material";
 import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
 
@@ -5,20 +6,22 @@ const { SERVER_URL } = process.env;
 
 const LogTable = (props) => {
   const location = useLocation();
-  const { method, path } = location.state;
+  const {method, path, monitoring} = location.state;
+  const {simulation} = props
+  const mode = simulation ? simulation : monitoring
+  console.log("MODE", mode)
 
   let [logEntries, setLogEntries] = useState([]);
 
   setTimeout(async () => {
     const encodedPath = path.replaceAll("/", "%2F");
     setLogEntries(
-      (await (await fetch(`${SERVER_URL}/logdata/?method=${method}&path=${encodedPath}`)).json())
+      (await (await fetch(`${SERVER_URL}/logdata/?method=${method}&path=${encodedPath}&mode=${mode}`)).json())
       .map((log) => {
-        // console.table(log);
         return (
           <LogEntry
             key={crypto.randomUUID()}
-            method={method}
+            method={method} 
             path={path}
             timestamp={log.timestamp}
             res_time={log.res_time}
@@ -50,7 +53,6 @@ const LogTable = (props) => {
 
 const LogEntry = (props) => {
   const { timestamp, path, method, res_time, status_code } = props;
-
   return (
     <tr>
       <td>{timestamp}</td>

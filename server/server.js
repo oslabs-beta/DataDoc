@@ -14,6 +14,7 @@ const { resolve } = require("path");
 const {
   PhoneNumberContext
 } = require("twilio/lib/rest/lookups/v1/phoneNumber.js");
+const dbController = require("./controllers/dbController.js");
 
 const MODE = process.env.NODE_ENV || "production";
 const PORT = process.env.PORT || 9990;
@@ -109,6 +110,7 @@ app.post(
   (req, res) => res.sendStatus(200)
 );
 
+
 app.post("/monitoring", async (req, res) => {
   // * active is a boolean, interval is in seconds
   let { active, interval, verbose, metricsPort } = req.body;
@@ -147,11 +149,8 @@ const pingOneEndpoint = async (path) => {
 const performRPS = async (path, RPS) => {
   const interval = Math.floor(1000 / RPS);
   if (intervalId) clearInterval(intervalId);
-  let counter = 0;
   intervalId = setInterval(() => {
     pingOneEndpoint(path);
-    counter++;
-    console.log(counter);
   }, interval);
 };
 
@@ -159,13 +158,12 @@ const rpswithInterval = async (path, RPS, timeInterval) => {
   if (intervalId) clearInterval(intervalId);
   intervalId = setInterval(() => {
     performRPS(path, RPS);
-    console.log("PING FINISHED");
   }, timeInterval * 1000);
 };
 
 app.post("/simulation", async (req, res) => {
-  const {port} = req.body
-  const { RPS, timeInterval, setTime, stop, path } = req.body;
+  console.log("NEW REQ BODY", req.body)
+  const { RPS, timeInterval, port, stop, path } = req.body;
   if (!stop) {
     rpswithInterval(path, RPS, timeInterval);
     scrapeDataFromMetricsServer(port,"simulation");
@@ -178,6 +176,11 @@ app.get("/metrics", async (req, res) => {
   return res.status(200).json(logs);
 });
 
+app.get('/test',dbController.testFunc, async(req,res) => {
+  return res.status(200).json(res.locals.logs)
+})
+
+
 app.get("/routes/server", async (req, res) => {
   const { metrics_port } = req.query;
   console.log(metrics_port);
@@ -189,8 +192,8 @@ app.get("/routes/server", async (req, res) => {
     route.tracking = false;
   });
   return res.status(200).json(routes);
-});
 
+});
 
 app.get("/routes/:workspace_id", async (req, res) => {
   const { workspace_id } = req.params;
@@ -202,6 +205,7 @@ app.get("/routes/:workspace_id", async (req, res) => {
   return res.status(200).json(dbResponse.rows);
 });
 
+
 app.post("/routes/:workspace_id", async (req, res) => {
   const { workspace_id } = req.params;
   let queryText = "";
@@ -212,6 +216,7 @@ app.post("/routes/:workspace_id", async (req, res) => {
       ON CONFLICT ON CONSTRAINT endpoints_uq
       DO UPDATE SET tracking = ${URI.tracking};`;
   });
+  
   postgresClient.query(queryText);
   selectedEndpoints = req.body.filter((URI) => URI.tracking) || req.body;
   return res.sendStatus(204);
