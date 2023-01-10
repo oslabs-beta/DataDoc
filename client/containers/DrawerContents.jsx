@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
+  Avatar,
+  Icon,
+  IconButton,
   List,
   ListItem,
   ListItemButton,
@@ -52,7 +55,7 @@ const DrawerContents = (props) => {
                 });
               }}
             >
-              <ListItemIcon
+              {/* <ListItemIcon
                 sx={{
                   minWidth: 0,
                   mr: open ? 3 : "auto",
@@ -60,8 +63,22 @@ const DrawerContents = (props) => {
                 }}
               >
                 <Menu />
-              </ListItemIcon>
+              </ListItemIcon> */}
+              <Avatar
+                // size="small"
+                edge="start"
+                sx={{
+                  minWidth: 0,
+                  width: "40px",
+                  height: "40px",
+                  mr: open ? 3 : "auto",
+                  justifyContent: "center",
+                }}
+              >
+                {workspace.name.slice(0, 2)}
+              </Avatar>
               <ListItemText
+                edge="start"
                 primary={workspace.name}
                 sx={{ opacity: open ? 1 : 0 }}
               />
