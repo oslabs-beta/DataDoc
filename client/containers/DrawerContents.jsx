@@ -55,27 +55,18 @@ const DrawerContents = (props) => {
                 });
               }}
             >
-              {/* <ListItemIcon
-                sx={{
-                  minWidth: 0,
-                  mr: open ? 3 : "auto",
-                  justifyContent: "center"
-                }}
-              >
-                <Menu />
-              </ListItemIcon> */}
               <Avatar
-                // size="small"
-                edge="start"
+                size="small"
                 sx={{
                   minWidth: 0,
                   width: "40px",
                   height: "40px",
                   mr: open ? 3 : "auto",
+                  mb: 1,
                   justifyContent: "center",
                 }}
               >
-                {workspace.name.slice(0, 2)}
+                {(workspace.name.split(' ')).slice(0, 2).map((word) => word[0]).join('').toUpperCase()}
               </Avatar>
               <ListItemText
                 edge="start"
