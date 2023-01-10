@@ -9,7 +9,7 @@ import {
 import { ColorModeContext, tokens } from "./theme";
 import { Back, Forward } from "../components/NavButtons.jsx";
 
-const Topbar = () => {
+const TopBar = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const colorMode = useContext(ColorModeContext);
@@ -42,4 +42,4 @@ const Topbar = () => {
   );
 };
 
-export default Topbar;
+export default TopBar;

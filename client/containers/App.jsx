@@ -2,8 +2,6 @@ import { CssBaseline, ThemeProvider } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { ColorModeContext, useMode } from "./theme.js";
 
-// import Back from "../components/NavButtons.jsx";
-import Forward from "../components/Forward.jsx";
 import Home from "../components/Home.jsx";
 import Settings from "../components/Settings.jsx";
 import URI from "../components/URI.jsx";
@@ -11,8 +9,9 @@ import URIList from "../components/URIList.jsx";
 import Workspace from "../components/Workspace.jsx";
 import Dashboard from "./Dashboard.jsx";
 import Development from "./Development.jsx";
-import NavBar from "./NavBar.jsx";
-import Topbar from "./Topbar.jsx";
+// import NavBar from "./NavBar.jsx";
+import SideBar from "./NavBar.jsx";
+import TopBar from "./TopBar.jsx";
 import { HashRouter as Router, Route, Routes } from "react-router-dom";
 
 import "../styles/globals.scss";
@@ -54,7 +53,7 @@ const closedMixin = (theme) => ({
     width: `calc(${theme.spacing(8)} + 1px)`
   }
 });
-const DrawerHeader = styled("div")(({ theme }) => ({
+const DrawerSection = styled("div")(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   justifyContent: "flex-end",
@@ -97,125 +96,88 @@ const Drawer = styled(MuiDrawer, {
 }));
 
 const App = () => {
-  // const theme = useTheme();
   const [theme, colorMode] = useMode();
-
-  const [open, setOpen] = React.useState(false);
-  const handleDrawerOpen = () => {
-    setOpen(true);
-  };
-  const handleDrawerClose = () => {
-    setOpen(false);
-  };
+  const [open, setOpen] = useState(false);
+  const handleDrawerOpen = () => setOpen(true);
+  const handleDrawerClose = () => setOpen(false);
 
   return (
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
-
-        <Router>
+        <CssBaseline />
 
         <Box sx={{ display: "flex" }}>
-          <CssBaseline />
-          <AppBar position="fixed" open={open} color="secondary">
-            <Toolbar>
-              <IconButton
-                color="inherit"
-                aria-label="open drawer"
-                onClick={handleDrawerOpen}
-                edge="start"
-                sx={{
-                  marginRight: 5,
-                  ...(open && { display: "none" })
-                }}
-              >
-                <Menu />
-              </IconButton>
-              <Topbar />
-            </Toolbar>
-          </AppBar>
-          <Drawer variant="permanent" open={open}>
-            <DrawerHeader>
-              <IconButton onClick={handleDrawerClose}>
-                {theme.direction === "rtl" ? <ChevronRight /> : <ChevronLeft />}
-              </IconButton>
-            </DrawerHeader>
-            <Divider />
-            <List>
-              {["Inbox", "Starred", "Send email", "Drafts"].map(
-                (text, index) => (
-                  <ListItem key={text} disablePadding sx={{ display: "block" }}>
-                    <ListItemButton
-                      sx={{
-                        minHeight: 48,
-                        justifyContent: open ? "initial" : "center",
-                        px: 2.5
-                      }}
+          <Router>
+            {/* Top Toolbar */}
+            <AppBar position="fixed" open={open} color="secondary">
+              <Toolbar>
+                <IconButton
+                  color="inherit"
+                  aria-label="open drawer"
+                  onClick={handleDrawerOpen}
+                  edge="start"
+                  sx={{
+                    marginRight: 5,
+                    ...(open && { display: "none" })
+                  }}
+                >
+                  <Menu />
+                </IconButton>
+                <TopBar />
+              </Toolbar>
+            </AppBar>
+            {/* <TopBar position="fixed" open={open} drawerwidth={drawerWidth} color="secondary" handledraweropen={handleDrawerOpen} /> */}
+
+            {/* Drawer */}
+            <Drawer variant="permanent" open={open}>
+              <DrawerSection>
+                <IconButton onClick={handleDrawerClose}>
+                  <ChevronLeft />
+                </IconButton>
+              </DrawerSection>
+              <Divider />
+              <List>
+                {["Inbox", "Starred", "Send email", "Drafts"].map(
+                  (text, index) => (
+                    <ListItem
+                      key={text}
+                      disablePadding
+                      sx={{ display: "block" }}
                     >
-                      <ListItemIcon
+                      <ListItemButton
                         sx={{
-                          minWidth: 0,
-                          mr: open ? 3 : "auto",
-                          justifyContent: "center"
+                          minHeight: 48,
+                          justifyContent: open ? "initial" : "center",
+                          px: 2.5
                         }}
                       >
-                        <Menu />
-                      </ListItemIcon>
-                      <ListItemText
-                        primary={text}
-                        sx={{ opacity: open ? 1 : 0 }}
-                      />
-                    </ListItemButton>
-                  </ListItem>
-                )
-              )}
-            </List>
-            <Divider />
-            <List>
-              {["All mail", "Trash", "Spam"].map((text, index) => (
-                <ListItem key={text} disablePadding sx={{ display: "block" }}>
-                  <ListItemButton
-                    sx={{
-                      minHeight: 48,
-                      justifyContent: open ? "initial" : "center",
-                      px: 2.5
-                    }}
-                  >
-                    <ListItemIcon
-                      sx={{
-                        minWidth: 0,
-                        mr: open ? 3 : "auto",
-                        justifyContent: "center"
-                      }}
-                    >
-                      <Menu />
-                    </ListItemIcon>
-                    <ListItemText
-                      primary={text}
-                      sx={{ opacity: open ? 1 : 0 }}
-                    />
-                  </ListItemButton>
-                </ListItem>
-              ))}
-            </List>
-          </Drawer>
-          <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-            <DrawerHeader />
+                        <ListItemIcon
+                          sx={{
+                            minWidth: 0,
+                            mr: open ? 3 : "auto",
+                            justifyContent: "center"
+                          }}
+                        >
+                          <Menu />
+                        </ListItemIcon>
+                        <ListItemText
+                          primary={text}
+                          sx={{ opacity: open ? 1 : 0 }}
+                        />
+                      </ListItemButton>
+                    </ListItem>
+                  )
+                )}
+              </List>
+            </Drawer>
+            {/* <SideBar open={open} theme={theme} handledrawerclose={handleDrawerClose} /> */}
 
-            {/* <Router> */}
+            {/* Main components */}
+            <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+              <DrawerSection />
               <div className="fullApp">
                 <div className="content">
-                  <main
-                  // style={{
-                  //   boxSizing: "border-box",
-                  //   MozBoxSizing: "border-box",
-                  //   WebkitBoxSizing: "border-box",
-                  //   padding: "10px",
-                  //   // width: "100%",
-                  //   width: mainWidth,
-                  //   marginLeft: mainOffset,
-                  //   transition: "margin-left 0.5s"
-                  // }}
-                  >
+                  <main>
                     <Routes>
                       <Route path="/" element={<Home />} />
                       <Route path="/urilist/:id" element={<URIList />} />
@@ -231,12 +193,10 @@ const App = () => {
                   </main>
                 </div>
               </div>
-            {/* </Router> */}
-          </Box>
+            </Box>
+
+          </Router>
         </Box>
-
-        </Router>
-
       </ThemeProvider>
     </ColorModeContext.Provider>
   );
