@@ -8,7 +8,8 @@ import {
   ListItem,
   ListItemButton,
   ListItemIcon,
-  ListItemText
+  ListItemText,
+  Typography
 } from "@mui/material";
 import { Menu } from "@mui/icons-material";
 
@@ -63,16 +64,25 @@ const DrawerContents = (props) => {
                   height: "40px",
                   mr: open ? 3 : "auto",
                   mb: 1,
-                  justifyContent: "center",
+                  justifyContent: "center"
                 }}
               >
-                {(workspace.name.split(' ')).slice(0, 2).map((word) => word[0]).join('').toUpperCase()}
+                {workspace.name
+                  .split(" ")
+                  .slice(0, 2)
+                  .map((word) => word[0])
+                  .join("")
+                  .toUpperCase()}
               </Avatar>
               <ListItemText
                 edge="start"
                 primary={workspace.name}
-                sx={{ opacity: open ? 1 : 0 }}
+                secondary={workspace.domain}
+                sx={{ opacity: open ? 1 : 0, fontWeight: '600' }}
               />
+              {/* <Typography variant="h4" sx={{ opacity: open ? 1 : 0, display: open ? "block" : "none", fontWeight: "600" }}>
+                {workspace.name}
+              </Typography> */}
             </ListItemButton>
           </ListItem>
         );
