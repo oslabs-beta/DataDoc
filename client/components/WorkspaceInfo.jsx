@@ -9,13 +9,12 @@ import { flexbox } from "@mui/system";
 const WorkspaceInfo = (props) => {
   // const [URIList, setURIList] = useState([]);
   const { URIList, setURIList, workspaceId, name } = props;
+  console.table(props);
   const [errorMessage, setErrorMessage] = useState("");
   const [searchInput, setSearchInput] = useState("");
   const [monitoringFreq, setMonitoringFreq] = useState("");
   // const [metricsPort, setMetricsPort] = useState(9991);
 
-  // const location = useLocation();
-  // // const { workspace_id, name } = location.state;
 
   const minFreq = 0.5;
 

@@ -97,10 +97,10 @@ const getTrackedEndpointsByWorkspaceId = async (workspaceId) => {
   return dbResponse.rows;
 }
 
-const pingEndpoints = async (endpoints = []) => {
+const pingEndpoints = async (domain, port, endpoints = []) => {
   for (const endpoint of endpoints) {
     try {
-      await fetch("http://localhost:3000" + endpoint.path, {
+      await fetch(`http://${domain}${typeof port === "number" ? ':' + port : ''}${endpoint.path}`, {
         method: endpoint.method,
         headers: { "Cache-Control": "no-store" }
       });
@@ -132,7 +132,7 @@ app.post(
 
 app.post("/monitoring", async (req, res) => {
   // * active is a boolean, interval is in seconds
-  const { active, verbose, metricsPort, mode, port, workspaceId } = req.body;
+  const { active, domain, metricsPort, mode, port, verbose, workspaceId } = req.body;
   
   if (active) {
     // * Enforce a minimum interval
@@ -151,9 +151,10 @@ app.post("/monitoring", async (req, res) => {
           console.clear();
           console.log(`Monitoring for ${elapsed}`);
         }
-        pingEndpoints(endpoints);
+        pingEndpoints(domain, port || '', endpoints);
         scrapeDataFromMetricsServer(metricsPort || 9991, `${mode}_${workspaceId}`);
       }, interval * 1000),
+      domain,
       endpoints,
       metricsPort,
       mode,
