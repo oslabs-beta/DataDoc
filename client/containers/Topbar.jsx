@@ -32,15 +32,6 @@ const TopBar = () => {
       <Box display="flex" width="100%" ml="-8px">
         <Back />
         <Forward />
-        <Box>
-          <h1
-            onClick={() => {
-              navigate("/workspace/23", { state: { workspace_id: 23 } })
-            }}
-          >
-            Workspace5
-          </h1>
-        </Box>
         <IconButton
           onClick={colorMode.toggleColorMode}
           sx={{
