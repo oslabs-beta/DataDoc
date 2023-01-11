@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Box, Input, InputBase, Typography } from "@mui/material";
+import { TimerOutlined } from "@mui/icons-material";
 import URI from "./URI.jsx";
 import FlashError from "./FlashError.jsx";
 import SearchBar from "./SearchBar.jsx";
@@ -11,7 +12,7 @@ const WorkspaceInfo = (props) => {
   const { URIList, setURIList, workspaceId, name } = props;
   const [errorMessage, setErrorMessage] = useState("");
   const [searchInput, setSearchInput] = useState("");
-  const [monitoringFreq, setMonitoringFreq] = useState(5);
+  const [monitoringFreq, setMonitoringFreq] = useState();
   // const [metricsPort, setMetricsPort] = useState(9991);
 
   const minFreq = 0.5;
@@ -152,12 +153,14 @@ const WorkspaceInfo = (props) => {
       </Typography>
       <form className="monitoring">
         <br></br>
-        <label htmlFor="monitoring-frequency">Monitoring frequency:</label>
-        <Typography></Typography>
+        <label htmlFor="ping-frequency"><Typography>Monitoring Frequency</Typography></label>
+        {/* <Typography>Monitoring Frequency</Typography> */}
         <Input
+          label="Ping Frequency"
+          variant="outlined"
           type="number"
           inputProps={{
-            id: "monitoring-frequency",
+            id: "ping-frequency",
             type: "number",
             min: `${minFreq}`,
             step: 0.5,
@@ -168,13 +171,14 @@ const WorkspaceInfo = (props) => {
               textAlign: "end",
             }
           }}
+          startAdornment={(<TimerOutlined></TimerOutlined>)}
           endAdornment={(<Typography>s</Typography>)}
           fullWidth={true}
-          sx={{ ml: 2, width: 50 }}
+          sx={{ width: 70 }}
           onChange={(e) => {
-            if (e.target.value >= 0.5) {
+            // if (e.target.value >= 0.5) {
               setMonitoringFreq(e.target.value)
-            }
+            // }
           }}
         />
         <br></br>
