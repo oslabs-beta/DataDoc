@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import Settings from "./Settings.jsx";
 import URI from "./URI.jsx";
 import FlashError from "./FlashError.jsx";
 import SearchBar from "./SearchBar.jsx";
+import URITable from "./URITable.jsx";
+import { flexbox } from "@mui/system";
 
 const URIList = (props) => {
-  
   const [URIList, setURIList] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
   const [searchInput, setSearch] = useState("");
@@ -16,7 +17,7 @@ const URIList = (props) => {
 
   const location = useLocation();
   const { workspace_id, name } = location.state;
-  
+
   const minFreq = 0.5;
 
   const inputHandler = (e) => {
@@ -31,7 +32,9 @@ const URIList = (props) => {
   }, [workspace_id]);
 
   const getURIListFromServer = () => {
-    fetch(`http://localhost:${process.env.PORT}/routes/server?metrics_port=${metricsPort}`)
+    fetch(
+      `http://localhost:${process.env.PORT}/routes/server?metrics_port=${metricsPort}`
+    )
       .then((response) => response.json())
       .then((data) => {
         setURIList(data);
@@ -89,15 +92,15 @@ const URIList = (props) => {
     fetch(`http://localhost:${process.env.PORT}/routes/${workspace_id}`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "application/json"
       },
       body: JSON.stringify(
         URIList.map((URI) => ({
           method: URI.method,
           path: URI.path,
-          tracking: URI.tracking || false,
+          tracking: URI.tracking || false
         }))
-      ),
+      )
     }).catch((err) => {
       console.log(
         `there was an error sending the URI tracking list, error: ${err}`
@@ -112,15 +115,15 @@ const URIList = (props) => {
     fetch(`http://localhost:${process.env.PORT}/monitoring`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "application/json"
       },
       body: JSON.stringify({
         active: true,
         interval: monitoringFreq,
         verbose: true,
         metricsPort: metricsPort,
-        metricsPort: metricsPort,
-      }),
+        metricsPort: metricsPort
+      })
     }).catch((err) => {
       console.log("there was an error attempting to start monitoring: ", err);
       setErrorMessage(
@@ -134,12 +137,12 @@ const URIList = (props) => {
     fetch(`http://localhost:${process.env.PORT}/monitoring`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "application/json"
       },
       body: JSON.stringify({
         active: false,
-        verbose: true,
-      }),
+        verbose: true
+      })
     }).catch((err) => {
       console.log("there was an error attempting to stop monitoring: ", err);
       setErrorMessage(`Invalid POST request to stop monitoring, error: ${err}`);
@@ -148,10 +151,7 @@ const URIList = (props) => {
 
   return (
     <div className="URIListContainer">
-      <Typography
-        variant="h2"
-        fontWeight={600}
-      >
+      <Typography variant="h2" fontWeight={600}>
         Workspace: {name}
       </Typography>
       <form className="monitoring">
@@ -195,13 +195,22 @@ const URIList = (props) => {
           <FlashError errorMessage={errorMessage} />
         ) : null}
         <form>
-          <input placeholder="Metrics server port" type="number" defaultValue={9991} onChange={(e) => {
-            setMetricsPort(e.target.value);
-          }}></input>
-          <button onClick={(e) => {
-            e.preventDefault();
-            getURIListFromServer();
-          }}>Refresh</button>
+          <input
+            placeholder="Metrics server port"
+            type="number"
+            defaultValue={9991}
+            onChange={(e) => {
+              setMetricsPort(e.target.value);
+            }}
+          ></input>
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              getURIListFromServer();
+            }}
+          >
+            Refresh
+          </button>
         </form>
         <table>
           <thead>
@@ -235,6 +244,15 @@ const URIList = (props) => {
             })}
           </tbody>
         </table>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center"
+          }}
+        >
+          <URITable />
+        </Box>
       </div>
     </div>
   );

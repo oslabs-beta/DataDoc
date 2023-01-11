@@ -14,6 +14,7 @@ const { resolve } = require("path");
 const {
   PhoneNumberContext
 } = require("twilio/lib/rest/lookups/v1/phoneNumber.js");
+const pgController = require("./controllers/pgController.js");
 
 const MODE = process.env.NODE_ENV || "production";
 const PORT = process.env.PORT || 9990;
@@ -177,6 +178,13 @@ app.post("/simulation", async (req, res) => {
 app.get("/metrics", async (req, res) => {
   return res.status(200).json(logs);
 });
+
+app.put("/endpoints/:_id",
+  pgController.updateEndpoint,
+  (req, res) => {
+    return res.sendStatus(204);
+  }
+)
 
 app.get("/routes/server", async (req, res) => {
   const { metrics_port } = req.query;

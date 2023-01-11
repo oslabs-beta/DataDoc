@@ -3,10 +3,11 @@ import React, { useEffect, useState } from "react";
 import { ColorModeContext, useMode } from "./theme.js";
 
 import Home from "../components/Home.jsx";
+import Workspace from "../components/Workspace.jsx";
+import WorkspaceView from "./WorkspaceView.jsx";
 import Settings from "../components/Settings.jsx";
 import URI from "../components/URI.jsx";
 import URIList from "../components/URIList.jsx";
-import Workspace from "../components/Workspace.jsx";
 import Dashboard from "./Dashboard.jsx";
 import Development from "./Development.jsx";
 import DrawerContents from "./DrawerContents.jsx";
@@ -146,6 +147,7 @@ const App = () => {
             </Drawer>
             {/* <SideBar open={open} theme={theme} handledrawerclose={handleDrawerClose} /> */}
 
+
             {/* Main components */}
             <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
               <DrawerSection />
@@ -155,14 +157,15 @@ const App = () => {
                     <Routes>
                       <Route path="/" element={<Home />} />
                       <Route path="/urilist/:id" element={<URIList />} />
+                      <Route path="/workspace/:workspace_id" element={<WorkspaceView />} />
                       <Route path="/uri" element={<URI />} />
                       <Route path="/uri/:id" element={<Dashboard />} />
                       <Route path="/settings" element={<Settings />} />
+                      {/* <Route path="/workspaces" element={<Workspace />} /> */}
                       <Route
                         path="/development/:id"
                         element={<Development />}
                       />
-                      <Route path="/workspaces" element={<Workspace />} />
                     </Routes>
                     <Settings
                       showsettingspopup={showSettingsPopup}
