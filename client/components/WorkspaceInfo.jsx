@@ -1,32 +1,43 @@
 import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Box, Input, InputBase, Typography } from "@mui/material";
-import { TimerOutlined } from "@mui/icons-material";
+import {
+  Box,
+  Button,
+  ButtonGroup,
+  Input,
+  InputBase,
+  Typography
+} from "@mui/material";
+import { PlayArrow, Stop, TimerOutlined } from "@mui/icons-material";
 import URI from "./URI.jsx";
 import FlashError from "./FlashError.jsx";
 import SearchBar from "./SearchBar.jsx";
 import { flexbox } from "@mui/system";
 
 const WorkspaceInfo = (props) => {
-  // const [URIList, setURIList] = useState([]);
-  const { URIList, setURIList, workspaceId, name } = props;
+  const {
+    URIList,
+    setURIList,
+    workspaceId,
+    name,
+    domain,
+    port,
+    metricsPort,
+    isMonitoring,
+    setIsMonitoring,
+    getURIListFromServer
+  } = props;
   const [errorMessage, setErrorMessage] = useState("");
   const [searchInput, setSearchInput] = useState("");
-  const [monitoringFreq, setMonitoringFreq] = useState();
-  // const [metricsPort, setMetricsPort] = useState(9991);
+  const [pingInterval, setPingInterval] = useState(1);
 
-  const minFreq = 0.5;
+  const minPingInterval = 0.5;
 
   // const inputHandler = (e) => {
   //   // * Convert input text to lower case
   //   let lowerCase = e.target.value.toLowerCase();
   //   setSearch(lowerCase);
   // };
-
-  // // * Fetch the URI List from the database when the component mounts
-  // useEffect(() => {
-  //   getURIListFromDatabase(workspaceId);
-  // }, [workspaceId]);
 
   // const getURIListFromServer = () => {
   //   fetch(
@@ -56,142 +67,137 @@ const WorkspaceInfo = (props) => {
   //     });
   // };
 
-  // const addToTracking = (method, path) => {
-  //   const newURIList = [...URIList];
-  //   for (const URI of newURIList) {
-  //     if (URI.method === method && URI.path === path) {
-  //       URI.tracking = true;
-  //       break;
-  //     }
-  //   }
-  //   setURIList(newURIList);
-  // };
+  const handleStartMonitoringClick = (e) => {
+    if (pingInterval === undefined || pingInterval < minPingInterval) return;
+    e.preventDefault();
+    fetch(`http://localhost:${process.env.PORT}/monitoring`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        active: true,
+        domain,
+        interval: pingInterval,
+        metricsPort,
+        mode: "monitoring",
+        port,
+        verbose: true,
+        workspaceId
+      })
+    })
+      .then((serverResponse) => {
+        if (serverResponse.ok) {
+          setIsMonitoring(true);
+        }
+      })
+      .catch((err) => {
+        console.log("there was an error attempting to start monitoring: ", err);
+        setErrorMessage(
+          `Invalid POST request to start monitoring, error: ${err}`
+        );
+      });
+  };
 
-  // const removeFromTracking = (method, path) => {
-  //   const newURIList = [...URIList];
-  //   for (const URI of newURIList) {
-  //     if (URI.method === method && URI.path === path) {
-  //       URI.tracking = false;
-  //       break;
-  //     }
-  //   }
-  //   setURIList(newURIList);
-  // };
-
-  // // * Update the list of tracked URIs in the server whenever a checkbox changes
-  // useEffect(() => {
-  //   // if (firstRender) {
-  //   //   firstRender = false;
-  //   //   console.log(firstRender);
-  //   //   // setFirstLoad(false);
-  //   //   return;
-  //   // }
-  //   fetch(`http://localhost:${process.env.PORT}/routes/${workspaceId}`, {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json"
-  //     },
-  //     body: JSON.stringify(
-  //       URIList?.map((URI) => ({
-  //         method: URI.method,
-  //         path: URI.path,
-  //         tracking: URI.tracking || false
-  //       }))
-  //     )
-  //   }).catch((err) => {
-  //     console.log(
-  //       `there was an error sending the URI tracking list, error: ${err}`
-  //     );
-  //     setErrorMessage("Invalid POST request from the URI List");
-  //   });
-  // }, [URIList]);
-
-  // const handleStartMonitoringClick = (e) => {
-  //   if (monitoringFreq === undefined || monitoringFreq < minFreq) return;
-  //   e.preventDefault();
-  //   fetch(`http://localhost:${process.env.PORT}/monitoring`, {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json"
-  //     },
-  //     body: JSON.stringify({
-  //       active: true,
-  //       interval: monitoringFreq,
-  //       verbose: true,
-  //       metricsPort: metricsPort,
-  //       metricsPort: metricsPort
-  //     })
-  //   }).catch((err) => {
-  //     console.log("there was an error attempting to start monitoring: ", err);
-  //     setErrorMessage(
-  //       `Invalid POST request to start monitoring, error: ${err}`
-  //     );
-  //   });
-  // };
-
-  // const handleStopMonitoringClick = (e) => {
-  //   e.preventDefault();
-  //   fetch(`http://localhost:${process.env.PORT}/monitoring`, {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json"
-  //     },
-  //     body: JSON.stringify({
-  //       active: false,
-  //       verbose: true
-  //     })
-  //   }).catch((err) => {
-  //     console.log("there was an error attempting to stop monitoring: ", err);
-  //     setErrorMessage(`Invalid POST request to stop monitoring, error: ${err}`);
-  //   });
-  // };
+  const handleStopMonitoringClick = (e) => {
+    e.preventDefault();
+    setIsMonitoring(false);
+    fetch(`http://localhost:${process.env.PORT}/monitoring`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        active: false,
+        verbose: true,
+        workspaceId
+      })
+    })
+      .then((serverResponse) => {
+        if (serverResponse.ok) {
+          setIsMonitoring(false);
+        }
+      })
+      .catch((err) => {
+        console.log("there was an error attempting to stop monitoring: ", err);
+        setErrorMessage(
+          `Invalid POST request to stop monitoring, error: ${err}`
+        );
+      });
+  };
 
   return (
     <>
       <Typography variant="h2" fontWeight={700}>
         {name}
       </Typography>
-      <form className="monitoring">
-        <br></br>
-        <label htmlFor="ping-frequency"><Typography>Monitoring Frequency</Typography></label>
-        {/* <Typography>Monitoring Frequency</Typography> */}
-        <Input
-          label="Ping Frequency"
-          variant="outlined"
-          type="number"
-          inputProps={{
-            id: "ping-frequency",
-            type: "number",
-            min: `${minFreq}`,
-            step: 0.5,
-            required: true,
-            value: monitoringFreq,
-            textAlign: "end",
-            style: {
-              textAlign: "end",
-            }
-          }}
-          startAdornment={(<TimerOutlined></TimerOutlined>)}
-          endAdornment={(<Typography>s</Typography>)}
-          fullWidth={true}
-          sx={{ width: 70 }}
-          onChange={(e) => {
-            // if (e.target.value >= 0.5) {
-              setMonitoringFreq(e.target.value)
-            // }
-          }}
-        />
-        <br></br>
-        <div>
-          <button onClick={(e) => handleStartMonitoringClick(e)}>
-            Start Monitoring
-          </button>
-          <button onClick={(e) => handleStopMonitoringClick(e)}>
-            Stop Monitoring
-          </button>
-        </div>
-      </form>
+      <Typography variant="h2" fontWeight={700}>
+        {domain}
+      </Typography>
+      <Typography variant="h2" fontWeight={700}>
+        {port}
+      </Typography>
+      <Typography variant="h2" fontWeight={700}>
+        {metricsPort}
+      </Typography>
+      {/* <Input 
+        type="text" 
+        variant="outlined" 
+        inputProps={{
+          value: name,
+          style: {
+            disableUnderline: true,
+            fontWeight: 700,
+          }
+        }} 
+      /> */}
+      {/* <form className="monitoring" > */}
+      <label htmlFor="ping-interval">
+        <Typography variant="h5">Monitoring Frequency</Typography>
+      </label>
+      <Input
+        label="Ping Interval"
+        variant="outlined"
+        type="number"
+        inputProps={{
+          id: "ping-interval",
+          type: "number",
+          min: `${minPingInterval}`,
+          step: 0.5,
+          required: true,
+          value: pingInterval,
+          style: {
+            textAlign: "end"
+          }
+        }}
+        startAdornment={<TimerOutlined></TimerOutlined>}
+        endAdornment={<Typography>s</Typography>}
+        fullWidth={true}
+        sx={{ width: 70 }}
+        onChange={(e) => {
+          setPingInterval(e.target.value);
+        }}
+      />
       <br></br>
+      <ButtonGroup variant="contained" color="secondary">
+        <Button
+          onClick={handleStartMonitoringClick}
+          sx={{
+            opacity: isMonitoring ? 0.6 : 1,
+          }}
+        >
+          <PlayArrow />
+        </Button>
+        <Button
+          onClick={handleStopMonitoringClick}
+          sx={{
+            opacity: isMonitoring ? 1 : 0.6,
+          }}
+        >
+          <Stop />
+        </Button>
+      </ButtonGroup>
+      {/* </form> */}
       <br></br>
       <span>
         <label htmlFor="endpoint-search">Search for a specific endpoint:</label>

@@ -86,12 +86,20 @@ const Home = (props) => {
           onChange={(e) => handleChange(e, "domain")}
           required
         ></input>
-        <label htmlFor="workspacePort">Enter the workspace port:</label>
+        <label htmlFor="workspacePort">Enter the workspace application server port:</label>
         <input
           name="workspacePort"
           className="workspacePort"
           type="number"
           onChange={(e) => handleChange(e, "port")}
+          required
+        ></input>
+        <label htmlFor="workspacePort">Enter the workspace metrics server port:</label>
+        <input
+          name="metricsPort"
+          className="metricsPort"
+          type="number"
+          onChange={(e) => handleChange(e, "metricsPort")}
           required
         ></input>
         <button
@@ -185,6 +193,7 @@ const Home = (props) => {
                   name={workspace.name}
                   domain={workspace.domain}
                   port={workspace.port}
+                  metricsPort={workspace.metrics_port}
                   deleteWorkspace={deleteWorkspaceById}
                 />
               </Card>

@@ -141,7 +141,7 @@ DataTableHead.propTypes = {
 };
 
 function DataTableToolbar(props) {
-  const { numSelected, getURIListFromServer } = props;
+  const { numSelected, getURIListFromServer, metricsPort } = props;
 
   return (
     <Toolbar
@@ -187,7 +187,10 @@ function DataTableToolbar(props) {
         <>
         <Tooltip title="Refresh List">
           <IconButton
-            onClick={getURIListFromServer}
+            onClick={() => {
+              console.log(props.metricsPort);
+              getURIListFromServer(props.metricsPort)
+            }}
           >
             <Refresh />
           </IconButton>
@@ -204,8 +207,7 @@ DataTableToolbar.propTypes = {
 
 export default function URITable(props) {
 
-  const { workspaceId, rows } = props || [];
-  const { getURIListFromServer, updateTrackingInDatabaseById } = props;
+  const { workspaceId, rows, metricsPort,getURIListFromServer, updateTrackingInDatabaseById } = props;
 
   const headCells = generateHeadCells(rows);
 
@@ -275,7 +277,11 @@ export default function URITable(props) {
   return (
     <Box sx={{ width: "100%" }}>
       <Paper sx={{ width: "100%", mb: 2 }}>
-        <DataTableToolbar numSelected={selected.length} getURIListFromServer={getURIListFromServer} />
+        <DataTableToolbar 
+          numSelected={selected.length} 
+          getURIListFromServer={getURIListFromServer}
+          metricsPort={metricsPort}
+        />
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}

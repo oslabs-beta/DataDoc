@@ -127,6 +127,13 @@ app.post(
   (req, res) => res.sendStatus(200)
 );
 
+app.get("/monitoring/:workspaceId", 
+  (req, res) => {
+    const {workspaceId} = req.params;
+    return res.status(200).json(trackedWorkspaces[workspaceId]?.active || false)
+  }
+);
+
 app.post("/monitoring", async (req, res) => {
   // * active is a boolean, interval is in seconds
   const { active, domain, metricsPort, mode, port, verbose, workspaceId } = req.body;
@@ -238,8 +245,8 @@ app.put("/endpoints/:_id",
 )
 
 app.get("/routes/server", async (req, res) => {
-  const { metrics_port } = req.query;
-  const response = await fetch(`http://localhost:${metrics_port}/endpoints`);
+  const { metricsPort } = req.query;
+  const response = await fetch(`http://localhost:${metricsPort}/endpoints`);
   const routes = await response.json();
   // ! TO BE REMOVED: hard code status code 200
   routes.forEach((route) => {
@@ -274,25 +281,24 @@ app.post("/routes/:workspace_id", async (req, res) => {
   return res.sendStatus(204);
 });
 
-//get existing workspaces for the user
+// get existing workspaces for the user
 app.get("/workspaces", async (req, res) => {
   const queryText = `
     SELECT * 
     FROM workspaces
-    ;`;
+  ;`;
   const dbResponse = await postgresClient.query(queryText);
   return res.status(200).json(dbResponse.rows);
 });
 
-//create a new workspace for the user
+// create a new workspace for the user
 app.post("/workspaces", async (req, res) => {
-  const { name, domain, port } = req.body;
-  // console.log("THIS IS THE REQ BODY", domain, port);
+  const { name, domain, port, metricsPort } = req.body;
   let queryText = `
-    INSERT INTO workspaces (name, domain, port)
-    VALUES ($1, $2, $3)
-    ;`;
-  postgresClient.query(queryText, [name, domain, port]);
+    INSERT INTO workspaces (name, domain, port, metrics_port)
+    VALUES ($1, $2, $3, $4)
+  ;`;
+  postgresClient.query(queryText, [name, domain, port, metricsPort]);
   return res.sendStatus(204);
 });
 

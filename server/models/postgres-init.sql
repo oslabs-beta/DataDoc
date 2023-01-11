@@ -2,7 +2,8 @@ CREATE TABLE workspaces (
   _id SERIAL, 
   name TEXT NOT NULL,
   domain TEXT NOT NULL,
-  port INTEGER
+  port INTEGER,
+  metrics_port INTEGER
 );
 
 CREATE TABLE endpoints (

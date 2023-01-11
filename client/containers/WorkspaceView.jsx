@@ -1,28 +1,35 @@
-import WorkspaceInfo from "../components/WorkspaceInfo.jsx"
-
-// console.log(URIList);
 
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { Typography } from "@mui/material";
+import WorkspaceInfo from "../components/WorkspaceInfo.jsx"
 import URITable from "../components/URITable.jsx";
 
 const WorkspaceView = () => {
   const location = useLocation();
-  const { workspaceId, name, domain, port, metricsPort } = location.state;
+  const { workspaceId, name, domain, port } = location.state;
   const [URIList, setURIList] = useState([]);
-  const [trackingList, setTrackingList] = useState([]);
+  const [isMonitoring, setIsMonitoring] = useState();
+  const [metricsPort, setMetricsPort] = useState(location.state.metricsPort);
+
+  useEffect(() => {
+    fetch(`${process.env.SERVER_URL}/monitoring/${workspaceId}`)
+    .then((serverResponse) => {
+      return serverResponse.json();
+    })
+    .then((responseJson) => {
+      setIsMonitoring(responseJson);
+    })
+  })
 
   useEffect(() => {
     getURIListFromDatabase(workspaceId);
   }, [workspaceId]);
 
-  // console.table(location)
-  // console.table(location.state);
-
-  const getURIListFromServer = () => {
+  const getURIListFromServer = (metricsPortArg) => {
+    console.log(`http://localhost:${process.env.PORT}/routes/server?metricsPort=${metricsPortArg}`)
     fetch(
-      `http://localhost:${process.env.PORT}/routes/server?metrics_port=${metricsPort}`
+      `http://localhost:${process.env.PORT}/routes/server?metricsPort=${metricsPortArg}`
     )
       .then((response) => response.json())
       .then((data) => {
@@ -72,9 +79,15 @@ const WorkspaceView = () => {
         workspaceId={workspaceId}
         setURIList={setURIList}
         name={name}
-      />
+        domain={domain}
+        port={port}
+        metricsPort={metricsPort}
+        isMonitoring={isMonitoring}
+        setIsMonitoring={setIsMonitoring}
+        />
       <URITable
         workspaceId={workspaceId}
+        metricsPort={metricsPort}
         rows={URIList.map((URI) => {
           return {
             _id: URI._id, // hidden column

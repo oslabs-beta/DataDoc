@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import "../styles/WorkspaceBox.scss";
 
 const Workspace = (props) => {
-  const { workspaceId, name, domain, port, deleteWorkspace } = props;
+  const { workspaceId, name, domain, port, metricsPort, deleteWorkspace } = props;
   const theme = useTheme();
   const navigate = useNavigate();
   return (
@@ -19,7 +19,7 @@ const Workspace = (props) => {
               name,
               domain,
               port,
-              metricsPort: 0,
+              metricsPort,
             }
           })}}
         >
