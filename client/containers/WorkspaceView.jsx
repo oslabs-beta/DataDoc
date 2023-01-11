@@ -63,11 +63,11 @@ const WorkspaceView = () => {
       <URITable
         rows={URIList.map((URI) => {
           return {
-            _id: URI._id,
-            tracking: URI.tracking,
+            _id: URI._id, // hidden column
+            _tracking: URI.tracking, // hidden column
             path: URI.path,
             method: URI.method,
-            _hidden: "test"
+            status_code: URI.statusCode || "N/A"
           };
         })}
         updateTrackingInDatabaseById={updateTrackingInDatabaseById}

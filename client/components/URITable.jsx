@@ -309,13 +309,12 @@ export default function URITable(props) {
                         <Checkbox
                           color="secondary"
                           // checked={isItemSelected}
-                          checked={row.tracking}
+                          checked={row._tracking}
                           inputProps={{
                             "aria-labelledby": labelId
                           }}
                           onClick={() => {
-                            if (row.tracking) row.tracking = false;
-                            else row.tracking = true;
+                            row.tracking = ! row._tracking
                             updateTrackingInDatabaseById(row)
                           }}
                         />
@@ -327,7 +326,7 @@ export default function URITable(props) {
                           return (
                             <TableCell key={crypto.randomUUID()}
                               align="left"
-                              sx={{ width: "10%", whiteSpace: "nowrap"}}
+                              // sx={{ width: "10%", whiteSpace: "nowrap"}}
                             >
                               {row[column]}
                             </TableCell>
