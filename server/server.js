@@ -7,10 +7,7 @@ const influxClient = require("./models/influx-client.js");
 const { Point } = require("@influxdata/influxdb-client");
 const chartRouter = require("./routes/chartdata");
 const logRouter = require("./routes/logRouter.js");
-const { url } = require("inspector");
 const postgresClient = require("./models/postgres-client.js");
-const { response } = require("express");
-const { resolve } = require("path");
 const {
   PhoneNumberContext
 } = require("twilio/lib/rest/lookups/v1/phoneNumber.js");

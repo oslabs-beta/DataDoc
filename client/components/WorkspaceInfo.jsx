@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Box, Typography } from "@mui/material";
+import { Box, Input, InputBase, Typography } from "@mui/material";
 import URI from "./URI.jsx";
 import FlashError from "./FlashError.jsx";
 import SearchBar from "./SearchBar.jsx";
@@ -9,12 +9,10 @@ import { flexbox } from "@mui/system";
 const WorkspaceInfo = (props) => {
   // const [URIList, setURIList] = useState([]);
   const { URIList, setURIList, workspaceId, name } = props;
-  console.table(props);
   const [errorMessage, setErrorMessage] = useState("");
   const [searchInput, setSearchInput] = useState("");
-  const [monitoringFreq, setMonitoringFreq] = useState("");
+  const [monitoringFreq, setMonitoringFreq] = useState(5);
   // const [metricsPort, setMetricsPort] = useState(9991);
-
 
   const minFreq = 0.5;
 
@@ -154,18 +152,31 @@ const WorkspaceInfo = (props) => {
       </Typography>
       <form className="monitoring">
         <br></br>
-        <label htmlFor="monitoring-time">Set monitoring frequency:</label>
-        <input
+        <label htmlFor="monitoring-frequency">Monitoring frequency:</label>
+        <Typography></Typography>
+        <Input
           type="number"
-          min={`${minFreq}`}
-          step="0.1"
-          id="monitoring-time"
-          value={monitoringFreq}
-          placeholder="5 seconds"
-          size="30"
-          required
-          onChange={(e) => setMonitoringFreq(e.target.value)}
-        ></input>
+          inputProps={{
+            id: "monitoring-frequency",
+            type: "number",
+            min: `${minFreq}`,
+            step: 0.5,
+            required: true,
+            value: monitoringFreq,
+            textAlign: "end",
+            style: {
+              textAlign: "end",
+            }
+          }}
+          endAdornment={(<Typography>s</Typography>)}
+          fullWidth={true}
+          sx={{ ml: 2, width: 50 }}
+          onChange={(e) => {
+            if (e.target.value >= 0.5) {
+              setMonitoringFreq(e.target.value)
+            }
+          }}
+        />
         <br></br>
         <div>
           <button onClick={(e) => handleStartMonitoringClick(e)}>
