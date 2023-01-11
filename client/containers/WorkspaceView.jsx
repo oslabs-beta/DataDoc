@@ -71,6 +71,7 @@ const WorkspaceView = () => {
           };
         })}
         updateTrackingInDatabaseById={updateTrackingInDatabaseById}
+        getURIListFromServer={getURIListFromServer}
       />
     </>
   );

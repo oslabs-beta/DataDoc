@@ -20,7 +20,7 @@ import {
   FormControlLabel,
   Switch
 } from "@mui/material";
-import { Delete, FilterList } from "@mui/icons-material";
+import { Delete, FilterList, Sync as Refresh } from "@mui/icons-material";
 import { visuallyHidden } from "@mui/utils";
 
 function descendingComparator(a, b, orderBy) {
@@ -140,7 +140,7 @@ DataTableHead.propTypes = {
 };
 
 function DataTableToolbar(props) {
-  const { numSelected } = props;
+  const { numSelected, getURIListFromServer } = props;
 
   return (
     <Toolbar
@@ -183,11 +183,15 @@ function DataTableToolbar(props) {
           </IconButton>
         </Tooltip>
       ) : (
-        <Tooltip title="Filter list">
-          <IconButton>
-            <FilterList />
+        <>
+        <Tooltip title="Refresh List">
+          <IconButton
+            onClick={getURIListFromServer}
+          >
+            <Refresh />
           </IconButton>
         </Tooltip>
+        </>
       )}
     </Toolbar>
   );
@@ -199,18 +203,8 @@ DataTableToolbar.propTypes = {
 
 export default function URITable(props) {
 
-  // const unscrubbedRows = props.rows || [];
-  // const rows = unscrubbedRows.map(row => {
-  //   const scrubbedRow = {};
-  //   for (const key of Object.keys(row)) {
-  //     if (key[0] === '_') continue;
-  //     scrubbedRow[key] = row[key];
-  //   }
-  //   return scrubbedRow;
-  // })
-
   const { rows } = props || [];
-  const { updateTrackingInDatabaseById } = props;
+  const { getURIListFromServer, updateTrackingInDatabaseById } = props;
 
   const headCells = generateHeadCells(rows);
   
@@ -278,7 +272,7 @@ export default function URITable(props) {
   return (
     <Box sx={{ width: "100%" }}>
       <Paper sx={{ width: "100%", mb: 2 }}>
-        <DataTableToolbar numSelected={selected.length} />
+        <DataTableToolbar numSelected={selected.length} getURIListFromServer={getURIListFromServer} />
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}
