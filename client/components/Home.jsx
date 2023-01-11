@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Card, Container, Typography } from "@mui/material";
+import { Box, Card, Container, Typography } from "@mui/material";
+import { Add } from "@mui/icons-material";
 import Grid from "@mui/material/Unstable_Grid2";
 import Workspace from "./Workspace.jsx";
 import "../styles/AddWorkspace.scss";
@@ -9,7 +10,6 @@ import { tokens } from "../containers/theme";
 const { SERVER_URL } = process.env;
 
 const Home = (props) => {
-
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const [workspaceList, setWorkspaceList] = useState([]);
@@ -156,36 +156,30 @@ const Home = (props) => {
     padding: "20px",
     boxShadow: "0px 0px 8px 4px rgba(0, 0, 0, 0.04)",
     cursor: "pointer",
-    backgroundColor:`${colors.secondary[100]}`,
+    backgroundColor: `${colors.secondary[100]}`
   };
 
   return (
     <>
-      <Typography 
-        variant="h1"
-        fontWeight={600}
-      >
+      <Typography variant="h1" fontWeight={600}>
         Welcome to DataDoc
       </Typography>
-      <Typography
-        variant="h3"
-        fontWeight={600}
-        mb="20px"
-      >
+      <Typography variant="h3" fontWeight={600} mb="20px">
         Workspaces:
       </Typography>
       <Grid container spacing={2}>
         {workspaceList.map((workspace) => {
           return (
-            <Grid item
-              xs={12/1} 
-              sm={12/2} 
-              md={12/3} 
-              lg={12/4}
-              xl={12/5}
+            <Grid
+              item
+              xs={12 / 1}
+              sm={12 / 2}
+              md={12 / 3}
+              lg={12 / 4}
+              xl={12 / 5}
               key={crypto.randomUUID()}
             >
-              <Card variant="outlined" sx={cardStyle} >
+              <Card variant="outlined" sx={cardStyle}>
                 <Workspace
                   workspace_id={workspace._id}
                   name={workspace.name}
@@ -197,25 +191,18 @@ const Home = (props) => {
             </Grid>
           );
         })}
-        <Grid item
-          xs={12/1} 
-          sm={12/2} 
-          md={12/3} 
-          lg={12/4}
-          xl={12/5}>
+        <Grid item xs={12 / 1} sm={12 / 2} md={12 / 3} lg={12 / 4} xl={12 / 5}>
           <Card
             variant="outlined"
-            sx={cardStyle}
+            sx={{
+              ...cardStyle,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
             onClick={() => setShowNewWorkspacePopUp(true)}
           >
-            <span
-              style={{
-                alignSelf: "center",
-                justify: "center"
-              }}
-            >
-              +
-            </span>
+            <Add sx={{ color: "#BBBBBB"}} />
             {showNewWorkspacePopUp && newWorkspaceForm}
           </Card>
         </Grid>
