@@ -132,8 +132,7 @@ app.post(
 
 app.post("/monitoring", async (req, res) => {
   // * active is a boolean, interval is in seconds
-  const { active, verbose, metricsPort, port, workspaceId } = req.body;
-  console.table(req.body);
+  const { active, verbose, metricsPort, mode, port, workspaceId } = req.body;
   
   if (active) {
     // * Enforce a minimum interval
@@ -142,7 +141,7 @@ app.post("/monitoring", async (req, res) => {
     if (trackedWorkspaces[workspaceId].intervalId) clearInterval(intervalId);
     const start = new Date();
     const endpoints = await getTrackedEndpointsByWorkspaceId(workspaceId) || [];
-    const updatedTrackedWorkspace = {
+    Object.assign(trackedWorkspaces[workspaceId], {
       active,
       interval,
       intervalId: setInterval(() => {
@@ -153,16 +152,16 @@ app.post("/monitoring", async (req, res) => {
           console.log(`Monitoring for ${elapsed}`);
         }
         pingEndpoints(endpoints);
-        scrapeDataFromMetricsServer(metricsPort || 9991, 'monitoring' + workspaceId ? `${'_' + workspaceId}` : '');
+        scrapeDataFromMetricsServer(metricsPort || 9991, `${mode}_${workspaceId}`);
       }, interval * 1000),
       endpoints,
       metricsPort,
+      mode,
       port,
       start,
       end: null,
-      elapsed: null,
-    }
-    trackedWorkspaces[workspaceId] = updatedTrackedWorkspace;
+      elapsed: 0,
+    })
   } 
   
   else {
@@ -170,21 +169,19 @@ app.post("/monitoring", async (req, res) => {
       clearInterval(trackedWorkspaces[workspaceId]?.intervalId)
       trackedWorkspaces[workspaceId].active = false;
     }
-    const updatedTrackedWorkspace = {
+    Object.assign(trackedWorkspaces[workspaceId], {
       active,
-      interval: null,
       intervalId: null,
       endpoints: [],
-      metricsPort,
-      port,
-      start: null,
       end: new Date(),
-      elapsed: null,
-    }
-    trackedWorkspaces[workspaceId] = updatedTrackedWorkspace;
+    })
   };
 
-  if (verbose) console.log(`ACTIVE: ${active}`);
+  if (verbose) {
+    console.clear();
+    console.log(`ACTIVE: ${active}`);
+  }
+    
   res.sendStatus(204);
 });
 
