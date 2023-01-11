@@ -37,6 +37,7 @@ let logs = [];
 let selectedEndpoints = [];
 let activeWorkspaceId;
 let monitoringStartTime, monitoringEndTime, timeElapsed;
+const trackedWorkspaces = {};
 
 const updateTimeElapsed = function () {
   monitoringEndTime = new Date();
@@ -44,6 +45,12 @@ const updateTimeElapsed = function () {
   if (timeElapsed < 60 * 1000) return timeElapsed.getSeconds() + "s";
   return timeElapsed.getMinutes() + "m" + (timeElapsed.getSeconds() % 60) + "s";
 };
+
+const timeSince = (startDate) => {
+  const timeElapsed = new Date(new Date() - startDate)
+  if (timeElapsed < 60 * 1000) return timeElapsed.getSeconds() + "s";
+  return timeElapsed.getMinutes() + "m" + (timeElapsed.getSeconds() % 60) + "s";
+}
 
 const scrapeDataFromMetricsServer = async (metricsPort, tableName) => {
   try {
@@ -78,7 +85,7 @@ const storeLogsToDatabase = async (logsArr, tableName) => {
   }
 };
 
-const getTrackedEndpoints = async (workspaceId) => {
+const getTrackedEndpointsByWorkspaceId = async (workspaceId) => {
   const queryText = `
     SELECT * 
     FROM endpoints 
@@ -87,12 +94,11 @@ const getTrackedEndpoints = async (workspaceId) => {
       tracking=${true}
   ;`
   const dbResponse = await postgresClient.query(queryText);
-  selectedEndpoints = dbResponse.rows;
-  console.log(selectedEndpoints);
+  return dbResponse.rows;
 }
 
-const pingTargetEndpoints = async () => {
-  for (const endpoint of selectedEndpoints) {
+const pingEndpoints = async (endpoints = []) => {
+  for (const endpoint of endpoints) {
     try {
       await fetch("http://localhost:3000" + endpoint.path, {
         method: endpoint.method,
@@ -126,25 +132,59 @@ app.post(
 
 app.post("/monitoring", async (req, res) => {
   // * active is a boolean, interval is in seconds
-  let { active, interval, verbose, metricsPort, workspaceId } = req.body;
+  const { active, verbose, metricsPort, port, workspaceId } = req.body;
+  console.table(req.body);
+  
   if (active) {
     // * Enforce a minimum interval
-    interval = interval < 0.5 ? 0.5 : interval;
-    if (intervalId) clearInterval(intervalId);
-    monitoringStartTime = new Date();
-    activeWorkspaceId = workspaceId,
-    getTrackedEndpoints(activeWorkspaceId);
-    intervalId = setInterval(() => {
-      const timeElapsedString = updateTimeElapsed();
-      if (verbose) {
-        console.clear();
-        console.log(`Monitoring for ${timeElapsedString}`);
-      }
-      pingTargetEndpoints();
-      scrapeDataFromMetricsServer(metricsPort || 9991, (workspaceId ? `monitoring_${workspaceId}` : 'monitoring'));
-    }, interval * 1000);
-  } else clearInterval(intervalId);
-  if (verbose) console.log("ACTIVE:", active);
+    let interval = Math.max(0.5, req.body.interval);
+    if (trackedWorkspaces[workspaceId] === undefined) trackedWorkspaces[workspaceId] = {};
+    if (trackedWorkspaces[workspaceId].intervalId) clearInterval(intervalId);
+    const start = new Date();
+    const endpoints = await getTrackedEndpointsByWorkspaceId(workspaceId) || [];
+    const updatedTrackedWorkspace = {
+      active,
+      interval,
+      intervalId: setInterval(() => {
+        const elapsed = timeSince(trackedWorkspaces[workspaceId].start || new Date());
+        trackedWorkspaces[workspaceId].elapsed = elapsed;
+        if (verbose) {
+          console.clear();
+          console.log(`Monitoring for ${elapsed}`);
+        }
+        pingEndpoints(endpoints);
+        scrapeDataFromMetricsServer(metricsPort || 9991, 'monitoring' + workspaceId ? `${'_' + workspaceId}` : '');
+      }, interval * 1000),
+      endpoints,
+      metricsPort,
+      port,
+      start,
+      end: null,
+      elapsed: null,
+    }
+    trackedWorkspaces[workspaceId] = updatedTrackedWorkspace;
+  } 
+  
+  else {
+    if (trackedWorkspaces[workspaceId]) {
+      clearInterval(trackedWorkspaces[workspaceId]?.intervalId)
+      trackedWorkspaces[workspaceId].active = false;
+    }
+    const updatedTrackedWorkspace = {
+      active,
+      interval: null,
+      intervalId: null,
+      endpoints: [],
+      metricsPort,
+      port,
+      start: null,
+      end: new Date(),
+      elapsed: null,
+    }
+    trackedWorkspaces[workspaceId] = updatedTrackedWorkspace;
+  };
+
+  if (verbose) console.log(`ACTIVE: ${active}`);
   res.sendStatus(204);
 });
 
