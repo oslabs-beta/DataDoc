@@ -22,6 +22,7 @@ import {
 } from "@mui/material";
 import { Delete, FilterList, Sync as Refresh } from "@mui/icons-material";
 import { visuallyHidden } from "@mui/utils";
+import { useNavigate } from "react-router-dom";
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -203,10 +204,12 @@ DataTableToolbar.propTypes = {
 
 export default function URITable(props) {
 
-  const { rows } = props || [];
+  const { workspaceId, rows } = props || [];
   const { getURIListFromServer, updateTrackingInDatabaseById } = props;
 
   const headCells = generateHeadCells(rows);
+
+  const navigate = useNavigate();
   
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("path");
@@ -326,7 +329,15 @@ export default function URITable(props) {
                           return (
                             <TableCell key={crypto.randomUUID()}
                               align="left"
-                              // sx={{ width: "10%", whiteSpace: "nowrap"}}
+                              onClick={() => {
+                                navigate(`/dashboard/${row._id}`, { state: {
+                                  workspaceId,
+                                  endpointId: row._id,
+                                  method: row.method,
+                                  path: row.path,
+                                }})
+                              }}
+                              sx={{ cursor: "pointer" }}
                             >
                               {row[column]}
                             </TableCell>

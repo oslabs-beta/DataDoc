@@ -42,7 +42,7 @@ const LineChart = (props) => {
         fill: true,
         backgroundColor: ["rgba(75, 192, 192, 0.50)"],
         borderColor: ["rgb(75, 192, 192)"],
-        tension: 0.4,
+        tension: 0.3,
       },
     ],
   };

@@ -35,6 +35,7 @@ app.use("/logdata", logRouter);
 let intervalId;
 let logs = [];
 let selectedEndpoints = [];
+let activeWorkspaceId;
 let monitoringStartTime, monitoringEndTime, timeElapsed;
 
 const updateTimeElapsed = function () {
@@ -44,14 +45,14 @@ const updateTimeElapsed = function () {
   return timeElapsed.getMinutes() + "m" + (timeElapsed.getSeconds() % 60) + "s";
 };
 
-const scrapeDataFromMetricsServer = async (metricsPort, tableName) => {
+const scrapeDataFromMetricsServer = async (metricsPort, tableName, workspaceId) => {
   try {
     logs = await (
       await fetch(`http://localhost:${metricsPort}/metrics`, {
         method: "DELETE"
       })
     ).json();
-    storeLogsToDatabase(logs, tableName);
+    storeLogsToDatabase(logs, tableName, workspaceId);
     return logs;
   } catch (e) {
     console.error(e);
@@ -59,13 +60,14 @@ const scrapeDataFromMetricsServer = async (metricsPort, tableName) => {
   }
 };
 
-const storeLogsToDatabase = async (logsArr, tableName) => {
+const storeLogsToDatabase = async (logsArr, tableName, workspaceId) => {
   try {
     const pointsArr = logsArr.map((log) => {
       return new Point(tableName)
         .tag("path", log.path)
         .tag("url", log.url)
         .tag("method", log.method)
+        .tag("workspace_id", workspaceId)
         .floatField("res_time", log.response_time)
         .intField("status_code", log.status_code)
         .timestamp(new Date(log.date_created).getTime());
@@ -76,6 +78,19 @@ const storeLogsToDatabase = async (logsArr, tableName) => {
     return false;
   }
 };
+
+const getTrackedEndpoints = async (workspaceId) => {
+  const queryText = `
+    SELECT * 
+    FROM endpoints 
+    WHERE 
+      workspace_id=${workspaceId} AND 
+      tracking=${true}
+  ;`
+  const dbResponse = await postgresClient.query(queryText);
+  selectedEndpoints = dbResponse.rows;
+  console.log(selectedEndpoints);
+}
 
 const pingTargetEndpoints = async () => {
   for (const endpoint of selectedEndpoints) {
@@ -112,12 +127,14 @@ app.post(
 
 app.post("/monitoring", async (req, res) => {
   // * active is a boolean, interval is in seconds
-  let { active, interval, verbose, metricsPort } = req.body;
+  let { active, interval, verbose, metricsPort, workspaceId } = req.body;
   if (active) {
     // * Enforce a minimum interval
     interval = interval < 0.5 ? 0.5 : interval;
     if (intervalId) clearInterval(intervalId);
     monitoringStartTime = new Date();
+    activeWorkspaceId = workspaceId,
+    getTrackedEndpoints(activeWorkspaceId);
     intervalId = setInterval(() => {
       const timeElapsedString = updateTimeElapsed();
       if (verbose) {
@@ -125,7 +142,7 @@ app.post("/monitoring", async (req, res) => {
         console.log(`Monitoring for ${timeElapsedString}`);
       }
       pingTargetEndpoints();
-      scrapeDataFromMetricsServer(metricsPort, "monitoring");
+      scrapeDataFromMetricsServer(metricsPort || 9991, "monitoring", workspaceId);
     }, interval * 1000);
   } else clearInterval(intervalId);
   if (verbose) console.log("ACTIVE:", active);

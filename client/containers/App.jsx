@@ -160,6 +160,7 @@ const App = () => {
                       <Route path="/workspace/:workspace_id" element={<WorkspaceView />} />
                       <Route path="/uri" element={<URI />} />
                       <Route path="/uri/:id" element={<Dashboard />} />
+                      <Route path="/dashboard/:id" element={<Dashboard />} />
                       <Route path="/settings" element={<Settings />} />
                       {/* <Route path="/workspaces" element={<Workspace />} /> */}
                       <Route

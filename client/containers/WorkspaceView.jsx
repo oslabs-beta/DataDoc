@@ -74,6 +74,7 @@ const WorkspaceView = () => {
         name={name}
       />
       <URITable
+        workspaceId={workspaceId}
         rows={URIList.map((URI) => {
           return {
             _id: URI._id, // hidden column
