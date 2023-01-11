@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import "../styles/WorkspaceBox.scss";
 
 const Workspace = (props) => {
-  const { workspace_id, name, domain, port, deleteWorkspace } = props;
+  const { workspaceId, name, domain, port, deleteWorkspace } = props;
   const theme = useTheme();
   const navigate = useNavigate();
   return (
@@ -13,11 +13,13 @@ const Workspace = (props) => {
       <div className="workspaceBox">
         <div
           onClick={() => {
-            navigate(`/urilist/${workspace_id}`, {
+            navigate(`/workspace/${workspaceId}`, {
             state: {
-              workspace_id: workspace_id,
-              name: name,
-              domain: domain
+              workspaceId,
+              name,
+              domain,
+              port,
+              metricsPort: 0,
             }
           })}}
         >

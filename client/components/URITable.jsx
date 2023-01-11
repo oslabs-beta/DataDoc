@@ -56,7 +56,7 @@ function stableSort(array, comparator) {
 }
 
 const generateHeadCells = (rows) => {
-  if (rows.length === 0) return [];
+  if (! rows?.length > 0) return [];
   return (Object.keys(rows[0]))
     .filter(key => key[0] !== '_')
     .map((key) => {

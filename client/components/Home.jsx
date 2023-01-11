@@ -17,8 +17,8 @@ const Home = (props) => {
   const [workspaceValues, setWorkspaceValues] = useState({
     name: "",
     domain: "",
-    port: 0
-    // workspace_id: null,
+    port: "",
+    workspaceId: "",
   });
 
   const handleChange = (e, updateValue) => {
@@ -124,13 +124,13 @@ const Home = (props) => {
       });
   };
 
-  const deleteWorkspaceById = (workspace_id) => {
+  const deleteWorkspaceById = (workspaceId) => {
     fetch(`${SERVER_URL}/workspaces`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({ workspace_id })
+      body: JSON.stringify({ workspace_id: workspaceId })
     })
       .then((workspace) => {
         getAllWorkspaces();
@@ -181,7 +181,7 @@ const Home = (props) => {
             >
               <Card variant="outlined" sx={cardStyle}>
                 <Workspace
-                  workspace_id={workspace._id}
+                  workspaceId={workspace._id}
                   name={workspace.name}
                   domain={workspace.domain}
                   port={workspace.port}
@@ -202,7 +202,7 @@ const Home = (props) => {
             }}
             onClick={() => setShowNewWorkspacePopUp(true)}
           >
-            <Add sx={{ color: "#BBBBBB"}} />
+            <Add />
             {showNewWorkspacePopUp && newWorkspaceForm}
           </Card>
         </Grid>

@@ -7,7 +7,7 @@ import Workspace from "../components/Workspace.jsx";
 import WorkspaceView from "./WorkspaceView.jsx";
 import Settings from "../components/Settings.jsx";
 import URI from "../components/URI.jsx";
-import URIList from "../components/URIList.jsx";
+import WorkspaceInfo from "../components/WorkspaceInfo.jsx";
 import Dashboard from "./Dashboard.jsx";
 import Development from "./Development.jsx";
 import DrawerContents from "./DrawerContents.jsx";
@@ -156,7 +156,7 @@ const App = () => {
                   <main>
                     <Routes>
                       <Route path="/" element={<Home />} />
-                      <Route path="/urilist/:id" element={<URIList />} />
+                      <Route path="/urilist/:id" element={<WorkspaceInfo />} />
                       <Route path="/workspace/:workspace_id" element={<WorkspaceView />} />
                       <Route path="/uri" element={<URI />} />
                       <Route path="/uri/:id" element={<Dashboard />} />

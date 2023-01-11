@@ -1,17 +1,24 @@
+import WorkspaceInfo from "../components/WorkspaceInfo.jsx"
+
+// console.log(URIList);
+
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-
+import { Typography } from "@mui/material";
 import URITable from "../components/URITable.jsx";
 
 const WorkspaceView = () => {
   const location = useLocation();
-  const { workspace_id } = location.state;
+  const { workspaceId, name, domain, port, metricsPort } = location.state;
   const [URIList, setURIList] = useState([]);
   const [trackingList, setTrackingList] = useState([]);
 
   useEffect(() => {
-    getURIListFromDatabase(workspace_id);
-  }, [workspace_id]);
+    getURIListFromDatabase(workspaceId);
+  }, [workspaceId]);
+
+  // console.table(location)
+  // console.table(location.state);
 
   const getURIListFromServer = () => {
     fetch(
@@ -28,8 +35,8 @@ const WorkspaceView = () => {
       });
   };
 
-  const getURIListFromDatabase = (workspace_id) => {
-    fetch(`http://localhost:${process.env.PORT}/routes/${workspace_id}`)
+  const getURIListFromDatabase = (workspaceId) => {
+    fetch(`http://localhost:${process.env.PORT}/routes/${workspaceId}`)
       .then((response) => response.json())
       .then((data) => {
         setURIList(data);
@@ -60,6 +67,12 @@ const WorkspaceView = () => {
 
   return (
     <>
+      <WorkspaceInfo
+        URIList={URIList}
+        workspaceId={workspaceId}
+        setURIList={setURIList}
+        name={name}
+      />
       <URITable
         rows={URIList.map((URI) => {
           return {

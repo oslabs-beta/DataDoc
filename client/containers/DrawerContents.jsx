@@ -26,7 +26,8 @@ const DrawerContents = (props) => {
   const getWorkSpaceList = async () => {
     const newWorkspaceList = await (
       await fetch(`http://localhost:${process.env.PORT}/workspaces`)
-    ).json();
+    ).json() || [];
+    console.table(newWorkspaceList);
     setWorkspaceList(newWorkspaceList);
     return;
   };
@@ -67,9 +68,11 @@ const DrawerContents = (props) => {
                 px: 2.5
               }}
               onClick={() => {
-                navigate(`urilist/${workspace._id}`, {
+                console.table(workspace);
+                console.log(`/workspace/${workspace._id}`)
+                navigate(`/workspace/${workspace._id}`, {
                   state: {
-                    workspace_id: workspace._id,
+                    workspaceId: workspace._id,
                     name: workspace.name,
                     domain: workspace.domain
                   }
