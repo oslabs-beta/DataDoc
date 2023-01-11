@@ -45,14 +45,14 @@ const updateTimeElapsed = function () {
   return timeElapsed.getMinutes() + "m" + (timeElapsed.getSeconds() % 60) + "s";
 };
 
-const scrapeDataFromMetricsServer = async (metricsPort, tableName, workspaceId) => {
+const scrapeDataFromMetricsServer = async (metricsPort, tableName) => {
   try {
     logs = await (
       await fetch(`http://localhost:${metricsPort}/metrics`, {
         method: "DELETE"
       })
     ).json();
-    storeLogsToDatabase(logs, tableName, workspaceId);
+    storeLogsToDatabase(logs, tableName);
     return logs;
   } catch (e) {
     console.error(e);
@@ -60,14 +60,13 @@ const scrapeDataFromMetricsServer = async (metricsPort, tableName, workspaceId) 
   }
 };
 
-const storeLogsToDatabase = async (logsArr, tableName, workspaceId) => {
+const storeLogsToDatabase = async (logsArr, tableName) => {
   try {
     const pointsArr = logsArr.map((log) => {
       return new Point(tableName)
         .tag("path", log.path)
         .tag("url", log.url)
         .tag("method", log.method)
-        .tag("workspace_id", workspaceId)
         .floatField("res_time", log.response_time)
         .intField("status_code", log.status_code)
         .timestamp(new Date(log.date_created).getTime());
@@ -142,7 +141,7 @@ app.post("/monitoring", async (req, res) => {
         console.log(`Monitoring for ${timeElapsedString}`);
       }
       pingTargetEndpoints();
-      scrapeDataFromMetricsServer(metricsPort || 9991, "monitoring", workspaceId);
+      scrapeDataFromMetricsServer(metricsPort || 9991, (workspaceId ? `monitoring_${workspaceId}` : 'monitoring'));
     }, interval * 1000);
   } else clearInterval(intervalId);
   if (verbose) console.log("ACTIVE:", active);
@@ -205,7 +204,6 @@ app.put("/endpoints/:_id",
 
 app.get("/routes/server", async (req, res) => {
   const { metrics_port } = req.query;
-  console.log(metrics_port);
   const response = await fetch(`http://localhost:${metrics_port}/endpoints`);
   const routes = await response.json();
   // ! TO BE REMOVED: hard code status code 200
@@ -268,7 +266,7 @@ app.delete("/workspaces", async (req, res) => {
   const queryText = `
     DELETE FROM workspaces 
     WHERE _id=${workspace_id}
-    ;`;
+  ;`;
   await postgresClient.query(queryText);
   return res.sendStatus(204);
 });
