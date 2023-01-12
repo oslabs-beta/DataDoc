@@ -348,6 +348,7 @@ export default function URITable(props) {
                             <TableCell key={crypto.randomUUID()}
                               align="left"
                               onClick={() => {
+                                if (column === "simulation") return;
                                 navigate(`/dashboard/${row._id}`, { state: {
                                   workspaceId,
                                   endpointId: row._id,

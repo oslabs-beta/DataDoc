@@ -1,7 +1,8 @@
 
 import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
-import { Typography } from "@mui/material";
+import { useLocation, useNavigate } from "react-router-dom";
+import { Typography, IconButton } from "@mui/material";
+import { ChevronRight } from "@mui/icons-material";
 import WorkspaceInfo from "../components/WorkspaceInfo.jsx"
 import URITable from "../components/URITable.jsx";
 
@@ -11,6 +12,8 @@ const WorkspaceView = () => {
   const [URIList, setURIList] = useState([]);
   const [isMonitoring, setIsMonitoring] = useState();
   const [metricsPort, setMetricsPort] = useState(location.state.metricsPort);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetch(`${process.env.SERVER_URL}/monitoring/${workspaceId}`)
@@ -149,9 +152,26 @@ const WorkspaceView = () => {
             _tracking: URI.tracking, // hidden column
             path: URI.path,
             method: URI.method,
-            status_code: URI.statusCode || "N/A"
+            status_code: URI.statusCode || "N/A",
+            simulation: 
+              <IconButton
+                onClick={() => {
+                  navigate(`/development/${crypto.randomUUID()}`, {
+                    state: {
+                      method: URI.method,
+                      path: URI.path,
+                    }
+                  })
+                }}
+              >
+                <ChevronRight />
+              </IconButton>
           };
         })}
+        // (<Link to={`/development/${id}`} state={{
+        //   method: method,
+        //   path: path
+        // }} id={id} method={method} path={path}><button>CLICK ME</button></Link>)
         updateTrackingInDatabaseById={updateTrackingInDatabaseById}
         updateTrackingInDatabaseByRoute={updateTrackingInDatabaseByRoute}
         getURIListFromServer={getURIListFromServer}
