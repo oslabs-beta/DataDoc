@@ -1,39 +1,27 @@
 # DataDoc
 
-Monitor your API performance
+DataDoc is an endpoint monitoring, detection and traffic simulation tool that provides real-time metrics and customizable alert notifications.
 
-<img src="./assets/electron-logo-color.png" alt="Electron" title="Electron" align="center" height="30" />
+### Table of Contents
+   * [Getting Started](#getting-started)
+        * [Prerequisites](#prerequisites)
+        * [Installation](#installation)
+   * [How To Use](#how-to-use)
+        * [Adding Workspaces](#adding-workspaces)
+        * [Using the Monitoring Tool](#using-the-monitoring-tool)
+        * [Using the Simulation Tool](#using-the-simulation-tool)
+        * [Configuring Alerts](#configuring-alerts)
+   * [Tech Stack](#tech-stack)
+   * [Authors](#authors)
 
-<img src="./assets/react-logo-color.png" alt="React" title="React" align="center" height="30" />
+## Getting Started <a name="getting-started"></a>
 
-<img src="./assets/material-ui-logo-color.png" alt="MaterialUI" title="MaterialUI" align="center" height="30" />
-
-<img src="./assets/chartjs-logo-color.png" alt="MaterialUI" title="MaterialUI" align="center" height="30" />
-
-<img src="./assets/express-logo-color.png" alt="Express" title="Express" align="center" height="30" />
-
-<img src="./assets/node-logo-color.png" alt="Node.js" title="Node.js" align="center" height="30" />
-
-<img src="./assets/npm-logo-color.png" alt="npm" title="npm" align="center" height="30" />
-
-<img src="./assets/postgres-logo-color.png" alt="Postgres" title="Postgres" align="center" height="30" />
-
-<img src="./assets/influxdb-logo-color.png" alt="InfluxDB" title="InfluxDB" align="center" height="30" />
-
-<img src="./assets/twilio-logo-color.png" alt="Twilio" title="Twilio" align="center" height="30" />
-
-<img src="./assets/docker-logo-color.png" alt="Docker" title="Docker" align="center" height="30" />
-
-<img src="./assets/webpack-logo-color.png" alt="Webpack" title="Webpack" align="center" height="30" />
-
-## Requirements
+### Prerequisites <a name="prerequisites"></a>
 
 - Node.js v18^
 - Docker
 
-## Getting Started
-
-### Installation
+### Installation <a name="installation"></a>
 
 This tool requires the npm package `express-endpoints-monitor` to detect and gather metrics for endpoints in your Express application. To understand how to use this plugin, see the <a href="https://www.npmjs.com/package/express-endpoints-monitor">full documentation</a>.
 
@@ -140,21 +128,44 @@ This tool requires the npm package `express-endpoints-monitor` to detect and gat
     ```
     npm start
     ```
+## How to Use <a name="how-to-use"></a>
+    
+### Adding Workspaces <a name="adding-workspaces"></a>
 
+### Using the Monitoring Tool <a name="using-the-monitoring-tool"></a>
 
-### Adding Workspaces
+### Using the Simulation Tool <a name="using-the-simulation-tool"></a>
 
+### Configuring Alerts <a name="configuring-alerts"></a>
 
- 
-### Using the Monitoring Tool
+## Tech Stack <a name="tech-stack"></a>
+<img src="./assets/electron-logo-color.png" alt="Electron" title="Electron" align="center" height="30" />
 
-### Using the Simulation Tool
+<img src="./assets/react-logo-color.png" alt="React" title="React" align="center" height="30" />
 
-### Configuring Alerts
+<img src="./assets/material-ui-logo-color.png" alt="MaterialUI" title="MaterialUI" align="center" height="30" />
 
-## Contributors
+<img src="./assets/chartjs-logo-color.png" alt="MaterialUI" title="MaterialUI" align="center" height="30" />
 
-- Jo Huang <a href="https://www.linkedin.com/in/jh5/">LinkedIn</a> | <a href="https://github.com/JH51">GitHub</a>
-- Jonathan Huang <a href="https://www.linkedin.com/in/johuangx/">LinkedIn</a> | <a href="https://github.com/jochuang">GitHub</a>
+<img src="./assets/express-logo-color.png" alt="Express" title="Express" align="center" height="30" />
+
+<img src="./assets/node-logo-color.png" alt="Node.js" title="Node.js" align="center" height="30" />
+
+<img src="./assets/npm-logo-color.png" alt="npm" title="npm" align="center" height="30" />
+
+<img src="./assets/postgres-logo-color.png" alt="Postgres" title="Postgres" align="center" height="30" />
+
+<img src="./assets/influxdb-logo-color.png" alt="InfluxDB" title="InfluxDB" align="center" height="30" />
+
+<img src="./assets/twilio-logo-color.png" alt="Twilio" title="Twilio" align="center" height="30" />
+
+<img src="./assets/docker-logo-color.png" alt="Docker" title="Docker" align="center" height="30" />
+
+<img src="./assets/webpack-logo-color.png" alt="Webpack" title="Webpack" align="center" height="30" />
+
+## Authors <a name="authors"></a>
+
+- Jo Huang <a href="https://www.linkedin.com/in/johuangx/">LinkedIn</a> | <a href="https://github.com/JH51">GitHub</a>
+- Jonathan Huang <a href="https://www.linkedin.com/in/jh5/">LinkedIn</a> | <a href="https://github.com/jochuang">GitHub</a>
 - Jamie Schiff <a href="https://www.linkedin.com/in/jamie-schiff/">LinkedIn</a> | <a href="https://github.com/jamieschiff">GitHub</a>
 - Mariam Zakariadze <a href="https://www.linkedin.com/in/mariam-zakariadze-701573120/">LinkedIn | <a href="https://github.com/mariamzakariadze">GitHub</a>
