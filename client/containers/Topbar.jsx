@@ -9,7 +9,14 @@ import {
 import { ColorModeContext, tokens } from "./theme";
 import { Back, Forward } from "../components/NavButtons.jsx";
 
-const Topbar = () => {
+// ! Delete when done
+import { useNavigate } from "react-router-dom";
+
+const TopBar = () => {
+
+  // !
+  const navigate = useNavigate();
+
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const colorMode = useContext(ColorModeContext);
@@ -19,7 +26,7 @@ const Topbar = () => {
         boxSizing: "border-box",
         MozBoxSizing: "border-box",
         WebkitBoxSizing: "border-box",
-        width: "100%",
+        width: "100%"
       }}
     >
       <Box display="flex" width="100%" ml="-8px">
@@ -28,7 +35,7 @@ const Topbar = () => {
         <IconButton
           onClick={colorMode.toggleColorMode}
           sx={{
-            marginLeft: "auto",
+            marginLeft: "auto"
           }}
         >
           {theme.palette.mode === "light" ? (
@@ -42,4 +49,4 @@ const Topbar = () => {
   );
 };
 
-export default Topbar;
+export default TopBar;

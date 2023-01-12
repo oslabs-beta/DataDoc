@@ -9,15 +9,16 @@ import { useParams, useLocation } from "react-router-dom";
 const { SERVER_URL } = process.env;
 
 const ChartsContainer = (props) => {
-  const { id } = useParams();
+
+  const { workspaceId, endpointId, method, path } = props;
   const [chartsData, setChartsData] = useState({});
   
-  const location = useLocation();
-  const { method, path } = location.state;
 
   setTimeout(() => {
+    // fetch(`${SERVER_URL}/chartdata/${endpointId}`, {
     const encodedPath = path.replaceAll("/", "%2F");
-    fetch(`${SERVER_URL}/chartdata/?method=${method}&path=${encodedPath}`, {
+    fetch(`${SERVER_URL}/chartdata/?workspaceId=${workspaceId}&method=${method}&path=${encodedPath}`, {
+      method: "GET",
       headers: { 'Content-Encoding': 'gzip' },
     })
       .then((response) => response.json())
@@ -38,16 +39,16 @@ const ChartsContainer = (props) => {
       <div className="charts-container">
         <Grid container spacing={3}>
           <Grid item xs={12/1} md={12/2}>
-          <LineChart id={id} chartData={chartsData.respTimeLineData || [] } chartTitle="Response Time over Time" chartLabel="Time (in ms)" />
+          <LineChart chartData={chartsData.respTimeLineData || [] } chartTitle="Response Time over Time" chartLabel="Time (in ms)" />
           </Grid>
           <Grid item xs={12/1} md={12/2}>
-          <Histogram id={id} chartData={chartsData.respTimeHistData || [] } />
+          <Histogram chartData={chartsData.respTimeHistData || [] } />
           </Grid>
           <Grid item xs={12/1} md={12/2}>
-          <LineChart id={id} chartData={chartsData.reqFreqLineData || [] } chartTitle="Request Frequency over Time" chartLabel="Count" />
+          <LineChart chartData={chartsData.reqFreqLineData || [] } chartTitle="Request Frequency over Time" chartLabel="Count" />
           </Grid>
           <Grid item xs={12/1} md={12/2}>
-          <DonutChart id={id} chartData={chartsData.statusPieData || [{ x: "N/A", y: 1 }] } />
+          <DonutChart chartData={chartsData.statusPieData || [{ x: "N/A", y: 1 }] } />
           </Grid>
         </Grid>
       </div>

@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Card, Container, Typography } from "@mui/material";
+import { Box, Card, Container, Typography } from "@mui/material";
+import { Add } from "@mui/icons-material";
 import Grid from "@mui/material/Unstable_Grid2";
-import Workspace from "./Workspace.jsx";
+import WorkspaceCard from "./WorkspaceCard.jsx";
 import "../styles/AddWorkspace.scss";
 import { useTheme } from "@mui/material";
 import { tokens } from "../containers/theme";
@@ -9,7 +10,6 @@ import { tokens } from "../containers/theme";
 const { SERVER_URL } = process.env;
 
 const Home = (props) => {
-
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const [workspaceList, setWorkspaceList] = useState([]);
@@ -17,8 +17,8 @@ const Home = (props) => {
   const [workspaceValues, setWorkspaceValues] = useState({
     name: "",
     domain: "",
-    port: 0
-    // workspace_id: null,
+    port: "",
+    workspaceId: "",
   });
 
   const handleChange = (e, updateValue) => {
@@ -86,12 +86,20 @@ const Home = (props) => {
           onChange={(e) => handleChange(e, "domain")}
           required
         ></input>
-        <label htmlFor="workspacePort">Enter the workspace port:</label>
+        <label htmlFor="workspacePort">Enter the workspace application server port:</label>
         <input
           name="workspacePort"
           className="workspacePort"
           type="number"
           onChange={(e) => handleChange(e, "port")}
+          required
+        ></input>
+        <label htmlFor="workspacePort">Enter the workspace metrics server port:</label>
+        <input
+          name="metricsPort"
+          className="metricsPort"
+          type="number"
+          onChange={(e) => handleChange(e, "metricsPort")}
           required
         ></input>
         <button
@@ -124,13 +132,13 @@ const Home = (props) => {
       });
   };
 
-  const deleteWorkspaceById = (workspace_id) => {
+  const deleteWorkspaceById = (workspaceId) => {
     fetch(`${SERVER_URL}/workspaces`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({ workspace_id })
+      body: JSON.stringify({ workspace_id: workspaceId })
     })
       .then((workspace) => {
         getAllWorkspaces();
@@ -151,71 +159,59 @@ const Home = (props) => {
   const cardStyle = {
     // boxSizing: 'border-box',
     borderRadius: "10px",
-    height: "150px",
-    minWidth: "60px",
+    height: "170px",
+    minwidth: "60px",
     padding: "20px",
     boxShadow: "0px 0px 8px 4px rgba(0, 0, 0, 0.04)",
     cursor: "pointer",
-    backgroundColor:`${colors.secondary[100]}`,
+    backgroundColor: `${colors.secondary[100]}`
   };
 
   return (
     <>
-      <Typography 
-        variant="h1"
-        fontWeight={600}
-      >
+      <Typography variant="h1" fontWeight={600}>
         Welcome to DataDoc
       </Typography>
-      <Typography
-        variant="h3"
-        fontWeight={600}
-        mb="20px"
-      >
+      <Typography variant="h3" fontWeight={600} mb="20px">
         Workspaces:
       </Typography>
       <Grid container spacing={2}>
         {workspaceList.map((workspace) => {
           return (
-            <Grid item
-              xs={12/1} 
-              sm={12/2} 
-              md={12/3} 
-              lg={12/4}
-              xl={12/5}
+            <Grid
+              item
+              xs={12 / 1}
+              sm={12 / 2}
+              md={12 / 3}
+              lg={12 / 4}
+              xl={12 / 5}
               key={crypto.randomUUID()}
             >
-              <Card variant="outlined" sx={cardStyle} >
-                <Workspace
-                  workspace_id={workspace._id}
+              <Card variant="outlined" sx={cardStyle}>
+                <WorkspaceCard
+                  workspaceId={workspace._id}
                   name={workspace.name}
                   domain={workspace.domain}
                   port={workspace.port}
+                  metricsPort={workspace.metrics_port}
                   deleteWorkspace={deleteWorkspaceById}
                 />
               </Card>
             </Grid>
           );
         })}
-        <Grid item
-          xs={12/1} 
-          sm={12/2} 
-          md={12/3} 
-          lg={12/4}
-          xl={12/5}>
+        <Grid item xs={12 / 1} sm={12 / 2} md={12 / 3} lg={12 / 4} xl={12 / 5}>
           <Card
             variant="outlined"
-            sx={cardStyle}
+            sx={{
+              ...cardStyle,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
             onClick={() => setShowNewWorkspacePopUp(true)}
           >
-            <span
-              style={{
-                alignSelf: "center",
-                justify: "center"
-              }}
-            >
-              +
-            </span>
+            <Add />
             {showNewWorkspacePopUp && newWorkspaceForm}
           </Card>
         </Grid>

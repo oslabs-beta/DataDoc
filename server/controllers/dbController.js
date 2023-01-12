@@ -34,7 +34,7 @@ dbController.getRespTimeLineData = (req, res, next) => {
   const fluxQuery = `
     from(bucket: "dev-bucket")
     |> range(start: -${range})
-    |> filter(fn: (r) => r["_measurement"] == "monitoring")
+    |> filter(fn: (r) => r["_measurement"] == "monitoring${req.query?.workspaceId ? '_' + req.query.workspaceId : ''}")
     |> filter(fn: (r) => r["_field"] == "res_time")
     |> filter(fn: (r) => r["method"] == "${req.query.method}")
     |> filter(fn: (r) => r["path"] == "${req.query.path}")
@@ -66,7 +66,7 @@ dbController.getRespTimeHistData = (req, res, next) => {
   const fluxQuery = `
     from(bucket: "dev-bucket")
     |> range(start: -${range})
-    |> filter(fn: (r) => r["_measurement"] == "monitoring")
+    |> filter(fn: (r) => r["_measurement"] == "monitoring${req.query?.workspaceId ? '_' + req.query.workspaceId : ''}")
     |> filter(fn: (r) => r["_field"] == "res_time")
     |> filter(fn: (r) => r["method"] == "${req.query.method}")
     |> filter(fn: (r) => r["path"] == "${req.query.path}")
@@ -110,7 +110,7 @@ dbController.getReqFreqLineData = (req, res, next) => {
   const fluxQuery = `
     from(bucket: "dev-bucket")
     |> range(start: -${range})
-    |> filter(fn: (r) => r["_measurement"] == "monitoring")
+    |> filter(fn: (r) => r["_measurement"] == "monitoring${req.query?.workspaceId ? '_' + req.query.workspaceId : ''}")
     |> filter(fn: (r) => r["_field"] == "res_time")
     |> filter(fn: (r) => r["method"] == "${req.query.method}")
     |> filter(fn: (r) => r["path"] == "${req.query.path}")
@@ -142,7 +142,7 @@ dbController.getStatusPieData = (req, res, next) => {
   const influxQuery = `
     from(bucket: "dev-bucket") 
     |> range(start: -${range})
-    |> filter(fn: (r) => r["_measurement"] == "monitoring")
+    |> filter(fn: (r) => r["_measurement"] == "monitoring${req.query?.workspaceId ? '_' + req.query.workspaceId : ''}")
     |> filter(fn: (r) => r["_field"] == "status_code")
     |> filter(fn: (r) => r["method"] == "${req.query.method}")
     |> filter(fn: (r) => r["path"] == "${req.query.path}")
