@@ -1,7 +1,8 @@
 
 import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
-import { Typography } from "@mui/material";
+import { useLocation, useNavigate } from "react-router-dom";
+import { Typography, IconButton } from "@mui/material";
+import { ChevronRight } from "@mui/icons-material";
 import WorkspaceInfo from "../components/WorkspaceInfo.jsx"
 import URITable from "../components/URITable.jsx";
 
@@ -11,6 +12,8 @@ const WorkspaceView = () => {
   const [URIList, setURIList] = useState([]);
   const [isMonitoring, setIsMonitoring] = useState();
   const [metricsPort, setMetricsPort] = useState(location.state.metricsPort);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetch(`${process.env.SERVER_URL}/monitoring/${workspaceId}`)
@@ -37,7 +40,6 @@ const WorkspaceView = () => {
   }
 
   const getURIListFromServer = (metricsPortArg) => {
-    console.log(`http://localhost:${process.env.PORT}/routes/server?metricsPort=${metricsPortArg}`)
     fetch(
       `http://localhost:${process.env.PORT}/routes/server?metricsPort=${metricsPortArg}`
     )
@@ -77,7 +79,8 @@ const WorkspaceView = () => {
   };
 
   const updateTrackingInDatabaseById = async (updatedEndpoint) => {
-    // console.log("updateTrackingInDatabaseById")
+    console.table(updatedEndpoint)
+    console.log(updatedEndpoint)
     fetch(`http://localhost:9990/endpoints/${updatedEndpoint._id}`, {
       method: `PUT`,
       headers: { "Content-Type": "application/json" },
@@ -93,23 +96,18 @@ const WorkspaceView = () => {
     return;
   };
 
-  const updateTrackingInDatabaseByRoute = async (updatedEndpoint) => {
-    // console.log("updateTrackingInDatabaseById")
-    fetch(`http://localhost:9990/endpoints2`, {
-      method: `PUT`,
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(updatedEndpoint)
-    }).then((serverResponse) => {
-      if (serverResponse.ok) {
-        // const updatedURIList = URIList.map((URI) => {
-        //   return URI._id === updatedEndpoint._id ? updatedEndpoint : URI;
-        // });
-        // setURIList(updatedURIList);
-        getURIListFromDatabase(workspaceId)
-      }
-    });
-    return;
-  };
+  // const updateTrackingInDatabaseByRoute = async (updatedEndpoint) => {
+  //   fetch(`http://localhost:9990/endpoints2`, {
+  //     method: `PUT`,
+  //     headers: { "Content-Type": "application/json" },
+  //     body: JSON.stringify(updatedEndpoint)
+  //   }).then((serverResponse) => {
+  //     if (serverResponse.ok) {
+  //       getURIListFromDatabase(workspaceId)
+  //     }
+  //   });
+  //   return;
+  // };
 
   const refreshURIList = async (workspaceId = workspaceId, metricsPort = metricsPort) => {
     console.log(`${process.env.SERVER_URL}/routes/server?workspaceId=${workspaceId}&metricsPort=${metricsPort}`);
@@ -149,11 +147,28 @@ const WorkspaceView = () => {
             _tracking: URI.tracking, // hidden column
             path: URI.path,
             method: URI.method,
-            status_code: URI.statusCode || "N/A"
+            status_code: URI.statusCode || "N/A",
+            simulation: 
+              <IconButton
+                onClick={() => {
+                  navigate(`/development/${crypto.randomUUID()}`, {
+                    state: {
+                      method: URI.method,
+                      path: URI.path,
+                    }
+                  })
+                }}
+              >
+                <ChevronRight />
+              </IconButton>
           };
         })}
+        // (<Link to={`/development/${id}`} state={{
+        //   method: method,
+        //   path: path
+        // }} id={id} method={method} path={path}><button>CLICK ME</button></Link>)
         updateTrackingInDatabaseById={updateTrackingInDatabaseById}
-        updateTrackingInDatabaseByRoute={updateTrackingInDatabaseByRoute}
+        // updateTrackingInDatabaseByRoute={updateTrackingInDatabaseByRoute}
         getURIListFromServer={getURIListFromServer}
         refreshURIList={refreshURIList}
       />
