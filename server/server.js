@@ -57,6 +57,7 @@ const scrapeDataFromMetricsServer = async (metricsPort, tableName) => {
         method: "DELETE"
       })
     ).json();
+    console.log(`Storing to ${logs.length} entries to ${tableName}`)
     storeLogsToDatabase(logs, tableName);
     return logs;
   } catch (e) {
@@ -239,7 +240,11 @@ app.post("/simulation", async (req, res) => {
   if (!stop) {
     rpswithInterval(domain, port, path, method, RPS, timeInterval);
     scrapeDataFromMetricsServer(metricsPort, `simulation_${workspaceId}`);
-  } else clearInterval(intervalId);
+  } else {
+    clearInterval(intervalId)
+    console.log("Scraping...");
+    scrapeDataFromMetricsServer(metricsPort, `simulation_${workspaceId}`)
+  };
   console.log("PING RESULT DONE");
   return res.sendStatus(200);
 });

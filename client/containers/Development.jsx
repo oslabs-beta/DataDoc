@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Box, Slider, Typography, Button } from "@mui/material";
+import { Box, Slider, Typography, Button, ButtonGroup } from "@mui/material";
 import { useLocation } from "react-router-dom";
 
 const Development = (props) => {
@@ -10,7 +10,8 @@ const Development = (props) => {
   });
 
   const location = useLocation();
-  const { domain, port, path, method, metricsPort, workspaceId } = location.state;
+  const { domain, port, path, method, metricsPort, workspaceId } =
+    location.state;
 
   function valuetext(value) {
     return `${value}`;
@@ -32,15 +33,17 @@ const Development = (props) => {
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({ ...settings, 
+      body: JSON.stringify({
+        ...settings,
         domain,
         port,
         path,
         method,
+        mode: "simulation",
         metricsPort,
         workspaceId,
-        stop: false,
-       })
+        stop: false
+      })
     })
       .then((res) => res.json())
       .then((data) => {
@@ -60,7 +63,14 @@ const Development = (props) => {
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({ ...settings, path: path, stop: true })
+      body: JSON.stringify({
+        ...settings,
+        path: path,
+        stop: true,
+        metricsPort,
+        mode: "simulation",
+        workspaceId,
+      })
     })
       .then((res) => res.json())
       .then((data) => {
@@ -84,6 +94,7 @@ const Development = (props) => {
         </Typography>
         <Slider
           aria-label="Temperature"
+          color="secondary"
           defaultValue={30}
           getAriaValueText={valuetext}
           valueLabelDisplay="auto"
@@ -100,6 +111,7 @@ const Development = (props) => {
         </Typography>
         <Slider
           aria-label="Temperature"
+          color="secondary"
           defaultValue={30}
           getAriaValueText={valuetext}
           // style={{ width: 500, marginLeft: 300}}
@@ -116,6 +128,7 @@ const Development = (props) => {
         </Typography>
         <Slider
           aria-label="Temperature"
+          color="secondary"
           defaultValue={30}
           getAriaValueText={valuetext}
           // style={{ width: 500, marginLeft: 300}}
@@ -128,13 +141,35 @@ const Development = (props) => {
           onChange={(e) => handleChange(e, "setTime")}
         />
 
-        <Button variant="contained" onClick={handleTesting}>
-          START TESTING
-        </Button>
-        <br />
-        <Button variant="outlined" color="secondary" onClick={handleStop}>
-          STOP
-        </Button>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center"
+          }}
+        >
+          <ButtonGroup>
+            <Button
+              variant="contained"
+              onClick={handleTesting}
+              sx={{
+                width: 110
+              }}
+            >
+              START TESTING
+            </Button>
+            <Button
+              variant="outlined"
+              color="secondary"
+              onClick={handleStop}
+              sx={{
+                width: 120
+              }}
+            >
+              STOP
+            </Button>
+          </ButtonGroup>
+        </Box>
       </Box>
     </div>
   );
