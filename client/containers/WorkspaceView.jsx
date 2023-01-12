@@ -79,8 +79,6 @@ const WorkspaceView = () => {
   };
 
   const updateTrackingInDatabaseById = async (updatedEndpoint) => {
-    console.table(updatedEndpoint)
-    console.log(updatedEndpoint)
     fetch(`http://localhost:9990/endpoints/${updatedEndpoint._id}`, {
       method: `PUT`,
       headers: { "Content-Type": "application/json" },
@@ -110,7 +108,6 @@ const WorkspaceView = () => {
   // };
 
   const refreshURIList = async (workspaceId = workspaceId, metricsPort = metricsPort) => {
-    console.log(`${process.env.SERVER_URL}/routes/server?workspaceId=${workspaceId}&metricsPort=${metricsPort}`);
     const response = await fetch(`${process.env.SERVER_URL}/routes/server?workspaceId=${workspaceId}&metricsPort=${metricsPort}`, {
       method: "PUT",
       headers: {
@@ -153,8 +150,12 @@ const WorkspaceView = () => {
                 onClick={() => {
                   navigate(`/development/${crypto.randomUUID()}`, {
                     state: {
-                      method: URI.method,
+                      workspaceId,
+                      domain,
+                      port,
+                      metricsPort,
                       path: URI.path,
+                      method: URI.method,
                     }
                   })
                 }}
