@@ -45,7 +45,7 @@ const WorkspaceCard = (props) => {
           <Button 
             variant="outlined"
             color="customRed"
-            onClick={() => deleteWorkspace(workspace_id)}
+            onClick={() => deleteWorkspace(workspaceId)}
           >
             Delete
           </Button>

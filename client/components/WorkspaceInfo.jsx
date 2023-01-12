@@ -82,7 +82,7 @@ const WorkspaceInfo = (props) => {
         metricsPort,
         mode: "monitoring",
         port,
-        verbose: true,
+        verbose: false,
         workspaceId
       })
     })
@@ -109,7 +109,7 @@ const WorkspaceInfo = (props) => {
       },
       body: JSON.stringify({
         active: false,
-        verbose: true,
+        verbose: false,
         workspaceId
       })
     })

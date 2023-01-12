@@ -96,9 +96,11 @@ const getTrackedEndpointsByWorkspaceId = async (workspaceId) => {
 }
 
 const pingEndpoints = async (domain, port, endpoints = []) => {
+  console.log("NEW", domain, port);
+  const formattedPort = (port !== undefined && 0 < port && port < 9999) ? ':' + port : '';
   for (const endpoint of endpoints) {
     try {
-      await fetch(`http://${domain}${typeof port === "number" ? ':' + port : ''}${endpoint.path}`, {
+      await fetch(`http://${domain}${formattedPort}${endpoint.path}`, {
         method: endpoint.method,
         headers: { "Cache-Control": "no-store" }
       });
@@ -256,7 +258,6 @@ app.put("/routes/server", async (req, res, next) => {
   const { workspaceId, metricsPort } = req.body;
   try {
     res.locals.workspaceId = workspaceId;
-    console.table(req.body);
     const response = await fetch(`http://localhost:${metricsPort}/endpoints`)
     const routes = await response.json();
     let queryText = `
