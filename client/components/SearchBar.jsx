@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { Input, TextField } from "@mui/material"
+import { Search } from "@mui/icons-material"
 
 const SearchBar = (props) => {
   
@@ -12,18 +14,28 @@ const SearchBar = (props) => {
   };
 
   return (
-    <div>
+    <>
       <form action="/" method="get">
-        <input
+        <Input
           type="text"
           id="header-search"
-          placeholder="Search URI"
+          placeholder="Search for a specific endpoint"
           onChange={inputHandler}
+          endAdornment={<Search />}
+          disableUnderline={true}
+          sx={{
+            width: 240,
+            px: 2,
+            px: 1,
+            mt: 2,
+            border: "1px solid black",
+            borderRadius: 2
+          }}
           // searchInput={props.searchInput}
         />
         {/* <button type="submit">Search</button> */}
       </form>
-    </div>
+    </>
   );
 };
 

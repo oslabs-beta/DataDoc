@@ -167,7 +167,7 @@ const WorkspaceInfo = (props) => {
             textAlign: "end"
           }
         }}
-        startAdornment={<TimerOutlined></TimerOutlined>}
+        startAdornment={<TimerOutlined />}
         endAdornment={<Typography>s</Typography>}
         fullWidth={true}
         sx={{ width: 70 }}
@@ -197,7 +197,8 @@ const WorkspaceInfo = (props) => {
       {/* </form> */}
       <br></br>
       <span>
-        <label htmlFor="endpoint-search">Search for a specific endpoint:</label>
+        {/* <label htmlFor="endpoint-search">Search for a specific endpoint:</label> */}
+        <label htmlFor="endpoint-search"></label>
         <SearchBar
           id="endpoint-search"
           searchInput={searchInput}
