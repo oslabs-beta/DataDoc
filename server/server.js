@@ -12,6 +12,7 @@ const {
   PhoneNumberContext
 } = require("twilio/lib/rest/lookups/v1/phoneNumber.js");
 const pgController = require("./controllers/pgController.js");
+const { query } = require("express");
 
 const MODE = process.env.NODE_ENV || "production";
 const PORT = process.env.PORT || 9990;
@@ -238,22 +239,60 @@ app.get("/metrics", async (req, res) => {
 });
 
 app.put("/endpoints/:_id",
-  pgController.updateEndpoint,
+  pgController.updateEndpointById,
   (req, res) => {
     return res.sendStatus(204);
   }
 )
 
-app.get("/routes/server", async (req, res) => {
-  const { metricsPort } = req.query;
-  const response = await fetch(`http://localhost:${metricsPort}/endpoints`);
-  const routes = await response.json();
-  // ! TO BE REMOVED: hard code status code 200
-  routes.forEach((route) => {
-    route.status = 200;
-    route.tracking = false;
-  });
-  return res.status(200).json(routes);
+app.put("/endpoints2/",
+  pgController.updateEndpointByRoute,
+  (req, res) => {
+    return res.sendStatus(204);
+  }
+)
+
+app.put("/routes/server", async (req, res, next) => {
+  const { workspaceId, metricsPort } = req.body;
+  try {
+    res.locals.workspaceId = workspaceId;
+    console.table(req.body);
+    const response = await fetch(`http://localhost:${metricsPort}/endpoints`)
+    const routes = await response.json();
+    let queryText = `
+      DELETE
+      FROM endpoints
+      WHERE workspace_id=${workspaceId}
+    ;`;
+    routes.forEach((route) => {
+      // route.status = 200;
+      route.tracking = false;
+      queryText += `
+        INSERT INTO endpoints (method, path, tracking, workspace_id) 
+        VALUES ('${route.method}', '${route.path}', ${route.tracking}, ${workspaceId})
+        ON CONFLICT ON CONSTRAINT endpoints_uq
+        DO UPDATE SET tracking = ${route.tracking};
+      `;
+    });
+    await postgresClient.query(queryText);
+  }
+  catch (err) {
+    return console.error(err);
+  }
+  let dbResponse = [];
+  try {
+    queryText = `
+      SELECT *
+      FROM endpoints
+      WHERE workspace_id=${workspaceId}
+    ;`;
+    dbResponse = (await postgresClient.query(queryText)).rows;
+  }
+  catch (err) {
+    console.error(err);
+    return next(err);
+  }
+  return res.status(200).json(dbResponse);
 });
 
 app.get("/routes/:workspace_id", async (req, res) => {
@@ -311,6 +350,13 @@ app.delete("/workspaces", async (req, res) => {
   await postgresClient.query(queryText);
   return res.sendStatus(204);
 });
+
+app.delete("/endpoints/:workspaceId",
+  pgController.deleteEndpointsByWorkspaceId,
+  async (req, res) => {
+    return res.sendStatus(204);
+  }
+);
 
 app.listen(PORT, () => {
   console.log(

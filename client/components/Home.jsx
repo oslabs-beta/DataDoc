@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Box, Card, Container, Typography } from "@mui/material";
 import { Add } from "@mui/icons-material";
 import Grid from "@mui/material/Unstable_Grid2";
-import Workspace from "./Workspace.jsx";
+import WorkspaceCard from "./WorkspaceCard.jsx";
 import "../styles/AddWorkspace.scss";
 import { useTheme } from "@mui/material";
 import { tokens } from "../containers/theme";
@@ -188,7 +188,7 @@ const Home = (props) => {
               key={crypto.randomUUID()}
             >
               <Card variant="outlined" sx={cardStyle}>
-                <Workspace
+                <WorkspaceCard
                   workspaceId={workspace._id}
                   name={workspace.name}
                   domain={workspace.domain}

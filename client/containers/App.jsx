@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { ColorModeContext, useMode } from "./theme.js";
 
 import Home from "../components/Home.jsx";
-import Workspace from "../components/Workspace.jsx";
+import WorkspaceCard from "../components/WorkspaceCard.jsx";
 import WorkspaceView from "./WorkspaceView.jsx";
 import Settings from "../components/Settings.jsx";
 import URI from "../components/URI.jsx";
@@ -156,8 +156,8 @@ const App = () => {
                   <main>
                     <Routes>
                       <Route path="/" element={<Home />} />
-                      <Route path="/urilist/:id" element={<WorkspaceInfo />} />
-                      <Route path="/workspace/:workspace_id" element={<WorkspaceView />} />
+                      {/* <Route path="/urilist/:id" element={<WorkspaceInfo />} /> */}
+                      <Route path="/workspace/:workspaceId" element={<WorkspaceView />} />
                       <Route path="/uri" element={<URI />} />
                       <Route path="/uri/:id" element={<Dashboard />} />
                       <Route path="/dashboard/:id" element={<Dashboard />} />

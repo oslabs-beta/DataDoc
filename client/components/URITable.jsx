@@ -141,7 +141,7 @@ DataTableHead.propTypes = {
 };
 
 function DataTableToolbar(props) {
-  const { numSelected, getURIListFromServer, metricsPort } = props;
+  const { numSelected, getURIListFromServer, metricsPort, refreshURIList, workspaceId } = props;
 
   return (
     <Toolbar
@@ -188,8 +188,8 @@ function DataTableToolbar(props) {
         <Tooltip title="Refresh List">
           <IconButton
             onClick={() => {
-              console.log(props.metricsPort);
-              getURIListFromServer(props.metricsPort)
+              // getURIListFromServer(props.metricsPort)
+              refreshURIList(workspaceId, metricsPort);
             }}
           >
             <Refresh />
@@ -207,7 +207,7 @@ DataTableToolbar.propTypes = {
 
 export default function URITable(props) {
 
-  const { workspaceId, rows, metricsPort,getURIListFromServer, updateTrackingInDatabaseById } = props;
+  const { workspaceId, rows, metricsPort,getURIListFromServer, updateTrackingInDatabaseById, refreshURIList } = props;
 
   const headCells = generateHeadCells(rows);
 
@@ -281,6 +281,8 @@ export default function URITable(props) {
           numSelected={selected.length} 
           getURIListFromServer={getURIListFromServer}
           metricsPort={metricsPort}
+          refreshURIList={refreshURIList}
+          workspaceId={workspaceId}
         />
         <TableContainer>
           <Table
@@ -324,7 +326,17 @@ export default function URITable(props) {
                           }}
                           onClick={() => {
                             row.tracking = ! row._tracking
-                            updateTrackingInDatabaseById(row)
+                            try {
+                              updateTrackingInDatabaseById(row)
+                            } catch (err1) {
+                              console.error(err1);
+                              try {
+                                updateTrackingInDatabaseByRoute(row)
+                              }
+                              catch (err2) {
+                                console.error(err2);
+                              }
+                            }
                           }}
                         />
                       </TableCell>

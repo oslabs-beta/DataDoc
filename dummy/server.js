@@ -40,10 +40,10 @@ app.get("/slow", ourModule.registerEndpoint, (req, res) => {
   setTimeout(() => res.status(statusCode).send("slow"), artificialDelay);
 });
 
-app.listen(3000, () => {
+app.listen(3001, () => {
   console.log(`Target server started on port ${PORT}`);
 
   // ourModule.exportEndpoints(app);
   ourModule.exportAllEndpoints(app);
-  ourModule.startMetricsServer(9991);
+  ourModule.startMetricsServer(9992);
 });

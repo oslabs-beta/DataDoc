@@ -26,6 +26,16 @@ const WorkspaceView = () => {
     getURIListFromDatabase(workspaceId);
   }, [workspaceId]);
 
+  const addURIListToDatabase = async (workspaceId, URIList = URIList) => {
+    await fetch(`${process.env.SERVER_URL}/routes/${workspaceId}`, {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(URIList),
+    })
+  }
+
   const getURIListFromServer = (metricsPortArg) => {
     console.log(`http://localhost:${process.env.PORT}/routes/server?metricsPort=${metricsPortArg}`)
     fetch(
@@ -55,6 +65,17 @@ const WorkspaceView = () => {
       });
   };
 
+  const deleteURIListFromDatabase = (workspaceId) => {
+    fetch(`http://localhost:${process.env.PORT}/endpoints/${workspaceId}`, {
+      method: 'DELETE',
+    })
+    .catch((err) => {
+      setErrorMessage("Invalid db DELETE request for the URI List");
+      // * reset the error message
+      setTimeout(() => setErrorMessage(""), 5000);
+    });
+  };
+
   const updateTrackingInDatabaseById = async (updatedEndpoint) => {
     // console.log("updateTrackingInDatabaseById")
     fetch(`http://localhost:9990/endpoints/${updatedEndpoint._id}`, {
@@ -71,6 +92,40 @@ const WorkspaceView = () => {
     });
     return;
   };
+
+  const updateTrackingInDatabaseByRoute = async (updatedEndpoint) => {
+    // console.log("updateTrackingInDatabaseById")
+    fetch(`http://localhost:9990/endpoints2`, {
+      method: `PUT`,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(updatedEndpoint)
+    }).then((serverResponse) => {
+      if (serverResponse.ok) {
+        // const updatedURIList = URIList.map((URI) => {
+        //   return URI._id === updatedEndpoint._id ? updatedEndpoint : URI;
+        // });
+        // setURIList(updatedURIList);
+        getURIListFromDatabase(workspaceId)
+      }
+    });
+    return;
+  };
+
+  const refreshURIList = async (workspaceId = workspaceId, metricsPort = metricsPort) => {
+    console.log(`${process.env.SERVER_URL}/routes/server?workspaceId=${workspaceId}&metricsPort=${metricsPort}`);
+    const response = await fetch(`${process.env.SERVER_URL}/routes/server?workspaceId=${workspaceId}&metricsPort=${metricsPort}`, {
+      method: "PUT",
+      headers: {
+        "Content-type": "application/json"
+      },
+      body: JSON.stringify({
+        metricsPort,
+        workspaceId,
+      })
+    })
+    const data = await response.json();
+    setURIList(data);
+  }
 
   return (
     <>
@@ -98,7 +153,9 @@ const WorkspaceView = () => {
           };
         })}
         updateTrackingInDatabaseById={updateTrackingInDatabaseById}
+        updateTrackingInDatabaseByRoute={updateTrackingInDatabaseByRoute}
         getURIListFromServer={getURIListFromServer}
+        refreshURIList={refreshURIList}
       />
     </>
   );

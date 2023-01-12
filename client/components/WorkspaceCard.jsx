@@ -4,7 +4,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/WorkspaceBox.scss";
 
-const Workspace = (props) => {
+const WorkspaceCard = (props) => {
   const { workspaceId, name, domain, port, metricsPort, deleteWorkspace } = props;
   const theme = useTheme();
   const navigate = useNavigate();
@@ -55,4 +55,4 @@ const Workspace = (props) => {
   );
 };
 
-export default Workspace;
+export default WorkspaceCard;
