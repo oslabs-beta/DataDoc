@@ -326,12 +326,18 @@ export default function URITable(props) {
                           }}
                           onClick={() => {
                             row.tracking = ! row._tracking
+                            const newRow = Object.assign({}, {
+                              method: row.method,
+                              path: row.path,
+                              tracking: row.tracking,
+                              _id: row._id,
+                            })
                             try {
-                              updateTrackingInDatabaseById(row)
+                              updateTrackingInDatabaseById(newRow)
                             } catch (err1) {
                               console.error(err1);
                               try {
-                                updateTrackingInDatabaseByRoute(row)
+                                updateTrackingInDatabaseByRoute(newRow)
                               }
                               catch (err2) {
                                 console.error(err2);

@@ -4,7 +4,8 @@ const app = express();
 const apiRouter = require("./api.js");
 const ourModule = require("express-endpoints-monitor");
 
-const PORT = process.env.PORT || 3000;
+const PORT = 3000;
+const METRICS_PORT = 9991;
 
 app.use(express.json());
 app.use(ourModule.gatherMetrics);
@@ -40,10 +41,10 @@ app.get("/slow", ourModule.registerEndpoint, (req, res) => {
   setTimeout(() => res.status(statusCode).send("slow"), artificialDelay);
 });
 
-app.listen(3001, () => {
+app.listen(PORT, () => {
   console.log(`Target server started on port ${PORT}`);
-
+  
   // ourModule.exportEndpoints(app);
   ourModule.exportAllEndpoints(app);
-  ourModule.startMetricsServer(9992);
+  ourModule.startMetricsServer(METRICS_PORT);
 });
