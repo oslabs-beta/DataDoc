@@ -96,7 +96,6 @@ const getTrackedEndpointsByWorkspaceId = async (workspaceId) => {
 }
 
 const pingEndpoints = async (domain, port, endpoints = []) => {
-  console.log("NEW", domain, port);
   const formattedPort = (port !== undefined && 0 < port && port < 9999) ? ':' + port : '';
   for (const endpoint of endpoints) {
     try {
@@ -148,7 +147,7 @@ app.post("/monitoring", async (req, res) => {
     if (trackedWorkspaces[workspaceId].intervalId) clearInterval(intervalId);
     const start = new Date();
     const endpoints = await getTrackedEndpointsByWorkspaceId(workspaceId) || [];
-    Object.assign(trackedWorkspaces[workspaceId], {
+    trackedWorkspaces[workspaceId] = Object.assign(trackedWorkspaces[workspaceId] ? trackedWorkspaces[workspaceId] : {}, {
       active,
       interval,
       intervalId: setInterval(() => {
@@ -177,7 +176,7 @@ app.post("/monitoring", async (req, res) => {
       clearInterval(trackedWorkspaces[workspaceId]?.intervalId)
       trackedWorkspaces[workspaceId].active = false;
     }
-    Object.assign(trackedWorkspaces[workspaceId], {
+    trackedWorkspaces[workspaceId] = Object.assign(trackedWorkspaces[workspaceId] ? trackedWorkspaces[workspaceId] : {}, {
       active,
       intervalId: null,
       endpoints: [],

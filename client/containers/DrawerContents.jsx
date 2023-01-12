@@ -33,7 +33,7 @@ const DrawerContents = (props) => {
 
   return (
     <List>
-      <ListItem disablePadding sx={{ display: "block" }}>
+      <ListItem disablePadding sx={{ display: "block", ml: -0.5 }}>
         <ListItemButton onClick={() => navigate("/")}>
           <Avatar
             sx={{
@@ -71,7 +71,9 @@ const DrawerContents = (props) => {
                   state: {
                     workspaceId: workspace._id,
                     name: workspace.name,
-                    domain: workspace.domain
+                    domain: workspace.domain,
+                    port: workspace.port,
+                    metricsPort: workspace.metrics_port
                   }
                 });
               }}
@@ -102,7 +104,7 @@ const DrawerContents = (props) => {
           </ListItem>
         );
       })}
-      <ListItem disablePadding sx={{ display: "block" }}>
+      <ListItem disablePadding sx={{ display: "block", ml: -0.5 }}>
         <ListItemButton
           onClick={() => {
             if (showSettingsPopup) setShowSettingsPopup(false);

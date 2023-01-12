@@ -82,7 +82,7 @@ const WorkspaceInfo = (props) => {
         metricsPort,
         mode: "monitoring",
         port,
-        verbose: false,
+        verbose: true,
         workspaceId
       })
     })
@@ -109,7 +109,7 @@ const WorkspaceInfo = (props) => {
       },
       body: JSON.stringify({
         active: false,
-        verbose: false,
+        verbose: true,
         workspaceId
       })
     })
@@ -131,15 +131,12 @@ const WorkspaceInfo = (props) => {
       <Typography variant="h2" fontWeight={700}>
         {name}
       </Typography>
-      <Typography variant="h2" fontWeight={700}>
-        {domain}
+      <Typography variant="h4" fontWeight={700}>
+        {domain}{((port !== undefined && typeof port === "number") ? ':' + port : '')}
       </Typography>
-      <Typography variant="h2" fontWeight={700}>
-        {port}
-      </Typography>
-      <Typography variant="h2" fontWeight={700}>
+      {/* <Typography variant="h2" fontWeight={700}>
         {metricsPort}
-      </Typography>
+      </Typography> */}
       {/* <Input 
         type="text" 
         variant="outlined" 
@@ -212,7 +209,7 @@ const WorkspaceInfo = (props) => {
         {errorMessage !== "" ? (
           <FlashError errorMessage={errorMessage} />
         ) : null}
-        <form>
+        {/* <form>
           <input
             placeholder="Metrics server port"
             type="number"
@@ -229,7 +226,7 @@ const WorkspaceInfo = (props) => {
           >
             Refresh
           </button>
-        </form>
+        </form> */}
         {/* <table>
           <thead>
             <tr>
