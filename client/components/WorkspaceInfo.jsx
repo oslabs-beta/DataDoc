@@ -178,17 +178,29 @@ const WorkspaceInfo = (props) => {
       <br></br>
       <ButtonGroup variant="contained" color="secondary">
         <Button
+          disabled={isMonitoring}
           onClick={handleStartMonitoringClick}
           sx={{
             opacity: isMonitoring ? 0.6 : 1,
+            width: isMonitoring ? 40 : 60,
+            transition: "0.25s",
+            ":hover": {
+              "transform": "scale(1.05)",
+            }
           }}
         >
           <PlayArrow />
         </Button>
         <Button
+          disabled={!isMonitoring}
           onClick={handleStopMonitoringClick}
           sx={{
             opacity: isMonitoring ? 1 : 0.6,
+            width: isMonitoring ? 60 : 40,
+            transition: "0.25s",
+            ":hover": {
+              "transform": "scale(1.05)",
+            }
           }}
         >
           <Stop />

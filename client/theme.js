@@ -147,7 +147,7 @@ export const themeSettings = (mode) => {
               main: colors.primary[500],
             },
             secondary: {
-              main: colors.greenAccent[500],
+              main: colors.greenAccent[600],
             },
             neutral: {
               dark: colors.grey[700],
@@ -159,6 +159,9 @@ export const themeSettings = (mode) => {
             },
             customRed: {
               main: "rgb(255, 64, 64)"
+            },
+            disabled: {
+              main: colors.grey[700],
             },
           }
         : {
@@ -179,6 +182,9 @@ export const themeSettings = (mode) => {
             },
             customRed: {
               main: "#FF0000"
+            },
+            disabled: {
+              main: colors.grey[800],
             },
           }),
     },
