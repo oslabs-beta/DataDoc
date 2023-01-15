@@ -125,28 +125,12 @@ const WorkspaceInfo = (props) => {
       mb={2}
     >
       <Typography variant="h2" fontWeight={700}>
+        {name}
       </Typography>
       <Typography variant="h4" fontWeight={700}>
         {domain}{((port !== undefined && typeof port === "number") ? ':' + port : '')}
       </Typography>
-      {/* <Typography variant="h2" fontWeight={700}>
-        {metricsPort}
-      </Typography> */}
-      {/* <Input 
-        type="text" 
-        variant="outlined" 
-        inputProps={{
-          value: name,
-          style: {
-            disableUnderline: true,
-            fontWeight: 700,
-          }
-        }} 
-      /> */}
-      {/* <form className="monitoring" > */}
-      <label htmlFor="ping-interval">
-        <Typography variant="h5">Monitoring Frequency</Typography>
-      </label>
+      <Typography variant="h5">Monitoring Frequency</Typography>
       <Input
         label="Ping Interval"
         variant="outlined"
@@ -165,6 +149,7 @@ const WorkspaceInfo = (props) => {
         startAdornment={<TimerOutlined />}
         endAdornment={<Typography>s</Typography>}
         fullWidth={true}
+        size="lg"
         sx={{ width: 70 }}
         onChange={(e) => {
           setPingInterval(e.target.value);

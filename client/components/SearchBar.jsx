@@ -18,7 +18,7 @@ const SearchBar = (props) => {
           endAdornment={<Search color="neutral" />}
           disableUnderline={true}
           sx={{
-            width: 240,
+            width: 300,
             px: 1,
             border: "0.5px solid",
             borderRadius: 2

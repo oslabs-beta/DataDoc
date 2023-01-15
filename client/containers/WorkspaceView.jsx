@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { IconButton } from "@mui/material";
-import { ChevronRight } from "@mui/icons-material";
+import { ChevronRight, Launch } from "@mui/icons-material";
 import WorkspaceInfo from "../components/WorkspaceInfo.jsx"
 import URITable from "../components/URITable.jsx";
 
@@ -161,8 +161,21 @@ const WorkspaceView = () => {
                     }
                   })
                 }}
-              >
-                <ChevronRight />
+                >
+                <ChevronRight 
+                  color="neutral"
+                />
+              </IconButton>,
+            open: 
+              <IconButton
+                onClick={() => {
+                  const url = `http://${domain}${typeof port === "number" ? ':' + port : ""}${URI.path}`
+                  window.open(url);
+                }}
+                >
+                <Launch 
+                  color="neutral"
+                />
               </IconButton>
           };
         })}
