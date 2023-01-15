@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { alpha } from "@mui/material/styles";
 import {
@@ -23,6 +23,7 @@ import {
 import { Delete, FilterList, Sync as Refresh } from "@mui/icons-material";
 import { visuallyHidden } from "@mui/utils";
 import { useNavigate } from "react-router-dom";
+import SearchBar from "./SearchBar.jsx"
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -141,7 +142,7 @@ DataTableHead.propTypes = {
 };
 
 function DataTableToolbar(props) {
-  const { numSelected, getURIListFromServer, metricsPort, refreshURIList, workspaceId } = props;
+  const { numSelected, metricsPort, refreshURIList, workspaceId, searchQuery, setSearchQuery, handleSearchChange } = props;
 
   return (
     <Toolbar
@@ -167,25 +168,27 @@ function DataTableToolbar(props) {
           {numSelected} selected
         </Typography>
       ) : (
-        <Typography
-          sx={{ flex: "1 1 100%" }}
-          variant="h6"
-          id="tableTitle"
-          component="div"
+        <Box 
+          sx={{
+            width: "100%",
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
         >
-          Endpoints
-        </Typography>
-      )}
-
-      {numSelected > 0 ? (
-        <Tooltip title="Delete">
-          <IconButton>
-            <Delete />
-          </IconButton>
-        </Tooltip>
-      ) : (
-        <>
-        <Tooltip title="Refresh List">
+          <Typography
+            variant="h6"
+            id="tableTitle"
+            component="div"
+          >
+            Endpoints
+          </Typography>
+          <SearchBar
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+            handleSearchChange={handleSearchChange}
+          />
+          <Tooltip title="Refresh List">
           <IconButton
             onClick={() => {
               // getURIListFromServer(props.metricsPort)
@@ -195,8 +198,20 @@ function DataTableToolbar(props) {
             <Refresh />
           </IconButton>
         </Tooltip>
+        </Box>
+      )}
+      {numSelected > 0 ? (
+        <Tooltip title="Delete">
+          <IconButton>
+            <Delete />
+          </IconButton>
+        </Tooltip>
+      ) : (
+        <>
+        
         </>
       )}
+
     </Toolbar>
   );
 }
@@ -220,11 +235,41 @@ export default function URITable(props) {
 
   const headCells = generateHeadCells(rows);
 
+  const [searchQuery, setSearchQuery] = useState("")
+  const [filteredRows, setFilteredRows] = useState(rows);
+
+  const handleSearchChange = (event) => {
+    setSearchQuery(event.target.value);
+  }
+
+  useEffect(() => {
+    setFilteredRows(rows);
+    console.table(rows)
+  }, [])
+
+  useEffect(() => {
+    setFilteredRows(
+      searchQuery.length === 0 ? 
+      rows
+      :
+      rows.filter((row) => {
+        return (
+          Object.keys(row || {})
+          .filter(key => key[0] !== '_')
+          .some(column => searchQuery.length === 0 || row[column].toString().includes(searchQuery.toLowerCase()))
+        )
+      })
+    )
+    console.log(searchQuery)
+    console.table(filteredRows);
+    console.table(rows);
+  }, [searchQuery])
+
   const navigate = useNavigate();
   
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("path");
-  const [selected, setSelected] = React.useState(rows.filter((row) => row.tracking));
+  const [selected, setSelected] = React.useState(filteredRows.filter((row) => row.tracking));
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(true);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -237,7 +282,7 @@ export default function URITable(props) {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelected = rows.map((n) => n.name);
+      const newSelected = filteredRows.map((n) => n.name);
       setSelected(newSelected);
       return;
     }
@@ -281,7 +326,7 @@ export default function URITable(props) {
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - filteredRows.length) : 0;
 
   return (
     <Box sx={{ width: "100%" }}>
@@ -292,6 +337,9 @@ export default function URITable(props) {
           metricsPort={metricsPort}
           refreshURIList={refreshURIList}
           workspaceId={workspaceId}
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          handleSearchChange={handleSearchChange}
         />
         <TableContainer>
           <Table
@@ -306,10 +354,10 @@ export default function URITable(props) {
               orderBy={orderBy}
               onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
-              rowCount={rows.length}
+              rowCount={filteredRows.length}
             />
             <TableBody>
-              {stableSort(rows, getComparator(order, orderBy))
+              {stableSort(filteredRows, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
                   const isItemSelected = isSelected(row.id);
@@ -398,7 +446,7 @@ export default function URITable(props) {
         <TablePagination
           rowsPerPageOptions={[10, 20, 40]}
           component="div"
-          count={rows.length}
+          count={filteredRows.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}

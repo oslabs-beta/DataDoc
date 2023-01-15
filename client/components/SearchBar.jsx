@@ -4,14 +4,7 @@ import { Search } from "@mui/icons-material"
 
 const SearchBar = (props) => {
   
-  // const [searchInput, setSearch] = useState('');
-
-  const inputHandler = (e) => {
-    // * convert input text to lower case
-    // console.log("input handler TRIGGERED", e)
-    var lowerCase = e.target.value.toLowerCase();
-    props.setSearch(lowerCase);
-  };
+  const { handleSearchChange } = props;
 
   return (
     <>
@@ -19,21 +12,18 @@ const SearchBar = (props) => {
         <Input
           type="text"
           id="header-search"
+          onChange={handleSearchChange}
           placeholder="Search for a specific endpoint"
-          onChange={inputHandler}
-          endAdornment={<Search />}
+          color="neutral"
+          endAdornment={<Search color="neutral" />}
           disableUnderline={true}
           sx={{
             width: 240,
-            px: 2,
             px: 1,
-            mt: 2,
-            border: "1px solid black",
+            border: "0.5px solid",
             borderRadius: 2
           }}
-          // searchInput={props.searchInput}
         />
-        {/* <button type="submit">Search</button> */}
       </form>
     </>
   );

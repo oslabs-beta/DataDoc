@@ -1,18 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { PlayArrow, Stop, TimerOutlined } from "@mui/icons-material";
 import {
   Box,
   Button,
   ButtonGroup,
-  Input,
-  InputBase,
-  Typography
+  Input, Typography
 } from "@mui/material";
-import { PlayArrow, Stop, TimerOutlined } from "@mui/icons-material";
-import URI from "./URI.jsx";
+import React, { useState } from "react";
 import FlashError from "./FlashError.jsx";
-import SearchBar from "./SearchBar.jsx";
-import { flexbox } from "@mui/system";
 
 const WorkspaceInfo = (props) => {
   const {
@@ -127,9 +121,10 @@ const WorkspaceInfo = (props) => {
   };
 
   return (
-    <>
+    <Box
+      mb={2}
+    >
       <Typography variant="h2" fontWeight={700}>
-        {name}
       </Typography>
       <Typography variant="h4" fontWeight={700}>
         {domain}{((port !== undefined && typeof port === "number") ? ':' + port : '')}
@@ -208,16 +203,6 @@ const WorkspaceInfo = (props) => {
       </ButtonGroup>
       {/* </form> */}
       <br></br>
-      <span>
-        {/* <label htmlFor="endpoint-search">Search for a specific endpoint:</label> */}
-        <label htmlFor="endpoint-search"></label>
-        <SearchBar
-          id="endpoint-search"
-          searchInput={searchInput}
-          setSearch={setSearchInput}
-        />
-      </span>
-      <br></br>
       <div className="URIEntries">
         {errorMessage !== "" ? (
           <FlashError errorMessage={errorMessage} />
@@ -273,7 +258,7 @@ const WorkspaceInfo = (props) => {
           </tbody>
         </table> */}
       </div>
-    </>
+    </Box>
   );
 };
 
