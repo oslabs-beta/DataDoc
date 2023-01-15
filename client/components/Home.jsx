@@ -211,7 +211,9 @@ const Home = (props) => {
             }}
             onClick={() => setShowNewWorkspacePopUp(true)}
           >
-            <Add />
+            <Add 
+              color="neutral"
+            />
             {showNewWorkspacePopUp && newWorkspaceForm}
           </Card>
         </Grid>

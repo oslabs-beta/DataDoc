@@ -4,7 +4,8 @@ import {
   LightModeOutlined,
   DarkModeOutlined,
   SettingsOutlined,
-  NotificationsOutlined
+  NotificationsOutlined,
+  Help
 } from "@mui/icons-material";
 import { ColorModeContext, tokens } from "../theme.js";
 import { Back, Forward } from "../components/NavButtons.jsx";
@@ -29,21 +30,42 @@ const TopBar = () => {
         width: "100%"
       }}
     >
-      <Box display="flex" width="100%" ml="-8px">
-        <Back />
-        <Forward />
-        <IconButton
-          onClick={colorMode.toggleColorMode}
+      <Box width="100%" ml="-4px" sx={{
+        alignItems: "center",
+        display: "flex",
+      }}>
+        <Box
           sx={{
+            marginRight: "auto",
+          }}
+        >
+          <Back sx={{
+          }}/>
+          <Forward />
+        </Box>
+        <Box
+          sx={{
+            display: "flex",
             marginLeft: "auto"
           }}
         >
-          {theme.palette.mode === "light" ? (
-            <DarkModeOutlined />
-          ) : (
-            <LightModeOutlined />
-          )}
-        </IconButton>
+          <IconButton>
+            <Help />
+          </IconButton>
+          <IconButton
+            onClick={colorMode.toggleColorMode}
+            ml="auto"
+            sx={{
+              // marginLeft: "auto"
+            }}
+          >
+            {theme.palette.mode === "light" ? (
+              <DarkModeOutlined />
+            ) : (
+              <LightModeOutlined />
+            )}
+          </IconButton>
+        </Box>
       </Box>
     </nav>
   );

@@ -146,7 +146,7 @@ const WorkspaceInfo = (props) => {
             textAlign: "end"
           }
         }}
-        startAdornment={<TimerOutlined />}
+        startAdornment={<TimerOutlined color="neutral" />}
         endAdornment={<Typography>s</Typography>}
         fullWidth={true}
         size="lg"
