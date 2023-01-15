@@ -1,32 +1,37 @@
 import React, { useState } from "react";
-import { useLocation } from "react-router-dom";
 
 const { SERVER_URL } = process.env;
 
 const LogTable = (props) => {
-  const location = useLocation();
-  const { method, path } = location.state;
+  const { method, path, isMonitoring } = props;
 
   let [logEntries, setLogEntries] = useState([]);
 
-  setTimeout(async () => {
-    const encodedPath = path.replaceAll("/", "%2F");
-    setLogEntries(
-      (await (await fetch(`${SERVER_URL}/logdata/?method=${method}&path=${encodedPath}`)).json())
-      .map((log) => {
-        // console.table(log);
-        return (
-          <LogEntry
-            key={crypto.randomUUID()}
-            method={method}
-            path={path}
-            timestamp={log.timestamp}
-            res_time={log.res_time}
-            status_code={log.status_code}
-          />
-        );
+  if (isMonitoring) {
+    setTimeout(async () => {
+      const encodedPath = path.replaceAll("/", "%2F");
+      setLogEntries(
+        (
+          await (
+            await fetch(
+              `${SERVER_URL}/logdata/?method=${method}&path=${encodedPath}`
+            )
+          ).json()
+        ).map((log) => {
+          return (
+            <LogEntry
+              key={crypto.randomUUID()}
+              method={method}
+              path={path}
+              timestamp={log.timestamp}
+              res_time={log.res_time}
+              status_code={log.status_code}
+            />
+          );
         })
-  )}, 2000);
+      );
+    }, 2000);
+  }
 
   return (
     <>
@@ -40,9 +45,7 @@ const LogTable = (props) => {
             <th>Status Code</th>
           </tr>
         </thead>
-        <tbody>
-          {logEntries}
-        </tbody>
+        <tbody>{logEntries}</tbody>
       </table>
     </>
   );

@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Typography, IconButton } from "@mui/material";
+import { IconButton } from "@mui/material";
 import { ChevronRight } from "@mui/icons-material";
 import WorkspaceInfo from "../components/WorkspaceInfo.jsx"
 import URITable from "../components/URITable.jsx";
@@ -138,6 +138,8 @@ const WorkspaceView = () => {
       <URITable
         workspaceId={workspaceId}
         metricsPort={metricsPort}
+        isMonitoring={isMonitoring}
+        setIsMonitoring={setIsMonitoring}
         rows={URIList.map((URI) => {
           return {
             _id: URI._id, // hidden column
@@ -164,12 +166,7 @@ const WorkspaceView = () => {
               </IconButton>
           };
         })}
-        // (<Link to={`/development/${id}`} state={{
-        //   method: method,
-        //   path: path
-        // }} id={id} method={method} path={path}><button>CLICK ME</button></Link>)
         updateTrackingInDatabaseById={updateTrackingInDatabaseById}
-        // updateTrackingInDatabaseByRoute={updateTrackingInDatabaseByRoute}
         getURIListFromServer={getURIListFromServer}
         refreshURIList={refreshURIList}
       />

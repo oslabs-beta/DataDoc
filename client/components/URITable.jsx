@@ -207,7 +207,16 @@ DataTableToolbar.propTypes = {
 
 export default function URITable(props) {
 
-  const { workspaceId, rows, metricsPort,getURIListFromServer, updateTrackingInDatabaseById, refreshURIList } = props;
+  const {
+    workspaceId,
+    rows,
+    metricsPort,
+    getURIListFromServer,
+    updateTrackingInDatabaseById,
+    refreshURIList,
+    isMonitoring,
+    setIsMonitoring
+  } = props;
 
   const headCells = generateHeadCells(rows);
 
@@ -360,6 +369,7 @@ export default function URITable(props) {
                                   endpointId: row._id,
                                   method: row.method,
                                   path: row.path,
+                                  isMonitoring,
                                 }})
                               }}
                               sx={{ cursor: "pointer" }}

@@ -7,7 +7,7 @@ import LogTable from "../components/LogTable.jsx";
 const Dashboard = (props) => {
 
   const location = useLocation();
-  const { workspaceId, endpointId, method, path } = location.state;
+  const { workspaceId, endpointId, method, path, isMonitoring, setIsMonitoring } = location.state;
   
   return (
     <>
@@ -16,8 +16,13 @@ const Dashboard = (props) => {
         endpointId={endpointId}
         method={method}
         path={path}
+        isMonitoring={isMonitoring}
+        />
+      <LogTable 
+        method={method}
+        path={path}
+        isMonitoring={isMonitoring}
       />
-      <LogTable />
     </>
   );
 };
