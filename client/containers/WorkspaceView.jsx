@@ -150,7 +150,7 @@ const WorkspaceView = () => {
             simulation: 
               <IconButton
                 onClick={() => {
-                  navigate(`/development/${crypto.randomUUID()}`, {
+                  navigate(`/simulation/${crypto.randomUUID()}`, {
                     state: {
                       workspaceId,
                       domain,

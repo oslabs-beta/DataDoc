@@ -9,7 +9,7 @@ import Settings from "../components/Settings.jsx";
 import URI from "../components/URI.jsx";
 import WorkspaceInfo from "../components/WorkspaceInfo.jsx";
 import Dashboard from "./Dashboard.jsx";
-import Development from "./Development.jsx";
+import SimulationView from "./SimulationView.jsx";
 import DrawerContents from "./DrawerContents.jsx";
 // import NavBar from "./NavBar.jsx";
 import SideBar from "./NavBar.jsx";
@@ -167,8 +167,8 @@ const App = () => {
                       <Route path="/settings" element={<Settings />} />
                       {/* <Route path="/workspaces" element={<Workspace />} /> */}
                       <Route
-                        path="/development/:id"
-                        element={<Development />}
+                        path="/simulation/:id"
+                        element={<SimulationView />}
                       />
                     </Routes>
                     <Settings

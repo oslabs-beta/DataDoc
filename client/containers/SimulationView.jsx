@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Box, Slider, Typography, Button, ButtonGroup } from "@mui/material";
 import { useLocation } from "react-router-dom";
 
-const Development = (props) => {
+const SimulationView = (props) => {
   const [settings, setSettings] = useState({
     RPS: 100,
     timeInterval: 1,
@@ -175,4 +175,4 @@ const Development = (props) => {
   );
 };
 
-export default Development;
+export default SimulationView;
