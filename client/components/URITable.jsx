@@ -168,7 +168,7 @@ function DataTableToolbar(props) {
           {numSelected} selected
         </Typography>
       ) : (
-        <Box 
+        <Box
           sx={{
             width: "100%",
             display: "inline-flex",
@@ -176,28 +176,50 @@ function DataTableToolbar(props) {
             justifyContent: "space-between",
           }}
         >
-          <Typography
-            variant="h6"
-            id="tableTitle"
-            component="div"
-          >
-            Endpoints
-          </Typography>
-          <SearchBar
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-            handleSearchChange={handleSearchChange}
-          />
-          <Tooltip title="Refresh List">
-          <IconButton
-            onClick={() => {
-              // getURIListFromServer(props.metricsPort)
-              refreshURIList(workspaceId, metricsPort);
+          <Box component="div"
+            sx={{
+              flex: 1,
+              display: "flex",
+              justifyContent: "flex-start",
             }}
           >
-            <Refresh />
-          </IconButton>
-        </Tooltip>
+            <Typography
+              variant="h6"
+              id="tableTitle"
+              component="div"
+            >
+              Endpoints
+            </Typography>
+          </Box>
+          <Box component="div"
+            sx={{
+              width: "fit-content"
+            }}
+          >
+            <SearchBar
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+              handleSearchChange={handleSearchChange}
+            />
+          </Box>
+          <Box component="div"
+            sx={{
+              flex: 1,
+              display: "flex",
+              justifyContent: "flex-end"
+            }}
+          >
+            <Tooltip title="Refresh List">
+            <IconButton
+              onClick={() => {
+                // getURIListFromServer(props.metricsPort)
+                refreshURIList(workspaceId, metricsPort);
+              }}
+            >
+              <Refresh />
+            </IconButton>
+          </Tooltip>
+        </Box>
         </Box>
       )}
       {numSelected > 0 ? (
