@@ -162,7 +162,7 @@ const Home = (props) => {
     height: "170px",
     minwidth: "60px",
     padding: "20px",
-    boxShadow: "0px 0px 8px 4px rgba(0, 0, 0, 0.04)",
+    // boxShadow: "0px 0px 8px 4px rgba(0, 0, 0, 0.02)",
     cursor: "pointer",
     backgroundColor: `${colors.secondary[100]}`
   };
