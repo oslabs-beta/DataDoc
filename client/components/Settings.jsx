@@ -54,7 +54,7 @@ const Settings = (props) => {
     });
   }
   //settings form
-  const settingsForm = (
+  const SettingsForm = () => (
     <form className="modal">
       <div className="modal-content">
         <button
@@ -116,7 +116,7 @@ const Settings = (props) => {
     </form>
   );
   return (
-    <div className="settingsContainer">{showSettingsPopup && settingsForm}</div>
+    <div className="settingsContainer">{showSettingsPopup && <SettingsForm />}</div>
   );
 };
 

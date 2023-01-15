@@ -440,10 +440,10 @@ export default function URITable(props) {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
-      <FormControlLabel
+      {/* <FormControlLabel
         control={<Switch checked={dense} onChange={handleChangeDense} color="secondary" />}
         label="Compact view"
-      />
+      /> */}
     </Box>
   );
 }
