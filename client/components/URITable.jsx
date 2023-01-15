@@ -236,40 +236,47 @@ export default function URITable(props) {
   const headCells = generateHeadCells(rows);
 
   const [searchQuery, setSearchQuery] = useState("")
-  const [filteredRows, setFilteredRows] = useState(rows);
+  // console.table(rows);
+  // const [filteredRows, setFilteredRows] = useState(rows);
+  // console.table(filteredRows);
 
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);
   }
 
-  useEffect(() => {
-    setFilteredRows(rows);
-    console.table(rows)
-  }, [])
+  const filterBySearch = (unfilteredRows, searchQuery = "") => {
+    return unfilteredRows.filter((row) => {
+      return (
+        Object.keys(row || {})
+        .filter(key => key[0] !== '_')
+        .some(column => row[column].toString().includes(searchQuery.toLowerCase()))
+      )
+    })
+  }
 
-  useEffect(() => {
-    setFilteredRows(
-      searchQuery.length === 0 ? 
-      rows
-      :
-      rows.filter((row) => {
-        return (
-          Object.keys(row || {})
-          .filter(key => key[0] !== '_')
-          .some(column => searchQuery.length === 0 || row[column].toString().includes(searchQuery.toLowerCase()))
-        )
-      })
-    )
-    console.log(searchQuery)
-    console.table(filteredRows);
-    console.table(rows);
-  }, [searchQuery])
+  // useEffect(() => {
+  //   setFilteredRows(
+  //     searchQuery.length === 0 ? 
+  //     rows
+  //     :
+  //     rows.filter((row) => {
+  //       return (
+  //         Object.keys(row || {})
+  //         .filter(key => key[0] !== '_')
+  //         .some(column => searchQuery.length === 0 || row[column].toString().includes(searchQuery.toLowerCase()))
+  //       )
+  //     })
+  //   )
+  //   console.log(searchQuery)
+  //   console.table(filteredRows);
+  //   console.table(rows);
+  // }, [searchQuery])
 
   const navigate = useNavigate();
   
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("path");
-  const [selected, setSelected] = React.useState(filteredRows.filter((row) => row.tracking));
+  const [selected, setSelected] = React.useState(rows.filter((row) => row.tracking));
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(true);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -282,7 +289,7 @@ export default function URITable(props) {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelected = filteredRows.map((n) => n.name);
+      const newSelected = rows.map((n) => n.name);
       setSelected(newSelected);
       return;
     }
@@ -326,7 +333,7 @@ export default function URITable(props) {
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - filteredRows.length) : 0;
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
   return (
     <Box sx={{ width: "100%" }}>
@@ -354,10 +361,10 @@ export default function URITable(props) {
               orderBy={orderBy}
               onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
-              rowCount={filteredRows.length}
+              rowCount={rows.length}
             />
             <TableBody>
-              {stableSort(filteredRows, getComparator(order, orderBy))
+              {filterBySearch(stableSort(rows, getComparator(order, orderBy)), searchQuery)
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
                   const isItemSelected = isSelected(row.id);
@@ -408,7 +415,8 @@ export default function URITable(props) {
                         .filter(key => key[0] !== '_')
                         .map((column) => {
                           return (
-                            <TableCell key={crypto.randomUUID()}
+                            <TableCell 
+                              key={crypto.randomUUID()}
                               align="left"
                               onClick={() => {
                                 if (column === "simulation") return;
@@ -446,7 +454,7 @@ export default function URITable(props) {
         <TablePagination
           rowsPerPageOptions={[10, 20, 40]}
           component="div"
-          count={filteredRows.length}
+          count={rows.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}
