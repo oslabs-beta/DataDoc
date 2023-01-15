@@ -147,7 +147,7 @@ const WorkspaceInfo = (props) => {
           }
         }}
         startAdornment={<TimerOutlined color="neutral" />}
-        endAdornment={<Typography>s</Typography>}
+        endAdornment={<Typography variant="p" color="neutral">s</Typography>}
         fullWidth={true}
         size="lg"
         sx={{ width: 70 }}

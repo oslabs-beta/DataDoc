@@ -3,6 +3,7 @@ import { Box, IconButton, useTheme } from "@mui/material";
 import {
   LightModeOutlined,
   DarkModeOutlined,
+  Settings,
   SettingsOutlined,
   NotificationsOutlined,
   Help
@@ -49,7 +50,14 @@ const TopBar = () => {
             marginLeft: "auto"
           }}
         >
-          <IconButton>
+          <IconButton
+            onClick={() => null}
+          >
+            <Settings />
+          </IconButton>
+          <IconButton
+            onClick={() => (window.open(`https://github.com/oslabs-beta/DataDoc/blob/dev/README.md#readme`))}
+          >
             <Help />
           </IconButton>
           <IconButton
