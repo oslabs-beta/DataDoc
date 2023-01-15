@@ -244,12 +244,12 @@ export default function URITable(props) {
     setSearchQuery(event.target.value);
   }
 
-  const filterBySearch = (unfilteredRows, searchQuery = "") => {
+  const filterBySearchQuery = (unfilteredRows, searchQuery = "") => {
     return unfilteredRows.filter((row) => {
       return (
         Object.keys(row || {})
-        .filter(key => key[0] !== '_')
-        .some(column => row[column].toString().includes(searchQuery.toLowerCase()))
+        .filter(columnName => columnName[0] !== '_')
+        .some(column => row[column].toString().toLowerCase().includes(searchQuery.toLowerCase()))
       )
     })
   }
@@ -364,7 +364,7 @@ export default function URITable(props) {
               rowCount={rows.length}
             />
             <TableBody>
-              {filterBySearch(stableSort(rows, getComparator(order, orderBy)), searchQuery)
+              {filterBySearchQuery(stableSort(rows, getComparator(order, orderBy)), searchQuery)
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
                   const isItemSelected = isSelected(row.id);
