@@ -2,6 +2,8 @@
 
 DataDoc is an endpoint monitoring, detection and traffic simulation tool that provides real-time metrics and customizable alert notifications.
 
+<img src="./assets/datadoc_logo.png" alt="datadoc-logo" align="center"/>
+
 ### Table of Contents
    * [Getting Started](#getting-started)
         * [Prerequisites](#prerequisites)
