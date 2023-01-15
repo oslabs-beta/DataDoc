@@ -3,7 +3,7 @@ import { Chart as ChartJS, ArcElement, Title, Tooltip, Legend } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
 import { Card } from "@mui/material";
 import { useTheme } from "@mui/material";
-import { tokens } from "../containers/theme";
+import { tokens } from "../theme.js";
 
 const DonutChart = (props) => {
   const { id, chartData } = props;

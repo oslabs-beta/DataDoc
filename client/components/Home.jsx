@@ -5,7 +5,7 @@ import Grid from "@mui/material/Unstable_Grid2";
 import WorkspaceCard from "./WorkspaceCard.jsx";
 import "../styles/AddWorkspace.scss";
 import { useTheme } from "@mui/material";
-import { tokens } from "../containers/theme";
+import { tokens } from "../theme.js";
 
 const { SERVER_URL } = process.env;
 

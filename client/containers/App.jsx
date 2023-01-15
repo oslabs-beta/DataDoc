@@ -1,6 +1,6 @@
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { ColorModeContext, useMode } from "./theme.js";
+import { ColorModeContext, useMode } from "../theme.js";
 
 import Home from "../components/Home.jsx";
 import WorkspaceCard from "../components/WorkspaceCard.jsx";

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Card } from "@mui/material";
 import { useTheme } from "@mui/material";
-import { tokens } from "../containers/theme";
+import { tokens } from "../theme";
 
 import {
   Chart as ChartJS,

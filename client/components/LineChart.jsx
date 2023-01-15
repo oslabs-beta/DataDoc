@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Card } from "@mui/material";
 import { useTheme } from "@mui/material";
-import { tokens } from "../containers/theme";
 import "chartjs-adapter-moment";
-
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -17,6 +15,7 @@ import {
   Filler,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
+import { tokens } from "../theme.js";
 
 const LineChart = (props) => {
   const { chartData, chartTitle, chartLabel } = props;

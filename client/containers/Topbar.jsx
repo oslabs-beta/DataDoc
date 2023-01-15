@@ -6,7 +6,7 @@ import {
   SettingsOutlined,
   NotificationsOutlined
 } from "@mui/icons-material";
-import { ColorModeContext, tokens } from "./theme";
+import { ColorModeContext, tokens } from "../theme.js";
 import { Back, Forward } from "../components/NavButtons.jsx";
 
 // ! Delete when done
