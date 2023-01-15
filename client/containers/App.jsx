@@ -126,7 +126,10 @@ const App = () => {
                 >
                   <Menu />
                 </IconButton>
-                <TopBar />
+                <TopBar 
+                  showsettingspopup={showSettingsPopup}
+                  setshowsettingspopup={setShowSettingsPopup}
+                />
               </Toolbar>
             </AppBar>
             {/* <TopBar position="fixed" open={open} drawerwidth={drawerWidth} color="secondary" handledraweropen={handleDrawerOpen} /> */}

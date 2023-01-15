@@ -3,21 +3,21 @@ import { Box, IconButton, useTheme } from "@mui/material";
 import {
   LightModeOutlined,
   DarkModeOutlined,
-  Settings,
+  Settings as SettingsIcon,
   SettingsOutlined,
   NotificationsOutlined,
   Help
 } from "@mui/icons-material";
 import { ColorModeContext, tokens } from "../theme.js";
 import { Back, Forward } from "../components/NavButtons.jsx";
+import Settings from "../components/Settings.jsx";
 
 // ! Delete when done
 import { useNavigate } from "react-router-dom";
 
-const TopBar = () => {
+const TopBar = (props) => {
 
-  // !
-  const navigate = useNavigate();
+  const { showSettingsPopup, setShowSettingsPopup } = props;
 
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
@@ -51,8 +51,12 @@ const TopBar = () => {
           }}
         >
           <IconButton
-            onClick={() => null}
+            onClick={() => {
+              if (showSettingsPopup) setShowSettingsPopup(false);
+              else setShowSettingsPopup(true);
+            }}
           >
+            <SettingsIcon />
             <Settings />
           </IconButton>
           <IconButton
@@ -62,10 +66,6 @@ const TopBar = () => {
           </IconButton>
           <IconButton
             onClick={colorMode.toggleColorMode}
-            ml="auto"
-            sx={{
-              // marginLeft: "auto"
-            }}
           >
             {theme.palette.mode === "light" ? (
               <DarkModeOutlined />
