@@ -35,7 +35,7 @@ import {
   ListItemText
 } from "@mui/material";
 
-const drawerWidth = 300;
+const drawerWidth = 270;
 const openedMixin = (theme) => ({
   width: drawerWidth,
   transition: theme.transitions.create("width", {
