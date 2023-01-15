@@ -236,9 +236,6 @@ export default function URITable(props) {
   const headCells = generateHeadCells(rows);
 
   const [searchQuery, setSearchQuery] = useState("")
-  // console.table(rows);
-  // const [filteredRows, setFilteredRows] = useState(rows);
-  // console.table(filteredRows);
 
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);
@@ -253,24 +250,6 @@ export default function URITable(props) {
       )
     })
   }
-
-  // useEffect(() => {
-  //   setFilteredRows(
-  //     searchQuery.length === 0 ? 
-  //     rows
-  //     :
-  //     rows.filter((row) => {
-  //       return (
-  //         Object.keys(row || {})
-  //         .filter(key => key[0] !== '_')
-  //         .some(column => searchQuery.length === 0 || row[column].toString().includes(searchQuery.toLowerCase()))
-  //       )
-  //     })
-  //   )
-  //   console.log(searchQuery)
-  //   console.table(filteredRows);
-  //   console.table(rows);
-  // }, [searchQuery])
 
   const navigate = useNavigate();
   
