@@ -18,8 +18,6 @@ import { tokens } from "../theme.js";
 
 const LineChart = (props) => {
   const { chartData, chartTitle, chartLabel } = props;
-  // const theme = useTheme();
-  // const colors = tokens(theme.palette.mode);
 
   ChartJS.register(
     TimeScale,
@@ -70,7 +68,15 @@ const LineChart = (props) => {
       y: {
         beginAtZero: true,
         ticks: {
-          stepSize: 1,
+          stepSize: (() => {
+            if (! chartData) return 1;
+            const maxYValue = Math.max(...(chartData.map((point) => point.y)));
+            // console.table(chartData.map((point) => point.y));
+            for (const stepSize of [0.1, 1, 2, 5, 10, 50, 100, 200, 500, 1000]) {
+              console.log(`${maxYValue} / ${stepSize} = ${maxYValue/stepSize}}`);
+              if (maxYValue / stepSize < 6) return stepSize;
+            }
+          })()
         }
       }
     },

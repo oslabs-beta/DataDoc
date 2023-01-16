@@ -125,7 +125,7 @@ const ChartsContainer = (props) => {
               <LineChart
                 chartData={chartsData.reqFreqLineData || []}
                 chartTitle="Request Frequency"
-                chartLabel="Count"
+                chartLabel="Requests"
               />
             </Card>
           </Grid>
