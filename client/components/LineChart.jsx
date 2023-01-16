@@ -107,7 +107,8 @@ const LineChart = (props) => {
               options={options} 
               style={{
                 height: "100%",
-                width: "100%"
+                width: "100%",
+                cursor: "crosshair"
               }}
             />
     //       </div>
