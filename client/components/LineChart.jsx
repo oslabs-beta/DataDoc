@@ -72,7 +72,7 @@ const LineChart = (props) => {
             if (! chartData) return 1;
             const maxYValue = Math.max(...(chartData.map((point) => point.y)));
             // console.table(chartData.map((point) => point.y));
-            for (const stepSize of [0.1, 1, 2, 5, 10, 50, 100, 200, 500, 1000]) {
+            for (const stepSize of [0.1, 0.2, 0.5, 1, 2, 5, 10, 20, 50, 100, 200, 500, 1000]) {
               if (maxYValue / stepSize < 6) return stepSize;
             }
           })()

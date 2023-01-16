@@ -13,11 +13,15 @@ const Dashboard = (props) => {
     <>
       <Box
         mb={2}
+        sx={{
+          display: "inline-flex",
+          alignItems: "center",
+        }}
       >
         <Box
           component="div"
           color="secondary"
-          mr={0.5}
+          mr={0.75}
           sx={{
             display: "inline-flex",
             width: "fit-content",
@@ -29,12 +33,12 @@ const Dashboard = (props) => {
                 case "PUT": return "blue"
                 case "PATCH": return "grey"
                 case "DELETE": return "red"
-                default: return "white"
+                default: return "grey"
               }
             })(method)),
             borderRadius: 1.5,
-            px: 0.5,
-            py: 0.125,
+            px: 1,
+            py: 0.25,
           }}
         >
           <Typography variant="h5">

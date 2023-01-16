@@ -104,7 +104,7 @@ const ChartsContainer = (props) => {
           <ToggleButton value="5m" sx={toggleButtonStyle}>5m</ToggleButton>
           <ToggleButton value="30m" sx={toggleButtonStyle}>30m</ToggleButton>
         </ToggleButtonGroup>
-        <Grid container spacing={2}>
+        <Grid container spacing={2} sx={{width:"100%"}}>
           {/* {orderedGridItems} */}
           <Grid item sm={12} md={7}>
             <Card sx={cardStyle}>
