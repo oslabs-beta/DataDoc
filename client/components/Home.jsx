@@ -158,10 +158,10 @@ const Home = (props) => {
 
   const cardStyle = {
     // boxSizing: 'border-box',
-    borderRadius: "10px",
+    borderRadius: 3,
     height: "170px",
     minwidth: "60px",
-    padding: "20px",
+    padding: 2,
     // boxShadow: "0px 0px 8px 4px rgba(0, 0, 0, 0.02)",
     cursor: "pointer",
     backgroundColor: `${colors.secondary[100]}`
