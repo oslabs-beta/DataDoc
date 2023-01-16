@@ -54,81 +54,11 @@ const ChartsContainer = (props) => {
     display: "flex",
     justifyContent: "center",
     height: "270px",
+    width: "100%",
     borderRadius: 3,
     p: 2,
     backgroundColor: `${colors.secondary[100]}`
   };
-
-  console.table(window.innerWidth);
-
-  const [orderedGridItems, setOrderedGridItems] = useState(
-    window.innerWidth <= 500 ? ( // breakpoint for sm
-      <>
-        <Grid item sm={12} md={7}>
-          <Card sx={cardStyle}>
-            <LineChart
-              chartData={chartsData.respTimeLineData || []}
-              chartTitle="Response Time"
-              chartLabel="Time (in ms)"
-            />
-          </Card>
-        </Grid>
-        <Grid item sm={12} md={7}>
-          <Card sx={cardStyle}>
-            <LineChart
-              chartData={chartsData.reqFreqLineData || []}
-              chartTitle="Request Frequency"
-              chartLabel="Count"
-            />
-          </Card>
-        </Grid>
-        <Grid item sm={12} md={5}>
-          <Card sx={cardStyle}>
-            <Histogram chartData={chartsData.respTimeHistData || []} />
-          </Card>
-        </Grid>
-        <Grid item sm={12} md={5}>
-          <Card sx={cardStyle}>
-            <DonutChart
-              chartData={chartsData.statusPieData || [{ x: "N/A", y: 1 }]}
-            />
-          </Card>
-        </Grid>
-      </>
-    ) : (
-      <>
-        <Grid item sm={12} md={7}>
-          <Card sx={cardStyle}>
-            <LineChart
-              chartData={chartsData.respTimeLineData || []}
-              chartTitle="Response Time"
-              chartLabel="Time (in ms)"
-            />
-          </Card>
-        </Grid>
-        <Grid item sm={12} md={5}>
-          <Card sx={cardStyle}>
-            <Histogram chartData={chartsData.respTimeHistData || []} />
-          </Card>
-        </Grid>
-        <Grid item sm={12} md={7}>
-          <Card sx={cardStyle}>
-            <LineChart
-              chartData={chartsData.reqFreqLineData || []}
-              chartTitle="Request Frequency"
-              chartLabel="Count"
-            />
-          </Card>
-        </Grid>
-        <Grid item sm={12} md={5}>
-          <Card sx={cardStyle}>
-            <DonutChart
-              chartData={chartsData.statusPieData || [{ x: "N/A", y: 1 }]}
-            />
-          </Card>
-        </Grid>
-      </>
-    ))
 
   return (
     <>

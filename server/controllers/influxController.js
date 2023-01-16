@@ -18,7 +18,7 @@ const queryApi = new InfluxDB({
   }
 });
 
-const dbController = {};
+const influxController = {};
 
 const range = "1m";
 
@@ -30,7 +30,7 @@ const data = {
   statusPieData: []
 };
 
-dbController.getRespTimeLineData = (req, res, next) => {
+influxController.getRespTimeLineData = (req, res, next) => {
   const fluxQuery = `
     from(bucket: "dev-bucket")
     |> range(start: -${range})
@@ -62,7 +62,7 @@ dbController.getRespTimeLineData = (req, res, next) => {
   });
 };
 
-dbController.getRespTimeHistData = (req, res, next) => {
+influxController.getRespTimeHistData = (req, res, next) => {
   const fluxQuery = `
     from(bucket: "dev-bucket")
     |> range(start: -${range})
@@ -106,7 +106,7 @@ dbController.getRespTimeHistData = (req, res, next) => {
   });
 };
 
-dbController.getReqFreqLineData = (req, res, next) => {
+influxController.getReqFreqLineData = (req, res, next) => {
   const fluxQuery = `
     from(bucket: "dev-bucket")
     |> range(start: -${range})
@@ -138,7 +138,7 @@ dbController.getReqFreqLineData = (req, res, next) => {
   });
 };
 
-dbController.getStatusPieData = (req, res, next) => {
+influxController.getStatusPieData = (req, res, next) => {
   const influxQuery = `
     from(bucket: "dev-bucket") 
     |> range(start: -${range})
@@ -173,7 +173,7 @@ dbController.getStatusPieData = (req, res, next) => {
   });
 };
 
-dbController.getEndpointLogs = (req, res, next) => {
+influxController.getEndpointLogs = (req, res, next) => {
   const influxQuery = `
     from(bucket: "dev-bucket") 
     |> range(start: -${range})
@@ -205,4 +205,4 @@ dbController.getEndpointLogs = (req, res, next) => {
   });
 };
 
-module.exports = dbController;
+module.exports = influxController;

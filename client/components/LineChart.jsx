@@ -48,7 +48,7 @@ const LineChart = (props) => {
   const options = {
     responsive: true,
     maintainAspectRatio: false,
-    // resizeDelay: 500,    
+    resizeDelay: 200,
     plugins: {
       title: {
         display: true,
@@ -68,7 +68,19 @@ const LineChart = (props) => {
         }
       },
     },
-    animation: false,
+    animation: {
+      duration: 1000,
+      // easing: "linear",
+    },
+    animations: {
+      x: {
+        duration: 100,
+        easing: "linear",
+      },
+      y: {
+        duration: 0,
+      },
+    }
   };
 
   return (

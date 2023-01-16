@@ -64,7 +64,7 @@ const Histogram = (props) => {
   const options = {
     responsive: true,
     maintainAspectRatio: false,
-    // resizeDelay: 500,    
+    resizeDelay: 200,    
     plugins: {
       legend: {
         display: false,

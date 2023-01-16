@@ -12,8 +12,8 @@ const DonutChart = (props) => {
 
   ChartJS.register(ArcElement, Tooltip, Title, Legend);
 
-  const backgroundOpacity = 0.75;
-  const borderOpacity = 1;
+  const backgroundOpacity = 0.7;
+  const borderOpacity = 0.25;
   const gradientFactor = 4;
   const colorMapper = (value, gradientFactor, opacity) => {
     if (value === "N/A") {
@@ -41,12 +41,17 @@ const DonutChart = (props) => {
       }, 64, 255, ${opacity})`;
   };
 
+  const convertCountToPercentage = (counts) => {
+    const total = counts.reduce((curr, acc) => curr + acc, 0);
+    return counts.map(count => count / total * 100);
+  }
+
   const data = {
     labels: chartData.map((point) => String(point.x)),
     datasets: [
       {
-        label: "Count",
-        data: chartData.map((point) => point.y),
+        label: "Percentage",
+        data: convertCountToPercentage(chartData.map((point) => point.y)),
         backgroundColor: chartData
           .map((point) => point.x)
           .map((status_code) =>
@@ -65,7 +70,7 @@ const DonutChart = (props) => {
   const options = {
     responsive: true,
     maintainAspectRatio: false,
-    // resizeDelay: 500,
+    resizeDelay: 200,
     plugins: {
       title: {
         display: true,

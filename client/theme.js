@@ -132,10 +132,10 @@ export const themeSettings = (mode) => {
     breakpoints: {
       values: {
         xs: 0, //0
-        sm: 500, //600
-        md: 700, //900
-        lg: 1000, //1200
-        xl: 1200, //1536
+        sm: 600, //600
+        md: 900, //900
+        lg: 1200, //1200
+        xl: 1500, //1536
       },
     },
     palette: {
