@@ -1,9 +1,7 @@
-import React, { useEffect, useState } from "react";
+import { Box, Typography } from "@mui/material";
+import React from "react";
 import { useLocation } from "react-router-dom";
-import { Box, Typography } from "@mui/material"
-import FlashError from "../components/FlashError.jsx";
 import ChartsContainer from "./ChartsContainer.jsx";
-import LogTable from "../components/LogTable.jsx";
 
 const Dashboard = (props) => {
 

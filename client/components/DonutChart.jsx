@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { Chart as ChartJS, ArcElement, Title, Tooltip, Legend } from "chart.js";
-import { Doughnut } from "react-chartjs-2";
-import { Card } from "@mui/material";
 import { useTheme } from "@mui/material";
+import { ArcElement, Chart as ChartJS, Legend, Title, Tooltip } from "chart.js";
+import React from "react";
+import { Doughnut } from "react-chartjs-2";
 import { tokens } from "../theme.js";
 
 const DonutChart = (props) => {

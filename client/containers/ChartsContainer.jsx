@@ -1,12 +1,10 @@
-import React, { useEffect, useState } from "react";
-import { Box, ToggleButton, ToggleButtonGroup, Card, Typography } from "@mui/material";
-import { useTheme } from "@mui/material";
+import { Box, Card, ToggleButton, ToggleButtonGroup, useTheme } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
-import LineChart from "../components/LineChart.jsx";
+import React, { useEffect, useState } from "react";
 import DonutChart from "../components/DonutChart.jsx";
 import Histogram from "../components/Histogram.jsx";
+import LineChart from "../components/LineChart.jsx";
 import "../styles/Charts.scss";
-import { useParams } from "react-router-dom";
 import { tokens } from "../theme.js";
 
 const { SERVER_URL } = process.env;

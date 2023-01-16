@@ -1,16 +1,10 @@
-import React, { useEffect, useState } from "react";
-import { Card } from "@mui/material";
 import { useTheme } from "@mui/material";
+import React from "react";
 import { tokens } from "../theme";
 
 import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend
+  BarElement, CategoryScale, Chart as ChartJS, Legend, LinearScale, Title,
+  Tooltip
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
 

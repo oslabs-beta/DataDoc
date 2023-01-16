@@ -1,20 +1,10 @@
-import React, { useState, useEffect } from "react";
-import { Card } from "@mui/material";
-import "chartjs-adapter-moment";
 import {
-  Chart as ChartJS,
-  CategoryScale,
-  TimeScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-  Filler,
+  Chart as ChartJS, Filler, Legend, LinearScale, LineElement, PointElement, TimeScale, Title,
+  Tooltip
 } from "chart.js";
+import "chartjs-adapter-moment";
+import React from "react";
 import { Line } from "react-chartjs-2";
-import { tokens } from "../theme.js";
 
 const LineChart = (props) => {
   const { chartData, chartTitle, chartLabel } = props;
