@@ -20,7 +20,7 @@ const queryApi = new InfluxDB({
 
 const influxController = {};
 
-const range = "1m";
+let range = "1m";
 
 // declare a data object to store chart data
 const data = {
@@ -29,6 +29,12 @@ const data = {
   reqFreqLineData: [],
   statusPieData: []
 };
+
+influxController.updateRange = (req, res, next) => {
+  range = req.body.range || range;
+  console.log(`Updated range to: ${range}`)
+  return next();
+}
 
 influxController.getRespTimeLineData = (req, res, next) => {
   const fluxQuery = `

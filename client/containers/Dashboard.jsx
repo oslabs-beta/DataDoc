@@ -60,11 +60,11 @@ const Dashboard = (props) => {
         path={path}
         isMonitoring={isMonitoring}
         />
-      <LogTable 
+      {/* <LogTable 
         method={method}
         path={path}
         isMonitoring={isMonitoring}
-      />
+      /> */}
     </>
   );
 };

@@ -5,7 +5,7 @@ const influxController = require("../controllers/influxController.js");
 const router = express.Router();
 router.use(compression());
 
-// get line chart data
+// * Retrieve line chart data from InfluxDB
 router.get(
   "/",
   influxController.getRespTimeLineData,
@@ -16,5 +16,11 @@ router.get(
     return res.status(200).json(res.locals.data);
   }
 );
+
+// * Update chart range
+router.post("/", 
+  influxController.updateRange,
+  (req, res) => res.sendStatus(204)
+)
 
 module.exports = router;
