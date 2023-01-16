@@ -99,7 +99,7 @@ const ChartsContainer = (props) => {
           size="large"
           sx={toggleButtonGroupStyle}
         >
-          <ToggleButton value="30s" sx={toggleButtonStyle}>30s</ToggleButton>
+          {/* <ToggleButton value="30s" sx={toggleButtonStyle}>30s</ToggleButton> */}
           <ToggleButton value="1m" sx={toggleButtonStyle}>1m</ToggleButton>
           <ToggleButton value="5m" sx={toggleButtonStyle}>5m</ToggleButton>
           <ToggleButton value="30m" sx={toggleButtonStyle}>30m</ToggleButton>

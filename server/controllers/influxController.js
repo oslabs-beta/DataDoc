@@ -120,7 +120,7 @@ influxController.getReqFreqLineData = (req, res, next) => {
     |> filter(fn: (r) => r["_field"] == "res_time")
     |> filter(fn: (r) => r["method"] == "${req.query.method}")
     |> filter(fn: (r) => r["path"] == "${req.query.path}")
-    |> aggregateWindow(every: 1s, fn: count, createEmpty: false)
+    |> aggregateWindow(every: ${Math.floor(Number(range.slice(0, range.length - 1)) * 60 / 10)}s, fn: count, createEmpty: false)
   `;
 
   // declare a metrics object to collect labels and data

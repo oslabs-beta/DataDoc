@@ -67,6 +67,12 @@ const LineChart = (props) => {
           display: false,
         }
       },
+      y: {
+        beginAtZero: true,
+        ticks: {
+          stepSize: 1,
+        }
+      }
     },
     animation: {
       duration: 1000,

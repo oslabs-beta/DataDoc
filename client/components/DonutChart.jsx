@@ -79,6 +79,10 @@ const DonutChart = (props) => {
       legend: {
         display: true,
         position: "left",
+        align: "center",
+        labels: {
+          padding: 0,
+        }
       },
     },
   };
