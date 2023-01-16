@@ -137,6 +137,9 @@ const WorkspaceView = () => {
         />
       <URITable
         workspaceId={workspaceId}
+        name={name}
+        domain={domain}
+        port={port}
         metricsPort={metricsPort}
         isMonitoring={isMonitoring}
         setIsMonitoring={setIsMonitoring}

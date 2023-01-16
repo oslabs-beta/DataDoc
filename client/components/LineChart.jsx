@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Card } from "@mui/material";
-import { useTheme } from "@mui/material";
 import "chartjs-adapter-moment";
 import {
   Chart as ChartJS,
@@ -19,8 +18,8 @@ import { tokens } from "../theme.js";
 
 const LineChart = (props) => {
   const { chartData, chartTitle, chartLabel } = props;
-  const theme = useTheme();
-  const colors = tokens(theme.palette.mode);
+  // const theme = useTheme();
+  // const colors = tokens(theme.palette.mode);
 
   ChartJS.register(
     TimeScale,
@@ -48,6 +47,8 @@ const LineChart = (props) => {
 
   const options = {
     responsive: true,
+    maintainAspectRatio: false,
+    // resizeDelay: 500,    
     plugins: {
       title: {
         display: true,
@@ -71,15 +72,25 @@ const LineChart = (props) => {
   };
 
   return (
-    <Card sx={{height: "350px", padding:"10px", backgroundColor:`${colors.secondary[100]}`}}>
-      <div className="chartWrapper">
-        <div className="chartAreaWrapper">
-          <div className="line-chart" style={{position: "relative"}}>
-            <Line data={data} options={options} />
-          </div>
-        </div>
-      </div>
-    </Card>
+    // <>
+    //   {/* <div className="chartWrapper"> */}
+    //     {/* <div className="chartAreaWrapper"> */}
+    //       <div 
+    //         className="line-chart" 
+    //         // style={{position: "relative"}}
+    //       >
+            <Line 
+              data={data} 
+              options={options} 
+              style={{
+                height: "100%",
+                width: "100%"
+              }}
+            />
+    //       </div>
+    //     {/* </div> */}
+    //   {/* </div> */}
+    // </>
   );
 };
 

@@ -63,6 +63,8 @@ const Histogram = (props) => {
 
   const options = {
     responsive: true,
+    maintainAspectRatio: false,
+    // resizeDelay: 500,    
     plugins: {
       legend: {
         display: false,
@@ -76,11 +78,16 @@ const Histogram = (props) => {
   };
 
   return (
-    <Card sx={{height: "350px", padding:"30px", backgroundColor:`${colors.secondary[100]}`}}>
-      <div className="histogram" style={{position: "relative"}}>
-        <Bar data={data} options={options} />
-      </div>
-    </Card>
+      // <div className="histogram" style={{position: "relative"}}>
+        <Bar 
+          data={data} 
+          options={options} 
+          style={{
+            minHeight: "100%",
+            width: "100%",
+          }}
+        />
+      // </div>
   );
 };
 

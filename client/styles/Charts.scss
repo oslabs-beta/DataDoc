@@ -1,34 +1,34 @@
-.charts-container {
-  display: grid;
-  width: 100vw;
-  grid-template-areas:
-    "3fr 2fr"
-    "3fr 2fr";
-  gap: 2px;
-  // box-sizing: border-box;
-}
+// .charts-container {
+//   display: grid;
+//   width: 100vw;
+//   grid-template-areas:
+//     "3fr 2fr"
+//     "3fr 2fr";
+//   gap: 2px;
+//   // box-sizing: border-box;
+// }
 
-// .chartWrapper {
-//   position: relative;
-//  }
+// // .chartWrapper {
+// //   position: relative;
+// //  }
 
-.chartWrapper > canvas {
-  position: absolute;
-  left: 0;
-  top: 0;
-  pointer-events: none;
-  // width: 100%;
-}
+// .chartWrapper > canvas {
+//   position: absolute;
+//   left: 0;
+//   top: 0;
+//   pointer-events: none;
+//   // width: 100%;
+// }
 
-.chartAreaWrapper {
-  width: 60vw;
-  overflow-x: scroll;
-}
+// .chartAreaWrapper {
+//   width: 60vw;
+//   overflow-x: scroll;
+// }
 
-.line-chart {
-  width: 80vw;
-  height: 40vh;
-  > canvas {
-    cursor: crosshair;
-  }
-}
+// .line-chart {
+//   width: 80vw;
+//   height: 40vh;
+//   > canvas {
+//     cursor: crosshair;
+//   }
+// }

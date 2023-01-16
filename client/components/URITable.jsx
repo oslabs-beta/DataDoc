@@ -246,8 +246,11 @@ export default function URITable(props) {
 
   const {
     workspaceId,
-    rows,
+    name,
+    domain,
+    port,
     metricsPort,
+    rows,
     getURIListFromServer,
     updateTrackingInDatabaseById,
     refreshURIList,
@@ -423,6 +426,10 @@ export default function URITable(props) {
                                 if (column === "simulation" || column === "open") return;
                                 navigate(`/dashboard/${row._id}`, { state: {
                                   workspaceId,
+                                  name,
+                                  domain,
+                                  port,
+                                  metricsPort,
                                   endpointId: row._id,
                                   method: row.method,
                                   path: row.path,

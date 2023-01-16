@@ -64,6 +64,8 @@ const DonutChart = (props) => {
 
   const options = {
     responsive: true,
+    maintainAspectRatio: false,
+    // resizeDelay: 500,
     plugins: {
       title: {
         display: true,
@@ -71,17 +73,22 @@ const DonutChart = (props) => {
       },
       legend: {
         display: true,
-        position: "bottom",
+        position: "left",
       },
     },
   };
 
   return (
-    <Card sx={{height: "350px", padding:"50px", backgroundColor:`${colors.secondary[100]}`}}>
-      <div className="donut-chart" style={{position: "relative"}}>
-        <Doughnut data={data} options={options} />
-      </div>
-    </Card>
+    // <div className="donut-chart" style={{position: "relative"}}>
+      <Doughnut 
+        data={data} 
+        options={options}
+        style={{
+          height: "100%",
+          width: "100%"
+        }}
+      />
+    // </div>
   );
 };
 
