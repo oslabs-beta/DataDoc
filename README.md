@@ -57,7 +57,7 @@ This tool requires the npm package `express-endpoints-monitor` to detect and gat
 2. In your file, include the following line:
 
     ```
-    app.use(expMonitor.gatherMetrics());
+    app.use(expMonitor.gatherMetrics);
     ```
 
     This will record metrics for incoming requests and make them available to the metrics API which will be set up later.

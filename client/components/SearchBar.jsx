@@ -1,29 +1,31 @@
 import React, { useState, useEffect } from "react";
+import { Input, TextField } from "@mui/material"
+import { Search } from "@mui/icons-material"
 
 const SearchBar = (props) => {
   
-  // const [searchInput, setSearch] = useState('');
-
-  const inputHandler = (e) => {
-    // * convert input text to lower case
-    // console.log("input handler TRIGGERED", e)
-    var lowerCase = e.target.value.toLowerCase();
-    props.setSearch(lowerCase);
-  };
+  const { handleSearchChange } = props;
 
   return (
-    <div>
+    <>
       <form action="/" method="get">
-        <input
+        <Input
           type="text"
           id="header-search"
-          placeholder="Search URI"
-          onChange={inputHandler}
-          // searchInput={props.searchInput}
+          onChange={handleSearchChange}
+          placeholder="Search for a specific endpoint"
+          color="neutral"
+          endAdornment={<Search color="neutral" />}
+          disableUnderline={true}
+          sx={{
+            width: 300,
+            px: 1,
+            border: "0.5px solid",
+            borderRadius: 2
+          }}
         />
-        {/* <button type="submit">Search</button> */}
       </form>
-    </div>
+    </>
   );
 };
 

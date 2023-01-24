@@ -4,7 +4,7 @@
 // import { Link, NavLink, useNavigate } from "react-router-dom";
 // import Draggable from "react-draggable";
 // import { useTheme } from "@mui/material";
-// import { tokens } from "./theme";
+// import { tokens } from "../theme.js";
 
 // const NavBar = (props) => {
 //   const theme = useTheme();
@@ -128,7 +128,7 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useTheme } from '@mui/material/styles'
-import { useMode } from '../containers/theme.js'
+import { useMode } from '../theme.js'
 
 const SideBar = (props) => {
   const {open,  handledrawerclose: handleDrawerClose } = props;

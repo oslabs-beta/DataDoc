@@ -132,10 +132,10 @@ export const themeSettings = (mode) => {
     breakpoints: {
       values: {
         xs: 0, //0
-        sm: 500, //600
-        md: 700, //900
-        lg: 1000, //1200
-        xl: 1200, //1536
+        sm: 600, //600
+        md: 900, //900
+        lg: 1200, //1200
+        xl: 1500, //1536
       },
     },
     palette: {
@@ -147,7 +147,7 @@ export const themeSettings = (mode) => {
               main: colors.primary[500],
             },
             secondary: {
-              main: colors.greenAccent[500],
+              main: colors.greenAccent[600],
             },
             neutral: {
               dark: colors.grey[700],
@@ -160,6 +160,9 @@ export const themeSettings = (mode) => {
             customRed: {
               main: "rgb(255, 64, 64)"
             },
+            disabled: {
+              main: colors.grey[700],
+            },
           }
         : {
             // palette values for light mode
@@ -171,7 +174,7 @@ export const themeSettings = (mode) => {
             },
             neutral: {
               dark: colors.grey[700],
-              main: colors.grey[500],
+              main: colors.grey[700],
               light: colors.grey[100],
             },
             background: {
@@ -179,6 +182,9 @@ export const themeSettings = (mode) => {
             },
             customRed: {
               main: "#FF0000"
+            },
+            disabled: {
+              main: colors.grey[800],
             },
           }),
     },

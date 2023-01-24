@@ -1,16 +1,10 @@
-import React, { useEffect, useState } from "react";
-import { Card } from "@mui/material";
 import { useTheme } from "@mui/material";
-import { tokens } from "../containers/theme";
+import React from "react";
+import { tokens } from "../theme";
 
 import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend
+  BarElement, CategoryScale, Chart as ChartJS, Legend, LinearScale, Title,
+  Tooltip
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
 
@@ -63,6 +57,8 @@ const Histogram = (props) => {
 
   const options = {
     responsive: true,
+    maintainAspectRatio: false,
+    resizeDelay: 200,    
     plugins: {
       legend: {
         display: false,
@@ -76,11 +72,16 @@ const Histogram = (props) => {
   };
 
   return (
-    <Card sx={{height: "350px", padding:"30px", backgroundColor:`${colors.secondary[100]}`}}>
-      <div className="histogram" style={{position: "relative"}}>
-        <Bar data={data} options={options} />
-      </div>
-    </Card>
+      // <div className="histogram" style={{position: "relative"}}>
+        <Bar 
+          data={data} 
+          options={options} 
+          style={{
+            minHeight: "100%",
+            width: "100%",
+          }}
+        />
+      // </div>
   );
 };
 

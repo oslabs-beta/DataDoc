@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from "react";
-import { Chart as ChartJS, ArcElement, Title, Tooltip, Legend } from "chart.js";
-import { Doughnut } from "react-chartjs-2";
-import { Card } from "@mui/material";
 import { useTheme } from "@mui/material";
-import { tokens } from "../containers/theme";
+import { ArcElement, Chart as ChartJS, Legend, Title, Tooltip } from "chart.js";
+import React from "react";
+import { Doughnut } from "react-chartjs-2";
+import { tokens } from "../theme.js";
 
 const DonutChart = (props) => {
   const { id, chartData } = props;
@@ -12,8 +11,8 @@ const DonutChart = (props) => {
 
   ChartJS.register(ArcElement, Tooltip, Title, Legend);
 
-  const backgroundOpacity = 0.75;
-  const borderOpacity = 1;
+  const backgroundOpacity = 0.7;
+  const borderOpacity = 0.25;
   const gradientFactor = 4;
   const colorMapper = (value, gradientFactor, opacity) => {
     if (value === "N/A") {
@@ -41,12 +40,17 @@ const DonutChart = (props) => {
       }, 64, 255, ${opacity})`;
   };
 
+  const convertCountToPercentage = (counts) => {
+    const total = counts.reduce((curr, acc) => curr + acc, 0);
+    return counts.map(count => count / total * 100);
+  }
+
   const data = {
     labels: chartData.map((point) => String(point.x)),
     datasets: [
       {
-        label: "Count",
-        data: chartData.map((point) => point.y),
+        label: "Percentage",
+        data: convertCountToPercentage(chartData.map((point) => point.y)),
         backgroundColor: chartData
           .map((point) => point.x)
           .map((status_code) =>
@@ -64,6 +68,8 @@ const DonutChart = (props) => {
 
   const options = {
     responsive: true,
+    maintainAspectRatio: false,
+    resizeDelay: 200,
     plugins: {
       title: {
         display: true,
@@ -71,17 +77,26 @@ const DonutChart = (props) => {
       },
       legend: {
         display: true,
-        position: "bottom",
+        position: "left",
+        align: "center",
+        labels: {
+          padding: 0,
+        }
       },
     },
   };
 
   return (
-    <Card sx={{height: "350px", padding:"50px", backgroundColor:`${colors.secondary[100]}`}}>
-      <div className="donut-chart" style={{position: "relative"}}>
-        <Doughnut data={data} options={options} />
-      </div>
-    </Card>
+    // <div className="donut-chart" style={{position: "relative"}}>
+      <Doughnut 
+        data={data} 
+        options={options}
+        style={{
+          height: "100%",
+          width: "100%"
+        }}
+      />
+    // </div>
   );
 };
 

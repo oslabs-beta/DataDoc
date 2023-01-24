@@ -57,6 +57,7 @@ const scrapeDataFromMetricsServer = async (metricsPort, tableName) => {
         method: "DELETE"
       })
     ).json();
+    console.log(`Storing to ${logs.length} entries to ${tableName}`)
     storeLogsToDatabase(logs, tableName);
     return logs;
   } catch (e) {
@@ -90,7 +91,7 @@ const getTrackedEndpointsByWorkspaceId = async (workspaceId) => {
     WHERE 
       workspace_id=${workspaceId} AND 
       tracking=${true}
-  ;`
+  ;`;
   const dbResponse = await postgresClient.query(queryText);
   return dbResponse.rows;
 }
@@ -192,10 +193,11 @@ app.post("/monitoring", async (req, res) => {
   res.sendStatus(204);
 });
 
-const pingOneEndpoint = async (path) => {
+const pingOneEndpoint = async (URI, method) => {
+  console.log(`Sending traffic to: ${URI}`)
   try {
-    await fetch("http://localhost:3000" + path, {
-      method: "GET",
+    await fetch(URI, {
+      method: method,
       headers: {
         "Cache-Control": "no-cache"
       }
@@ -205,34 +207,46 @@ const pingOneEndpoint = async (path) => {
   }
 };
 
-const performRPS = async (path, RPS) => {
+const performRPS = async (domain, port, path, method, RPS) => {
+  // console.log("PERFORMRPS");
+  // console.table({
+  //   domain,
+  //   port,
+  //   path,
+  //   method,
+  //   RPS,
+  // })
+  // console.log("PERFORMRPS URI\nhttp://" + domain + (typeof port === "number") ? port : ''  + path);
   const interval = Math.floor(1000 / RPS);
   if (intervalId) clearInterval(intervalId);
   let counter = 0;
   intervalId = setInterval(() => {
-    pingOneEndpoint(path);
-    counter++;
-    console.log(counter);
+    console.clear()
+    console.log(++counter);
+    pingOneEndpoint(`http://${domain}${(typeof port === "number") ? ':' + port : ''}${path}`, method);
   }, interval);
 };
 
-const rpswithInterval = async (path, RPS, timeInterval) => {
+const rpswithInterval = async (domain, port, path, method, RPS, timeInterval) => {
   if (intervalId) clearInterval(intervalId);
   intervalId = setInterval(() => {
-    performRPS(path, RPS);
+    performRPS(domain, port, path, method, RPS);
     console.log("PING FINISHED");
   }, timeInterval * 1000);
 };
 
 app.post("/simulation", async (req, res) => {
-  // console.log(req.body);
-  const { RPS, timeInterval, setTime, stop, path } = req.body;
+  const { workspaceId, domain, port, path, method, metricsPort, RPS, timeInterval, setTime, stop } = req.body;
   if (!stop) {
-    rpswithInterval(path, RPS, timeInterval);
-    scrapeDataFromMetricsServer("simulation");
-  } else clearInterval(intervalId);
+    rpswithInterval(domain, port, path, method, RPS, timeInterval);
+    scrapeDataFromMetricsServer(metricsPort, `simulation_${workspaceId}`);
+  } else {
+    clearInterval(intervalId)
+    console.log("Scraping...");
+    scrapeDataFromMetricsServer(metricsPort, `simulation_${workspaceId}`)
+  };
   console.log("PING RESULT DONE");
-  return res.status(200).send("hi");
+  return res.sendStatus(200);
 });
 
 app.get("/metrics", async (req, res) => {

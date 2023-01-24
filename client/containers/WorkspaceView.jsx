@@ -1,8 +1,8 @@
 
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Typography, IconButton } from "@mui/material";
-import { ChevronRight } from "@mui/icons-material";
+import { IconButton } from "@mui/material";
+import { ChevronRight, Launch } from "@mui/icons-material";
 import WorkspaceInfo from "../components/WorkspaceInfo.jsx"
 import URITable from "../components/URITable.jsx";
 
@@ -79,8 +79,6 @@ const WorkspaceView = () => {
   };
 
   const updateTrackingInDatabaseById = async (updatedEndpoint) => {
-    console.table(updatedEndpoint)
-    console.log(updatedEndpoint)
     fetch(`http://localhost:9990/endpoints/${updatedEndpoint._id}`, {
       method: `PUT`,
       headers: { "Content-Type": "application/json" },
@@ -110,7 +108,6 @@ const WorkspaceView = () => {
   // };
 
   const refreshURIList = async (workspaceId = workspaceId, metricsPort = metricsPort) => {
-    console.log(`${process.env.SERVER_URL}/routes/server?workspaceId=${workspaceId}&metricsPort=${metricsPort}`);
     const response = await fetch(`${process.env.SERVER_URL}/routes/server?workspaceId=${workspaceId}&metricsPort=${metricsPort}`, {
       method: "PUT",
       headers: {
@@ -140,7 +137,12 @@ const WorkspaceView = () => {
         />
       <URITable
         workspaceId={workspaceId}
+        name={name}
+        domain={domain}
+        port={port}
         metricsPort={metricsPort}
+        isMonitoring={isMonitoring}
+        setIsMonitoring={setIsMonitoring}
         rows={URIList.map((URI) => {
           return {
             _id: URI._id, // hidden column
@@ -151,24 +153,36 @@ const WorkspaceView = () => {
             simulation: 
               <IconButton
                 onClick={() => {
-                  navigate(`/development/${crypto.randomUUID()}`, {
+                  navigate(`/simulation/${crypto.randomUUID()}`, {
                     state: {
-                      method: URI.method,
+                      workspaceId,
+                      domain,
+                      port,
+                      metricsPort,
                       path: URI.path,
+                      method: URI.method,
                     }
                   })
                 }}
-              >
-                <ChevronRight />
+                >
+                <ChevronRight 
+                  color="neutral"
+                />
+              </IconButton>,
+            open: 
+              <IconButton
+                onClick={() => {
+                  const url = `http://${domain}${typeof port === "number" ? ':' + port : ""}${URI.path}`
+                  window.open(url);
+                }}
+                >
+                <Launch 
+                  color="neutral"
+                />
               </IconButton>
           };
         })}
-        // (<Link to={`/development/${id}`} state={{
-        //   method: method,
-        //   path: path
-        // }} id={id} method={method} path={path}><button>CLICK ME</button></Link>)
         updateTrackingInDatabaseById={updateTrackingInDatabaseById}
-        // updateTrackingInDatabaseByRoute={updateTrackingInDatabaseByRoute}
         getURIListFromServer={getURIListFromServer}
         refreshURIList={refreshURIList}
       />

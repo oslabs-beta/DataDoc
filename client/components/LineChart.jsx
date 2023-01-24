@@ -1,27 +1,13 @@
-import React, { useState, useEffect } from "react";
-import { Card } from "@mui/material";
-import { useTheme } from "@mui/material";
-import { tokens } from "../containers/theme";
-import "chartjs-adapter-moment";
-
 import {
-  Chart as ChartJS,
-  CategoryScale,
-  TimeScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-  Filler,
+  Chart as ChartJS, Filler, Legend, LinearScale, LineElement, PointElement, TimeScale, Title,
+  Tooltip
 } from "chart.js";
+import "chartjs-adapter-moment";
+import React from "react";
 import { Line } from "react-chartjs-2";
 
 const LineChart = (props) => {
   const { chartData, chartTitle, chartLabel } = props;
-  const theme = useTheme();
-  const colors = tokens(theme.palette.mode);
 
   ChartJS.register(
     TimeScale,
@@ -49,6 +35,8 @@ const LineChart = (props) => {
 
   const options = {
     responsive: true,
+    maintainAspectRatio: false,
+    resizeDelay: 200,
     plugins: {
       title: {
         display: true,
@@ -67,20 +55,56 @@ const LineChart = (props) => {
           display: false,
         }
       },
+      y: {
+        beginAtZero: true,
+        ticks: {
+          stepSize: (() => {
+            if (! chartData) return 1;
+            const maxYValue = Math.max(...(chartData.map((point) => point.y)));
+            // console.table(chartData.map((point) => point.y));
+            for (const stepSize of [0.1, 0.2, 0.5, 1, 2, 5, 10, 20, 50, 100, 200, 500, 1000]) {
+              if (maxYValue / stepSize < 6) return stepSize;
+            }
+          })()
+        }
+      }
     },
-    animation: false,
+    animation: {
+      duration: 1000,
+      // easing: "linear",
+    },
+    animations: {
+      x: {
+        duration: 100,
+        easing: "linear",
+      },
+      y: {
+        duration: 0,
+      },
+    }
   };
 
   return (
-    <Card sx={{height: "350px", padding:"10px", backgroundColor:`${colors.secondary[100]}`}}>
-      <div className="chartWrapper">
-        <div className="chartAreaWrapper">
-          <div className="line-chart" style={{position: "relative"}}>
-            <Line data={data} options={options} />
-          </div>
-        </div>
-      </div>
-    </Card>
+    // <>
+    //   {/* <div className="chartWrapper"> */}
+    //     {/* <div className="chartAreaWrapper"> */}
+    //       <div 
+    //         className="line-chart" 
+    //         // style={{position: "relative"}}
+    //       >
+            <Line 
+              data={data} 
+              options={options} 
+              style={{
+                height: "100%",
+                width: "100%",
+                cursor: "crosshair"
+              }}
+            />
+    //       </div>
+    //     {/* </div> */}
+    //   {/* </div> */}
+    // </>
   );
 };
 

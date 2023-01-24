@@ -1,18 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { PlayArrow, Stop, TimerOutlined } from "@mui/icons-material";
 import {
   Box,
   Button,
   ButtonGroup,
-  Input,
-  InputBase,
-  Typography
+  Input, Typography
 } from "@mui/material";
-import { PlayArrow, Stop, TimerOutlined } from "@mui/icons-material";
-import URI from "./URI.jsx";
+import React, { useState } from "react";
 import FlashError from "./FlashError.jsx";
-import SearchBar from "./SearchBar.jsx";
-import { flexbox } from "@mui/system";
 
 const WorkspaceInfo = (props) => {
   const {
@@ -127,31 +121,16 @@ const WorkspaceInfo = (props) => {
   };
 
   return (
-    <>
+    <Box
+      mb={2}
+    >
       <Typography variant="h2" fontWeight={700}>
         {name}
       </Typography>
       <Typography variant="h4" fontWeight={700}>
         {domain}{((port !== undefined && typeof port === "number") ? ':' + port : '')}
       </Typography>
-      {/* <Typography variant="h2" fontWeight={700}>
-        {metricsPort}
-      </Typography> */}
-      {/* <Input 
-        type="text" 
-        variant="outlined" 
-        inputProps={{
-          value: name,
-          style: {
-            disableUnderline: true,
-            fontWeight: 700,
-          }
-        }} 
-      /> */}
-      {/* <form className="monitoring" > */}
-      <label htmlFor="ping-interval">
-        <Typography variant="h5">Monitoring Frequency</Typography>
-      </label>
+      <Typography variant="h5">Monitoring Frequency</Typography>
       <Input
         label="Ping Interval"
         variant="outlined"
@@ -167,9 +146,10 @@ const WorkspaceInfo = (props) => {
             textAlign: "end"
           }
         }}
-        startAdornment={<TimerOutlined></TimerOutlined>}
-        endAdornment={<Typography>s</Typography>}
+        startAdornment={<TimerOutlined color="neutral" />}
+        endAdornment={<Typography variant="p" color="neutral">s</Typography>}
         fullWidth={true}
+        size="lg"
         sx={{ width: 70 }}
         onChange={(e) => {
           setPingInterval(e.target.value);
@@ -178,32 +158,35 @@ const WorkspaceInfo = (props) => {
       <br></br>
       <ButtonGroup variant="contained" color="secondary">
         <Button
+          disabled={isMonitoring}
           onClick={handleStartMonitoringClick}
           sx={{
             opacity: isMonitoring ? 0.6 : 1,
+            width: isMonitoring ? 40 : 60,
+            transition: "0.25s",
+            ":hover": {
+              "transform": "scale(1.05)",
+            }
           }}
         >
           <PlayArrow />
         </Button>
         <Button
+          disabled={!isMonitoring}
           onClick={handleStopMonitoringClick}
           sx={{
             opacity: isMonitoring ? 1 : 0.6,
+            width: isMonitoring ? 60 : 40,
+            transition: "0.25s",
+            ":hover": {
+              "transform": "scale(1.05)",
+            }
           }}
         >
           <Stop />
         </Button>
       </ButtonGroup>
       {/* </form> */}
-      <br></br>
-      <span>
-        <label htmlFor="endpoint-search">Search for a specific endpoint:</label>
-        <SearchBar
-          id="endpoint-search"
-          searchInput={searchInput}
-          setSearch={setSearchInput}
-        />
-      </span>
       <br></br>
       <div className="URIEntries">
         {errorMessage !== "" ? (
@@ -260,7 +243,7 @@ const WorkspaceInfo = (props) => {
           </tbody>
         </table> */}
       </div>
-    </>
+    </Box>
   );
 };
 

@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { alpha } from "@mui/material/styles";
 import {
@@ -23,6 +23,7 @@ import {
 import { Delete, FilterList, Sync as Refresh } from "@mui/icons-material";
 import { visuallyHidden } from "@mui/utils";
 import { useNavigate } from "react-router-dom";
+import SearchBar from "./SearchBar.jsx"
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -141,7 +142,7 @@ DataTableHead.propTypes = {
 };
 
 function DataTableToolbar(props) {
-  const { numSelected, getURIListFromServer, metricsPort, refreshURIList, workspaceId } = props;
+  const { numSelected, metricsPort, refreshURIList, workspaceId, searchQuery, setSearchQuery, handleSearchChange } = props;
 
   return (
     <Toolbar
@@ -167,16 +168,60 @@ function DataTableToolbar(props) {
           {numSelected} selected
         </Typography>
       ) : (
-        <Typography
-          sx={{ flex: "1 1 100%" }}
-          variant="h6"
-          id="tableTitle"
-          component="div"
+        <Box
+          sx={{
+            width: "100%",
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
         >
-          Endpoints
-        </Typography>
+          <Box component="div"
+            sx={{
+              flex: 1,
+              display: "flex",
+              justifyContent: "flex-start",
+            }}
+          >
+            <Typography
+              variant="h6"
+              id="tableTitle"
+              component="div"
+            >
+              Endpoints
+            </Typography>
+          </Box>
+          <Box component="div"
+            sx={{
+              width: "fit-content"
+            }}
+          >
+            <SearchBar
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+              handleSearchChange={handleSearchChange}
+            />
+          </Box>
+          <Box component="div"
+            sx={{
+              flex: 1,
+              display: "flex",
+              justifyContent: "flex-end"
+            }}
+          >
+            <Tooltip title="Refresh List">
+            <IconButton
+              onClick={() => {
+                // getURIListFromServer(props.metricsPort)
+                refreshURIList(workspaceId, metricsPort);
+              }}
+            >
+              <Refresh />
+            </IconButton>
+          </Tooltip>
+        </Box>
+        </Box>
       )}
-
       {numSelected > 0 ? (
         <Tooltip title="Delete">
           <IconButton>
@@ -185,18 +230,10 @@ function DataTableToolbar(props) {
         </Tooltip>
       ) : (
         <>
-        <Tooltip title="Refresh List">
-          <IconButton
-            onClick={() => {
-              // getURIListFromServer(props.metricsPort)
-              refreshURIList(workspaceId, metricsPort);
-            }}
-          >
-            <Refresh />
-          </IconButton>
-        </Tooltip>
+        
         </>
       )}
+
     </Toolbar>
   );
 }
@@ -207,9 +244,37 @@ DataTableToolbar.propTypes = {
 
 export default function URITable(props) {
 
-  const { workspaceId, rows, metricsPort,getURIListFromServer, updateTrackingInDatabaseById, refreshURIList } = props;
+  const {
+    workspaceId,
+    name,
+    domain,
+    port,
+    metricsPort,
+    rows,
+    getURIListFromServer,
+    updateTrackingInDatabaseById,
+    refreshURIList,
+    isMonitoring,
+    setIsMonitoring
+  } = props;
 
   const headCells = generateHeadCells(rows);
+
+  const [searchQuery, setSearchQuery] = useState("")
+
+  const handleSearchChange = (event) => {
+    setSearchQuery(event.target.value);
+  }
+
+  const filterBySearchQuery = (unfilteredRows, searchQuery = "") => {
+    return unfilteredRows.filter((row) => {
+      return (
+        Object.keys(row || {})
+        .filter(columnName => columnName[0] !== '_')
+        .some(column => row[column].toString().toLowerCase().includes(searchQuery.toLowerCase()))
+      )
+    })
+  }
 
   const navigate = useNavigate();
   
@@ -217,7 +282,7 @@ export default function URITable(props) {
   const [orderBy, setOrderBy] = React.useState("path");
   const [selected, setSelected] = React.useState(rows.filter((row) => row.tracking));
   const [page, setPage] = React.useState(0);
-  const [dense, setDense] = React.useState(false);
+  const [dense, setDense] = React.useState(true);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
   const handleRequestSort = (event, property) => {
@@ -283,6 +348,9 @@ export default function URITable(props) {
           metricsPort={metricsPort}
           refreshURIList={refreshURIList}
           workspaceId={workspaceId}
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          handleSearchChange={handleSearchChange}
         />
         <TableContainer>
           <Table
@@ -300,7 +368,7 @@ export default function URITable(props) {
               rowCount={rows.length}
             />
             <TableBody>
-              {stableSort(rows, getComparator(order, orderBy))
+              {filterBySearchQuery(stableSort(rows, getComparator(order, orderBy)), searchQuery)
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
                   const isItemSelected = isSelected(row.id);
@@ -351,15 +419,21 @@ export default function URITable(props) {
                         .filter(key => key[0] !== '_')
                         .map((column) => {
                           return (
-                            <TableCell key={crypto.randomUUID()}
+                            <TableCell 
+                              key={crypto.randomUUID()}
                               align="left"
                               onClick={() => {
-                                if (column === "simulation") return;
+                                if (column === "simulation" || column === "open") return;
                                 navigate(`/dashboard/${row._id}`, { state: {
                                   workspaceId,
+                                  name,
+                                  domain,
+                                  port,
+                                  metricsPort,
                                   endpointId: row._id,
                                   method: row.method,
                                   path: row.path,
+                                  isMonitoring,
                                 }})
                               }}
                               sx={{ cursor: "pointer" }}
@@ -395,10 +469,10 @@ export default function URITable(props) {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
-      <FormControlLabel
-        control={<Switch checked={dense} onChange={handleChangeDense} />}
-        label="Dense padding"
-      />
+      {/* <FormControlLabel
+        control={<Switch checked={dense} onChange={handleChangeDense} color="secondary" />}
+        label="Compact view"
+      /> */}
     </Box>
   );
 }

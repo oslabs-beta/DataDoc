@@ -3,19 +3,21 @@ import { Box, IconButton, useTheme } from "@mui/material";
 import {
   LightModeOutlined,
   DarkModeOutlined,
+  Settings as SettingsIcon,
   SettingsOutlined,
-  NotificationsOutlined
+  NotificationsOutlined,
+  Help
 } from "@mui/icons-material";
-import { ColorModeContext, tokens } from "./theme";
+import { ColorModeContext, tokens } from "../theme.js";
 import { Back, Forward } from "../components/NavButtons.jsx";
+import Settings from "../components/Settings.jsx";
 
 // ! Delete when done
 import { useNavigate } from "react-router-dom";
 
-const TopBar = () => {
+const TopBar = (props) => {
 
-  // !
-  const navigate = useNavigate();
+  const { showSettingsPopup, setShowSettingsPopup } = props;
 
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
@@ -29,21 +31,49 @@ const TopBar = () => {
         width: "100%"
       }}
     >
-      <Box display="flex" width="100%" ml="-8px">
-        <Back />
-        <Forward />
-        <IconButton
-          onClick={colorMode.toggleColorMode}
+      <Box width="100%" ml="-4px" sx={{
+        alignItems: "center",
+        display: "flex",
+      }}>
+        <Box
           sx={{
+            marginRight: "auto",
+          }}
+        >
+          <Back sx={{
+          }}/>
+          <Forward />
+        </Box>
+        <Box
+          sx={{
+            display: "flex",
             marginLeft: "auto"
           }}
         >
-          {theme.palette.mode === "light" ? (
-            <DarkModeOutlined />
-          ) : (
-            <LightModeOutlined />
-          )}
-        </IconButton>
+          <IconButton
+            onClick={() => {
+              if (showSettingsPopup) setShowSettingsPopup(false);
+              else setShowSettingsPopup(true);
+            }}
+          >
+            <SettingsIcon />
+            <Settings />
+          </IconButton>
+          <IconButton
+            onClick={() => (window.open(`https://github.com/oslabs-beta/DataDoc/blob/dev/README.md#readme`))}
+          >
+            <Help />
+          </IconButton>
+          <IconButton
+            onClick={colorMode.toggleColorMode}
+          >
+            {theme.palette.mode === "light" ? (
+              <DarkModeOutlined />
+            ) : (
+              <LightModeOutlined />
+            )}
+          </IconButton>
+        </Box>
       </Box>
     </nav>
   );

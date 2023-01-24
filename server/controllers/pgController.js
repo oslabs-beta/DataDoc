@@ -1,5 +1,5 @@
 const postgresClient = require("../models/postgres-client");
-const dbController = require("./dbController");
+const influxController = require("./influxController");
 
 const pgController = {
 

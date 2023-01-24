@@ -1,6 +1,6 @@
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { ColorModeContext, useMode } from "./theme.js";
+import { ColorModeContext, useMode } from "../theme.js";
 
 import Home from "../components/Home.jsx";
 import WorkspaceCard from "../components/WorkspaceCard.jsx";
@@ -9,7 +9,7 @@ import Settings from "../components/Settings.jsx";
 import URI from "../components/URI.jsx";
 import WorkspaceInfo from "../components/WorkspaceInfo.jsx";
 import Dashboard from "./Dashboard.jsx";
-import Development from "./Development.jsx";
+import SimulationView from "./SimulationView.jsx";
 import DrawerContents from "./DrawerContents.jsx";
 // import NavBar from "./NavBar.jsx";
 import SideBar from "./NavBar.jsx";
@@ -35,7 +35,7 @@ import {
   ListItemText
 } from "@mui/material";
 
-const drawerWidth = 300;
+const drawerWidth = 270;
 const openedMixin = (theme) => ({
   width: drawerWidth,
   transition: theme.transitions.create("width", {
@@ -126,7 +126,10 @@ const App = () => {
                 >
                   <Menu />
                 </IconButton>
-                <TopBar />
+                <TopBar 
+                  showsettingspopup={showSettingsPopup}
+                  setshowsettingspopup={setShowSettingsPopup}
+                />
               </Toolbar>
             </AppBar>
             {/* <TopBar position="fixed" open={open} drawerwidth={drawerWidth} color="secondary" handledraweropen={handleDrawerOpen} /> */}
@@ -164,8 +167,8 @@ const App = () => {
                       <Route path="/settings" element={<Settings />} />
                       {/* <Route path="/workspaces" element={<Workspace />} /> */}
                       <Route
-                        path="/development/:id"
-                        element={<Development />}
+                        path="/simulation/:id"
+                        element={<SimulationView />}
                       />
                     </Routes>
                     <Settings

@@ -18,9 +18,9 @@ const queryApi = new InfluxDB({
   }
 });
 
-const dbController = {};
+const influxController = {};
 
-const range = "1m";
+let range = "1m";
 
 // declare a data object to store chart data
 const data = {
@@ -30,7 +30,13 @@ const data = {
   statusPieData: []
 };
 
-dbController.getRespTimeLineData = (req, res, next) => {
+influxController.updateRange = (req, res, next) => {
+  range = req.body.range || range;
+  console.log(`Updated range to: ${range}`)
+  return next();
+}
+
+influxController.getRespTimeLineData = (req, res, next) => {
   const fluxQuery = `
     from(bucket: "dev-bucket")
     |> range(start: -${range})
@@ -62,7 +68,7 @@ dbController.getRespTimeLineData = (req, res, next) => {
   });
 };
 
-dbController.getRespTimeHistData = (req, res, next) => {
+influxController.getRespTimeHistData = (req, res, next) => {
   const fluxQuery = `
     from(bucket: "dev-bucket")
     |> range(start: -${range})
@@ -106,7 +112,7 @@ dbController.getRespTimeHistData = (req, res, next) => {
   });
 };
 
-dbController.getReqFreqLineData = (req, res, next) => {
+influxController.getReqFreqLineData = (req, res, next) => {
   const fluxQuery = `
     from(bucket: "dev-bucket")
     |> range(start: -${range})
@@ -114,7 +120,13 @@ dbController.getReqFreqLineData = (req, res, next) => {
     |> filter(fn: (r) => r["_field"] == "res_time")
     |> filter(fn: (r) => r["method"] == "${req.query.method}")
     |> filter(fn: (r) => r["path"] == "${req.query.path}")
-    |> aggregateWindow(every: 1s, fn: count, createEmpty: false)
+    |> aggregateWindow(every: ${(() => {switch (range) {
+        case "1m": return "10s"
+        case "5m": return "1m"
+        case "30m": return "5m"
+        default: return "10s"
+      }
+    })()}, fn: count, createEmpty: false)
   `;
 
   // declare a metrics object to collect labels and data
@@ -138,7 +150,7 @@ dbController.getReqFreqLineData = (req, res, next) => {
   });
 };
 
-dbController.getStatusPieData = (req, res, next) => {
+influxController.getStatusPieData = (req, res, next) => {
   const influxQuery = `
     from(bucket: "dev-bucket") 
     |> range(start: -${range})
@@ -173,7 +185,7 @@ dbController.getStatusPieData = (req, res, next) => {
   });
 };
 
-dbController.getEndpointLogs = (req, res, next) => {
+influxController.getEndpointLogs = (req, res, next) => {
   const influxQuery = `
     from(bucket: "dev-bucket") 
     |> range(start: -${range})
@@ -205,4 +217,4 @@ dbController.getEndpointLogs = (req, res, next) => {
   });
 };
 
-module.exports = dbController;
+module.exports = influxController;

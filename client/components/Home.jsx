@@ -5,7 +5,7 @@ import Grid from "@mui/material/Unstable_Grid2";
 import WorkspaceCard from "./WorkspaceCard.jsx";
 import "../styles/AddWorkspace.scss";
 import { useTheme } from "@mui/material";
-import { tokens } from "../containers/theme";
+import { tokens } from "../theme.js";
 
 const { SERVER_URL } = process.env;
 
@@ -158,11 +158,11 @@ const Home = (props) => {
 
   const cardStyle = {
     // boxSizing: 'border-box',
-    borderRadius: "10px",
+    borderRadius: 3,
     height: "170px",
     minwidth: "60px",
-    padding: "20px",
-    boxShadow: "0px 0px 8px 4px rgba(0, 0, 0, 0.04)",
+    padding: 2,
+    // boxShadow: "0px 0px 8px 4px rgba(0, 0, 0, 0.02)",
     cursor: "pointer",
     backgroundColor: `${colors.secondary[100]}`
   };
@@ -211,7 +211,9 @@ const Home = (props) => {
             }}
             onClick={() => setShowNewWorkspacePopUp(true)}
           >
-            <Add />
+            <Add 
+              color="neutral"
+            />
             {showNewWorkspacePopUp && newWorkspaceForm}
           </Card>
         </Grid>
